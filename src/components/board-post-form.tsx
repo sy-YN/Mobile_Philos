@@ -2,7 +2,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { createPost, type FormState, type Post } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +29,7 @@ type BoardPostFormProps = {
 };
 
 export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
-  const [state, formAction] = useFormState(createPost, initialState);
+  const [state, formAction] = useActionState(createPost, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
