@@ -2,15 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Calendar as CalendarIcon, Bell } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 
 type AppHeaderProps = {
   notificationCount: number;
   onNotificationClick: () => void;
+  onCalendarClick: () => void;
 };
 
-export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderProps) {
+export function AppHeader({ notificationCount, onNotificationClick, onCalendarClick }: AppHeaderProps) {
   return (
     <header className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-4 pt-8 pb-3 flex items-center justify-between shrink-0 z-20">
       <div className="flex items-center gap-2">
@@ -18,20 +17,10 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
         <h1 className="text-lg font-bold text-foreground font-headline">Philos</h1>
       </div>
       <div className="flex items-center gap-1">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <CalendarIcon className="h-4 w-4" />
-              <span className="sr-only">カレンダーを開く</span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onCalendarClick}>
+          <CalendarIcon className="h-4 w-4" />
+          <span className="sr-only">カレンダーを開く</span>
+        </Button>
         <Button
           variant="ghost"
           size="icon"

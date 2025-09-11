@@ -21,6 +21,10 @@ export default function EmpowerUApp() {
   const [activeTab, setActiveTab] = useState('home');
   const [showNotifications, setShowNotifications] = useState(false);
 
+  const handleCalendarClick = () => {
+    setActiveTab('dashboard');
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
@@ -41,6 +45,7 @@ export default function EmpowerUApp() {
       <AppHeader
         notificationCount={notifications.length}
         onNotificationClick={() => setShowNotifications(!showNotifications)}
+        onCalendarClick={handleCalendarClick}
       />
 
       <NotificationPanel
