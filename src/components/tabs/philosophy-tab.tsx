@@ -1,105 +1,59 @@
 
 'use client';
 
-import { useState } from 'react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { philosophyItems, valuesItems } from '@/lib/company-philosophy';
-import { BookOpen, Gem, Search } from 'lucide-react';
+import { valuesItems } from '@/lib/company-philosophy';
+import { Gem } from 'lucide-react';
 
 export function PhilosophyTab() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeAccordion, setActiveAccordion] = useState<string[]>([]);
+  const [todayValue, setTodayValue] = useState(valuesItems[0]);
+  const [currentDate, setCurrentDate] = useState('');
+  const [animationClass, setAnimationClass] = useState('');
 
-  const filteredPhilosophy = philosophyItems.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.content.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    const date = new Date();
+    const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+    const valueIndex = dayOfYear % valuesItems.length;
+    setTodayValue(valuesItems[valueIndex]);
+    
+    const formattedDate = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    }).format(date);
+    setCurrentDate(formattedDate);
+    
+    // Animation effect
+    setAnimationClass('animate-in fade-in duration-500');
+    const timer = setTimeout(() => setAnimationClass(''), 500);
+    return () => clearTimeout(timer);
 
-  const filteredValues = valuesItems.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.content.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const term = event.target.value;
-    setSearchTerm(term);
-
-    if (term) {
-      const allFilteredIds = [
-        ...filteredPhilosophy.map(item => item.id),
-        ...filteredValues.map(item => item.id)
-      ];
-      setActiveAccordion(allFilteredIds);
-    } else {
-      setActiveAccordion([]);
-    }
-  };
+  }, []);
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="text"
-          placeholder="理念を検索..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+    <div className="p-4 flex flex-col items-center justify-center h-full text-center space-y-8">
+      <div className={`w-full max-w-sm ${animationClass}`}>
+        <div className="mb-4">
+          <p className="text-muted-foreground">{currentDate}</p>
+          <h1 className="text-2xl font-bold text-foreground font-headline">今日のPhilosophy</h1>
+        </div>
+        <Card className="shadow-2xl rounded-2xl overflow-hidden group">
+          <CardContent className="p-8 bg-gradient-to-br from-card to-muted/30 relative">
+            <Gem className="h-10 w-10 text-primary absolute -top-3 -left-3 opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-primary">{todayValue.title}</h2>
+              <p className="text-muted-foreground leading-relaxed text-lg">{todayValue.content}</p>
+            </div>
+            <Gem className="h-12 w-12 text-primary absolute -bottom-4 -right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
+          </CardContent>
+        </Card>
       </div>
-
-      <section>
-        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-primary" />
-          企業理念
-        </h2>
-        <Card>
-          <CardContent className="p-0">
-            <Accordion type="multiple" value={activeAccordion} onValueChange={setActiveAccordion}>
-              {filteredPhilosophy.map((item) => (
-                <AccordionItem value={item.id} key={item.id}>
-                  <AccordionTrigger className="px-6 text-base hover:no-underline">
-                    {item.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
-                    <p className="whitespace-pre-line text-muted-foreground leading-relaxed">{item.content}</p>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Gem className="h-5 w-5 text-primary" />
-          私たちの価値観
-        </h2>
-        <Card>
-          <CardContent className="p-0">
-            <Accordion type="multiple" value={activeAccordion} onValueChange={setActiveAccordion}>
-              {filteredValues.map((item) => (
-                <AccordionItem value={item.id} key={item.id}>
-                  <AccordionTrigger className="px-6 text-base hover:no-underline">
-                    {item.title}
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
-                     <p className="whitespace-pre-line text-muted-foreground leading-relaxed">{item.content}</p>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
-      </section>
+       <div className="text-xs text-muted-foreground">
+        <p>毎日一つ、私たちの価値観を紹介します。</p>
+        <p>日付が変わると、新しいPhilosophyが表示されます。</p>
+      </div>
     </div>
   );
 }

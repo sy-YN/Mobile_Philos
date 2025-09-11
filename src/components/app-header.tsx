@@ -6,9 +6,10 @@ import { Building2, Calendar, Bell } from "lucide-react";
 type AppHeaderProps = {
   notificationCount: number;
   onNotificationClick: () => void;
+  onCalendarClick: () => void;
 };
 
-export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderProps) {
+export function AppHeader({ notificationCount, onNotificationClick, onCalendarClick }: AppHeaderProps) {
   return (
     <header className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-4 pt-8 pb-3 flex items-center justify-between shrink-0 z-20">
       <div className="flex items-center gap-2">
@@ -16,7 +17,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
         <h1 className="text-lg font-bold text-foreground font-headline">Philos</h1>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onCalendarClick}>
           <Calendar className="h-4 w-4" />
           <span className="sr-only">カレンダー</span>
         </Button>
