@@ -7,7 +7,6 @@ import { AppHeader } from '@/components/app-header';
 import { BottomNav } from '@/components/bottom-nav';
 import { NotificationPanel, type Notification } from '@/components/notification-panel';
 import { HomeTab } from '@/components/tabs/home-tab';
-import { BoardTab } from '@/components/tabs/board-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
 import { PhilosophyTab } from './tabs/philosophy-tab';
@@ -28,8 +27,6 @@ export default function EmpowerUApp() {
         return <HomeTab />;
       case 'philosophy':
         return <PhilosophyTab />;
-      case 'board':
-        return <BoardTab />;
       case 'dashboard':
         return <DashboardTab />;
       case 'other':

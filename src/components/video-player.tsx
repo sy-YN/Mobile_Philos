@@ -1,16 +1,25 @@
 
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Play, Pause, PictureInPicture, Heart, Bot } from 'lucide-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
-export function VideoPlayer() {
+type VideoPlayerProps = {
+  onPlayStateChange?: (isPlaying: boolean) => void;
+};
+
+
+export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    onPlayStateChange?.(isPlaying);
+  }, [isPlaying, onPlayStateChange]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
