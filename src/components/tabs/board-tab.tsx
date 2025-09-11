@@ -19,16 +19,36 @@ const philosophyItems = [
     title: "私たちのビジョン",
     content: "すべての声が聞かれ、評価される、継続的な改善、革新、協業の文化を創造すること。",
   },
+];
+
+const valuesItems = [
   {
-    id: "values",
-    title: "私たちの価値観",
-    content: `1. エンパワーメント: 社員一人ひとりが自律的に行動し、意思決定できる権限と責任を持つことを奨励します。
-2. 透明性: 情報をオープンに共有し、組織の意思決定プロセスを明確にすることで、信頼と誠実さを築きます。
-3. 協業: チームや部門の垣根を越えて協力し、多様な視点を活かして共通の目標を達成します。
-4. 成長: 継続的な学習と挑戦を支援し、個人と組織が共に成長できる環境を提供します。
-5. 包括性: あらゆる背景を持つ人々を尊重し、誰もが自分らしく貢献できる、公平でインクルーシブな職場を目指します。`,
+    id: "value-1",
+    title: "1. エンパワーメント",
+    content: "社員一人ひとりが自律的に行動し、意思決定できる権限と責任を持つことを奨励します。",
+  },
+  {
+    id: "value-2",
+    title: "2. 透明性",
+    content: "情報をオープンに共有し、組織の意思決定プロセスを明確にすることで、信頼と誠実さを築きます。",
+  },
+  {
+    id: "value-3",
+    title: "3. 協業",
+    content: "チームや部門の垣根を越えて協力し、多様な視点を活かして共通の目標を達成します。",
+  },
+  {
+    id: "value-4",
+    title: "4. 成長",
+    content: "継続的な学習と挑戦を支援し、個人と組織が共に成長できる環境を提供します。",
+  },
+  {
+    id: "value-5",
+    title: "5. 包括性",
+    content: "あらゆる背景を持つ人々を尊重し、誰もが自分らしく貢献できる、公平でインクルーシブな職場を目指します。",
   },
 ];
+
 
 export function BoardTab() {
   return (
@@ -45,6 +65,27 @@ export function BoardTab() {
             </AccordionContent>
           </AccordionItem>
         ))}
+        <AccordionItem value="values">
+          <AccordionTrigger className="text-base font-medium hover:no-underline">
+            私たちの価値観
+          </AccordionTrigger>
+          <AccordionContent className="pt-2 pb-4 px-2">
+            <Accordion type="multiple" className="w-full space-y-1">
+              {valuesItems.map((valueItem) => (
+                <AccordionItem key={valueItem.id} value={valueItem.id} className="border-none">
+                   <Card className="bg-muted/50">
+                    <AccordionTrigger className="text-sm font-medium hover:no-underline p-4 text-left">
+                      {valueItem.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="whitespace-pre-line text-sm text-muted-foreground pt-0 pb-4 px-4">
+                      {valueItem.content}
+                    </AccordionContent>
+                   </Card>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </div>
   );
