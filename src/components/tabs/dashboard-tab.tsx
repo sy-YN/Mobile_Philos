@@ -8,6 +8,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -44,7 +57,9 @@ const CircularProgress = ({ value }: { value: number }) => {
   const [strokeDashoffset, setStrokeDashoffset] = useState(circumference);
 
   useEffect(() => {
-    const offset = circumference - (value / 100) * circumference;
+    // Ensure the value is within the 0-100 range
+    const clampedValue = Math.max(0, Math.min(value, 100));
+    const offset = circumference - (clampedValue / 100) * circumference;
     setStrokeDashoffset(offset);
   }, [value, circumference]);
 
@@ -86,21 +101,41 @@ const CircularProgress = ({ value }: { value: number }) => {
 
 export function DashboardTab() {
   const [activeTab, setActiveTab] = useState("目標");
-  const [monthlyTarget, setMonthlyTarget] = useState("企業理念促進");
+  
+  const [departmentGoal, setDepartmentGoal] = useState("企業理念促進");
+  const [departmentProgress, setDepartmentProgress] = useState(70);
+  const [personalGoal, setPersonalGoal] = useState("新システムの機能をリリースまで行く");
+  const [personalProgress, setPersonalProgress] = useState(45);
+  
+  const [tempPersonalGoal, setTempPersonalGoal] = useState(personalGoal);
+  const [tempPersonalProgress, setTempPersonalProgress] = useState(personalProgress);
+
   const [showAward, setShowAward] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const currentMonth = new Date().toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    if (value === "個人") {
-      setMonthlyTarget("新システムの機能をリリースまで行く");
-      setShowAward(false);
-    } else {
-      setMonthlyTarget("企業理念促進");
-      setShowAward(value === "目標");
-    }
+    setShowAward(value === "目標");
   };
+
+  const handleSaveChanges = () => {
+    setPersonalGoal(tempPersonalGoal);
+    setPersonalProgress(tempPersonalProgress);
+    setIsDialogOpen(false);
+  };
+  
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setTempPersonalGoal(personalGoal);
+      setTempPersonalProgress(personalProgress);
+    }
+    setIsDialogOpen(open);
+  }
+
+  const currentGoal = activeTab === "個人" ? personalGoal : departmentGoal;
+  const currentProgress = activeTab === "個人" ? personalProgress : departmentProgress;
 
   return (
     <div className="flex flex-col h-full">
@@ -131,13 +166,12 @@ export function DashboardTab() {
               <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full text-sm">
                 <Target className="w-4 h-4 text-accent" />
                 <span className="text-foreground/80">月間目標</span>
-                <span className="font-semibold text-accent">{monthlyTarget}</span>
-                <span className="cursor-pointer">✏️</span>
+                <span className="font-semibold text-accent">{currentGoal}</span>
               </div>
             </div>
 
             <div className="relative">
-              <CircularProgress value={70} />
+              <CircularProgress value={currentProgress} />
               
               {activeTab === '個人' && (
                 <div className="absolute -bottom-4 right-4">
@@ -255,10 +289,60 @@ export function DashboardTab() {
           </TabsContent>
           <TabsContent value="個人" className="mt-0">
              <div className="relative flex justify-center items-center gap-4 pt-10">
-                <Button className="rounded-full shadow-md gap-2">
-                  <Edit className="w-4 h-4" />
-                  <span>編集</span>
-                </Button>
+                <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+                  <DialogTrigger asChild>
+                    <Button className="rounded-full shadow-md gap-2">
+                      <Edit className="w-4 h-4" />
+                      <span>編集</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>個人目標の編集</DialogTitle>
+                      <DialogDescription>
+                        今月の個人目標と現在の達成率を設定してください。
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="goal" className="text-right">
+                          目標
+                        </Label>
+                        <Input
+                          id="goal"
+                          value={tempPersonalGoal}
+                          onChange={(e) => setTempPersonalGoal(e.target.value)}
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="progress" className="text-right">
+                          達成率
+                        </Label>
+                        <div className="col-span-3 flex items-center gap-4">
+                           <Slider
+                            id="progress"
+                            min={0}
+                            max={100}
+                            step={5}
+                            value={[tempPersonalProgress]}
+                            onValueChange={(value) => setTempPersonalProgress(value[0])}
+                            className="flex-1"
+                          />
+                          <span className="w-12 text-center font-mono text-sm bg-muted rounded-md py-1">
+                            {tempPersonalProgress}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                         <Button type="button" variant="outline">キャンセル</Button>
+                      </DialogClose>
+                      <Button type="submit" onClick={handleSaveChanges}>保存</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
                 <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
                   過去の目標
@@ -270,3 +354,5 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
