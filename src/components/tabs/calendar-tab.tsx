@@ -25,14 +25,16 @@ export function CalendarTab() {
           <Sparkles className="h-6 w-6 text-primary" />
           今日のひとこと！
         </h2>
-        <p className="text-muted-foreground text-sm mt-1">
-          {today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
       </div>
 
-      <Card className="bg-gradient-to-br from-accent/20 to-transparent border-accent/50 shadow-lg">
+      <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/30 shadow-lg overflow-hidden">
+        <div className="p-6 pb-4 text-center bg-primary/10">
+            <p className="text-lg font-semibold text-primary-foreground/90">
+              {today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+        </div>
         <CardHeader className="p-6 pb-4 text-center">
-          <CardTitle className="text-2xl font-bold font-headline text-accent leading-tight">
+          <CardTitle className="text-2xl font-bold font-headline text-primary leading-tight">
             {currentValue.title.split('. ')[1]}
           </CardTitle>
         </CardHeader>
@@ -50,7 +52,7 @@ export function CalendarTab() {
            {valuesItems.map((item, index) => (
             <Card 
               key={item.id} 
-              className={`p-3 text-xs transition-all ${currentValue.id === item.id ? 'bg-accent/20 border-accent/50 scale-105' : 'bg-card/50'}`}
+              className={`p-3 text-xs transition-all ${currentValue.id === item.id ? 'bg-primary/10 border-primary/30 scale-105' : 'bg-card/50'}`}
             >
               <p className="font-semibold text-card-foreground mb-1">{item.title}</p>
               <p className="text-muted-foreground">{item.content}</p>
