@@ -304,35 +304,24 @@ export function DashboardTab() {
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-1 items-center gap-2">
-                        <Label htmlFor="goal" className="text-left">
-                          目標
-                        </Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="goal">目標</Label>
                         <Input
                           id="goal"
                           value={tempPersonalGoal}
                           onChange={(e) => setTempPersonalGoal(e.target.value)}
-                          className="col-span-3"
                         />
                       </div>
-                      <div className="grid grid-cols-1 items-center gap-2">
-                        <Label htmlFor="progress" className="text-left">
-                          達成率
-                        </Label>
-                        <div className="col-span-3 flex items-center gap-4">
-                           <Slider
-                            id="progress"
-                            min={0}
-                            max={100}
-                            step={5}
-                            value={[tempPersonalProgress]}
-                            onValueChange={(value) => setTempPersonalProgress(value[0])}
-                            className="flex-1"
-                          />
-                          <span className="w-12 text-center font-mono text-sm bg-muted rounded-md py-1">
-                            {tempPersonalProgress}%
-                          </span>
-                        </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="progress">達成率 ({tempPersonalProgress}%)</Label>
+                        <Slider
+                          id="progress"
+                          min={0}
+                          max={100}
+                          step={5}
+                          value={[tempPersonalProgress]}
+                          onValueChange={(value) => setTempPersonalProgress(value[0])}
+                        />
                       </div>
                     </div>
                     <DialogFooter>
@@ -354,8 +343,3 @@ export function DashboardTab() {
     </div>
   );
 }
-
-    
-    
-
-    
