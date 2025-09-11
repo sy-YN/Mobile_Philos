@@ -54,8 +54,8 @@ const CircularProgress = ({ value }: { value: number }) => {
         <circle cx="100" cy="100" r={radius} stroke="hsl(var(--border))" strokeWidth="16" fill="transparent" />
         <defs>
           <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="100%" stopColor="hsl(var(--accent))" />
+            <stop offset="0%" stopColor="hsl(var(--accent))" />
+            <stop offset="100%" stopColor="hsl(var(--accent) / 0.8)" />
           </linearGradient>
         </defs>
         <circle
@@ -73,7 +73,7 @@ const CircularProgress = ({ value }: { value: number }) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+          <div className="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
           <span className="text-sm text-muted-foreground">今日までの達成率</span>
         </div>
         <div className="text-4xl font-bold text-foreground">{value}%</div>
@@ -105,9 +105,9 @@ export function DashboardTab() {
   return (
     <div className="flex flex-col h-full">
       <header className="px-4 py-3 flex justify-between items-center bg-card-foreground/5 border-b">
-        <Button variant="ghost" size="icon" className="h-8 w-8"><HelpCircle className="w-5 h-5 text-primary" /></Button>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-accent"><HelpCircle className="w-5 h-5" /></Button>
         <h1 className="text-base font-semibold text-foreground">{currentMonth}</h1>
-        <Button variant="ghost" size="icon" className="h-8 w-8"><Settings className="w-5 h-5 text-primary" /></Button>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-accent"><Settings className="w-5 h-5" /></Button>
       </header>
       
       <Tabs value={activeTab} onValueChange={handleTabChange} className="flex-grow">
@@ -120,7 +120,7 @@ export function DashboardTab() {
         <div className="p-4 space-y-6">
           <div className={`${activeTab === "売上" ? 'hidden' : 'block'}`}>
             <div className="flex items-center justify-between">
-              <Button variant="link" className="text-primary text-sm p-0 h-auto gap-2">
+              <Button variant="link" className="text-accent text-sm p-0 h-auto gap-2">
                 <TrendingUp className="w-4 h-4" />
                 1年前を見る
               </Button>
@@ -128,10 +128,10 @@ export function DashboardTab() {
             </div>
 
             <div className="mt-6 mb-6">
-              <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm">
-                <Target className="w-4 h-4 text-primary" />
+              <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full text-sm">
+                <Target className="w-4 h-4 text-accent" />
                 <span className="text-foreground/80">月間目標</span>
-                <span className="font-semibold text-primary">{monthlyTarget}</span>
+                <span className="font-semibold text-accent">{monthlyTarget}</span>
                 <span className="cursor-pointer">✏️</span>
               </div>
             </div>
@@ -174,7 +174,7 @@ export function DashboardTab() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button variant="outline" className="rounded-full shadow-sm border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
+                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
                   過去の目標
                 </Button>
             </div>
@@ -184,20 +184,20 @@ export function DashboardTab() {
               <div className="grid grid-cols-2 gap-4">
                 <Card className="bg-blue-500/10 border-blue-500/20">
                   <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-blue-600 mb-1">平均売上</CardTitle>
+                    <CardTitle className="text-sm text-blue-600 dark:text-blue-400 mb-1">平均売上</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-blue-800">¥2,850,000</div>
-                    <div className="text-xs text-blue-500">前月比 +12%</div>
+                    <div className="font-bold text-lg text-blue-800 dark:text-blue-300">¥2,850,000</div>
+                    <div className="text-xs text-blue-500 dark:text-blue-400">前月比 +12%</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-green-500/10 border-green-500/20">
                   <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-green-600 mb-1">合計売上見込み</CardTitle>
+                    <CardTitle className="text-sm text-green-600 dark:text-green-400 mb-1">合計売上見込み</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-green-800">¥4,200,000</div>
-                    <div className="text-xs text-green-500">目標達成まで 85%</div>
+                    <div className="font-bold text-lg text-green-800 dark:text-green-300">¥4,200,000</div>
+                    <div className="text-xs text-green-500 dark:text-green-400">目標達成まで 85%</div>
                   </CardContent>
                 </Card>
               </div>
@@ -239,7 +239,7 @@ export function DashboardTab() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button variant="outline" className="rounded-full shadow-sm border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
+                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
                   過去の目標
                 </Button>
             </div>
