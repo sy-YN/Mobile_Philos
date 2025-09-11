@@ -205,17 +205,48 @@ export function DashboardTab() {
                 <CardHeader>
                   <CardTitle>売上推移</CardTitle>
                 </CardHeader>
-                <CardContent className="h-80">
+                <CardContent className="h-[22rem] -mx-4">
                   <ChartContainer config={salesChartConfig}>
                     <ComposedChart data={salesChartData}>
                       <CartesianGrid vertical={false} />
-                      <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                      <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" />
-                      <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
-                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <XAxis
+                        dataKey="month"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        yAxisId="left"
+                        orientation="left"
+                        stroke="hsl(var(--chart-1))"
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="hsl(var(--chart-2))"
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent indicator="dot" />}
+                      />
                       <ChartLegend content={<ChartLegendContent />} />
-                      <Bar dataKey="売上" fill="hsl(var(--chart-1))" radius={4} yAxisId="left" />
-                      <Line dataKey="利益率" type="monotone" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} yAxisId="right" />
+                      <Bar
+                        dataKey="売上"
+                        fill="hsl(var(--chart-1))"
+                        radius={4}
+                        yAxisId="left"
+                      />
+                      <Line
+                        dataKey="利益率"
+                        type="monotone"
+                        stroke="hsl(var(--chart-2))"
+                        strokeWidth={2}
+                        yAxisId="right"
+                      />
                     </ComposedChart>
                   </ChartContainer>
                 </CardContent>
@@ -249,3 +280,4 @@ export function DashboardTab() {
     </div>
   );
 }
+
