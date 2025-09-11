@@ -9,7 +9,7 @@ type BottomNavProps = {
 
 const navItems = [
   { id: 'home', label: 'ホーム', icon: Home },
-  { id: 'philosophy', label: '今日の理念', icon: CalendarCheck },
+  { id: 'philosophy', label: '今日の理念', icon: Home },
   { id: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
   { id: 'other', label: 'その他', icon: MoreHorizontal },
 ];
