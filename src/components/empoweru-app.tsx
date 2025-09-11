@@ -10,6 +10,7 @@ import { HomeTab } from '@/components/tabs/home-tab';
 import { BoardTab } from '@/components/tabs/board-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
+import { PhilosophyTab } from './tabs/philosophy-tab';
 
 const notifications: Notification[] = [
   { id: 1, title: '新しい経営陣メッセージ', message: '第4四半期の目標について', time: '5分前' },
@@ -25,6 +26,8 @@ export default function EmpowerUApp() {
     switch (activeTab) {
       case 'home':
         return <HomeTab />;
+      case 'philosophy':
+        return <PhilosophyTab />;
       case 'board':
         return <BoardTab />;
       case 'dashboard':

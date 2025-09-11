@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { VideoPlayer } from "@/components/video-player";
 import { ExecutiveMessageCard } from "@/components/executive-message-card";
 import { Building2 } from "lucide-react";
+import { BoardPostForm } from "../board-post-form";
+import { BoardPostCard } from "../board-post-card";
+import type { Post } from "@/app/actions";
 
 const executiveMessages = [
   {
@@ -26,8 +29,37 @@ const executiveMessages = [
   },
 ];
 
+const initialPosts: Post[] = [
+  {
+    id: 1,
+    author: '山田さん',
+    avatar: 'https://picsum.photos/seed/p1/100/100',
+    title: '全社ミーティングの感想',
+    content: 'CEOのメッセージ、非常に感銘を受けました。特にDXの推進に関する部分は、今後の会社の成長に不可欠だと感じています。',
+    likes: 12,
+    comments: 3,
+    time: '1時間前'
+  },
+  {
+    id: 2,
+    author: '鈴木さん',
+    avatar: 'https://picsum.photos/seed/p2/100/100',
+    title: 'ビデオを見て',
+    content: '動画、とても分かりやすかったです！倍速機能も便利ですね。',
+    likes: 8,
+    comments: 1,
+    time: '3時間前'
+  }
+];
+
+
 export function HomeTab() {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+
+  const handlePostCreated = (post: Post) => {
+    setPosts(prevPosts => [post, ...prevPosts]);
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,9 +77,25 @@ export function HomeTab() {
           <VideoPlayer />
         </div>
       </div>
-      
+
+      <section
+        className={`transition-all duration-700 delay-100 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+      >
+        <BoardPostForm onPostCreated={handlePostCreated} />
+      </section>
+
       <section
         className={`transition-all duration-700 delay-200 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+      >
+        <div className="space-y-3">
+          {posts.map(post => (
+            <BoardPostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
+      
+      <section
+        className={`transition-all duration-700 delay-300 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary" />

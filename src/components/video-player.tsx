@@ -2,11 +2,15 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Play, Pause, PictureInPicture } from 'lucide-react';
+import { Play, Pause, PictureInPicture, Heart, Bot } from 'lucide-react';
+import { Button } from './ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [isLiked, setIsLiked] = useState(false);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -28,6 +32,17 @@ export function VideoPlayer() {
         await videoRef.current.requestPictureInPicture();
       }
     }
+  };
+
+  const handlePlaybackRateChange = (rate: number) => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
+    }
+  };
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
   };
 
   return (
@@ -57,7 +72,7 @@ export function VideoPlayer() {
         </div>
       )}
 
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
         <button
           onClick={handlePictureInPicture}
           className="p-2 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors"
@@ -70,6 +85,27 @@ export function VideoPlayer() {
       <div className="absolute bottom-4 left-4 text-white">
         <h3 className="font-bold text-base drop-shadow-md font-headline">第4四半期 全社ミーティング</h3>
         <p className="text-sm opacity-90 drop-shadow-md">CEOからのメッセージ</p>
+      </div>
+
+      <div className="absolute bottom-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 hover:text-white font-mono text-xs h-7 px-2">
+              {playbackRate}x
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {[0.5, 1, 1.5, 2].map(rate => (
+              <DropdownMenuItem key={rate} onSelect={() => handlePlaybackRateChange(rate)}>
+                {rate}x
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        
+        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 hover:text-white h-8 w-8" onClick={handleLike}>
+          <Heart className={`h-5 w-5 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
+        </Button>
       </div>
     </div>
   );
