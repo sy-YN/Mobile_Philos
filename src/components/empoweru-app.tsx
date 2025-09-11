@@ -41,7 +41,6 @@ export default function EmpowerUApp() {
       <AppHeader
         notificationCount={notifications.length}
         onNotificationClick={() => setShowNotifications(!showNotifications)}
-        onCalendarClick={() => setActiveTab('philosophy')}
       />
 
       <NotificationPanel
