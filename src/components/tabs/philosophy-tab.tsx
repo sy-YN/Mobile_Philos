@@ -16,6 +16,7 @@ import { philosophyItems, valuesItems } from '@/lib/company-philosophy';
 
 export function PhilosophyTab() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [openItems, setOpenItems] = useState(["mission", "vision", "values"]);
 
   const filteredPhilosophyItems = useMemo(() => {
     if (!searchTerm) return philosophyItems;
@@ -33,22 +34,9 @@ export function PhilosophyTab() {
     );
   }, [searchTerm]);
 
-  const openAccordionItems = useMemo(() => {
-    if (!searchTerm) return ["mission", "vision", "values"];
-    
-    const openItems = new Set<string>();
-
-    if (filteredPhilosophyItems.length > 0) {
-      filteredPhilosophyItems.forEach(item => openItems.add(item.id));
-    }
-    
-    if (filteredValuesItems.length > 0) {
-      openItems.add("values");
-      filteredValuesItems.forEach(item => openItems.add(item.id));
-    }
-
-    return Array.from(openItems);
-  }, [searchTerm, filteredPhilosophyItems, filteredValuesItems]);
+  const handleOpenChange = (value: string[]) => {
+    setOpenItems(value);
+  };
 
 
   return (
@@ -66,7 +54,7 @@ export function PhilosophyTab() {
         />
       </div>
 
-      <Accordion type="multiple" value={openAccordionItems} className="w-full">
+      <Accordion type="multiple" value={openItems} onValueChange={handleOpenChange} className="w-full">
         {filteredPhilosophyItems.map((item) => (
           <AccordionItem key={item.id} value={item.id}>
             <AccordionTrigger className="text-base font-medium hover:no-underline">
@@ -84,7 +72,7 @@ export function PhilosophyTab() {
               私たちの価値観
             </AccordionTrigger>
             <AccordionContent className="pt-2 pb-4 px-2">
-              <Accordion type="multiple" value={openAccordionItems} className="w-full space-y-1">
+              <Accordion type="multiple" value={openItems} onValueChange={handleOpenChange} className="w-full space-y-1">
                 {filteredValuesItems.map((valueItem) => (
                   <AccordionItem key={valueItem.id} value={valueItem.id} className="border-none">
                      <Card className="bg-muted/50">
@@ -111,3 +99,4 @@ export function PhilosophyTab() {
     </div>
   );
 }
+
