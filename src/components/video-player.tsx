@@ -86,6 +86,18 @@ export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
         <p className="text-sm opacity-90 drop-shadow-md">CEOからのメッセージ</p>
       </div>
 
+      <div className="absolute top-4 right-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/20 hover:text-white h-8 w-8"
+          onClick={handlePictureInPicture}
+          aria-label="ピクチャーインピクチャー"
+        >
+          <PictureInPicture className="h-4 w-4" />
+        </Button>
+      </div>
+
       <div className="absolute bottom-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -101,16 +113,6 @@ export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-white/20 hover:text-white h-8 w-8"
-          onClick={handlePictureInPicture}
-          aria-label="ピクチャーインピクチャー"
-        >
-          <PictureInPicture className="h-4 w-4" />
-        </Button>
         
         <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 hover:text-white h-8 w-8" onClick={handleLike}>
           <Heart className={`h-5 w-5 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
