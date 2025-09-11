@@ -296,7 +296,7 @@ export function DashboardTab() {
                       <span>編集</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-[425px] rounded-lg">
+                  <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[425px] rounded-lg">
                     <DialogHeader>
                       <DialogTitle>個人目標の編集</DialogTitle>
                       <DialogDescription>
