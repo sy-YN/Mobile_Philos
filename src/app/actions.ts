@@ -5,8 +5,8 @@ import { analyzeBoardPostSentiment, type AnalyzeBoardPostSentimentOutput } from 
 import { z } from 'zod';
 
 const formSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters.'),
-  content: z.string().min(10, 'Content must be at least 10 characters.'),
+  title: z.string().min(3, 'タイトルは3文字以上で入力してください。'),
+  content: z.string().min(10, '内容は10文字以上で入力してください。'),
 });
 
 export type Post = {
@@ -41,7 +41,7 @@ export async function createPost(
 
   if (!validatedFields.success) {
     return {
-      message: 'Validation failed.',
+      message: '検証に失敗しました。',
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
@@ -53,19 +53,19 @@ export async function createPost(
 
     const newPost: Post = {
       id: Date.now(),
-      author: 'You',
+      author: 'あなた',
       avatar: 'https://picsum.photos/seed/you/100/100',
       title,
       content,
       likes: 0,
       comments: 0,
-      time: 'Just now',
+      time: 'たった今',
       analysis,
     };
 
-    return { message: 'Post created successfully.', post: newPost };
+    return { message: '投稿が正常に作成されました。', post: newPost };
   } catch (error) {
     console.error(error);
-    return { message: 'An error occurred during sentiment analysis.' };
+    return { message: '感情分析中にエラーが発生しました。' };
   }
 }

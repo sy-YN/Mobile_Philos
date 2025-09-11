@@ -36,7 +36,7 @@ export function BoardPostCard({ post }: BoardPostCardProps) {
             <div className="p-2 rounded-md bg-yellow-500/10 mb-3 text-xs text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
               <div>
-                <span className="font-semibold">Needs Review:</span> {post.analysis?.sentiment}
+                <span className="font-semibold">要レビュー:</span> {post.analysis?.sentiment}
               </div>
             </div>
           )}

@@ -25,7 +25,7 @@ export function NotificationPanel({ isOpen, notifications, onClose }: Notificati
     >
       <Card className="shadow-2xl">
         <CardHeader className="p-4 border-b">
-          <CardTitle className="text-base">Notifications</CardTitle>
+          <CardTitle className="text-base">通知</CardTitle>
         </CardHeader>
         <CardContent className="p-0 max-h-64 overflow-y-auto">
           {notifications.map((notification, index) => (

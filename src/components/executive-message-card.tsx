@@ -37,7 +37,7 @@ export function ExecutiveMessageCard({ message, className, ...props }: Executive
           </div>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant={message.priority === "high" ? "destructive" : "secondary"}>
-              {message.priority === "high" ? "Important" : "Update"}
+              {message.priority === "high" ? "重要" : "更新"}
             </Badge>
           </div>
           <h3 className="font-medium text-card-foreground mb-1">{message.title}</h3>

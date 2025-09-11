@@ -14,7 +14,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? 'Submitting...' : 'Submit Post'}
+      {pending ? '投稿中...' : '投稿する'}
     </Button>
   );
 }
@@ -36,7 +36,7 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
     if (state.message) {
       if (state.post) {
         toast({
-          title: "Success",
+          title: "成功",
           description: state.message,
         });
         onPostCreated(state.post);
@@ -45,7 +45,7 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
         // Errors are displayed inline
       } else {
          toast({
-          title: "Error",
+          title: "エラー",
           description: state.message,
           variant: "destructive",
         });
@@ -56,18 +56,18 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Create a New Post</CardTitle>
+        <CardTitle className="text-base">新規投稿を作成</CardTitle>
       </CardHeader>
       <CardContent>
         <form ref={formRef} action={formAction} className="space-y-4">
           <div>
-            <Input name="title" placeholder="Post title" aria-label="Post title" />
+            <Input name="title" placeholder="投稿のタイトル" aria-label="投稿のタイトル" />
             {state.errors?.title && (
               <p className="text-xs text-destructive mt-1">{state.errors.title[0]}</p>
             )}
           </div>
           <div>
-            <Textarea name="content" placeholder="What's on your mind?" aria-label="Post content" />
+            <Textarea name="content" placeholder="何を考えていますか？" aria-label="投稿の内容" />
             {state.errors?.content && (
               <p className="text-xs text-destructive mt-1">{state.errors.content[0]}</p>
             )}

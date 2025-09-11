@@ -4,19 +4,19 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 export function OtherTab() {
   return (
     <div className="p-4 space-y-4">
-      <h2 className="text-lg font-semibold text-foreground font-headline">Other</h2>
+      <h2 className="text-lg font-semibold text-foreground font-headline">その他</h2>
       <div className="space-y-3">
         <Card className="p-4 hover:bg-muted/50 cursor-pointer transition-colors">
-          <CardTitle className="text-base mb-1">Settings</CardTitle>
-          <CardDescription className="text-sm">Change app settings</CardDescription>
+          <CardTitle className="text-base mb-1">設定</CardTitle>
+          <CardDescription className="text-sm">アプリの設定を変更します</CardDescription>
         </Card>
         <Card className="p-4 hover:bg-muted/50 cursor-pointer transition-colors">
-          <CardTitle className="text-base mb-1">Help</CardTitle>
-          <CardDescription className="text-sm">How-to guides and FAQs</CardDescription>
+          <CardTitle className="text-base mb-1">ヘルプ</CardTitle>
+          <CardDescription className="text-sm">使い方ガイドとFAQ</CardDescription>
         </Card>
         <Card className="p-4 hover:bg-muted/50 cursor-pointer transition-colors">
-          <CardTitle className="text-base mb-1">Feedback</CardTitle>
-          <CardDescription className="text-sm">Help us improve the app</CardDescription>
+          <CardTitle className="text-base mb-1">フィードバック</CardTitle>
+          <CardDescription className="text-sm">アプリの改善にご協力ください</CardDescription>
         </Card>
       </div>
     </div>

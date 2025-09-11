@@ -18,7 +18,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <Calendar className="h-4 w-4" />
-          <span className="sr-only">Calendar</span>
+          <span className="sr-only">カレンダー</span>
         </Button>
         <Button
           variant="ghost"
@@ -27,7 +27,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
           onClick={onNotificationClick}
         >
           <Bell className="h-4 w-4" />
-          <span className="sr-only">Notifications</span>
+          <span className="sr-only">通知</span>
           {notificationCount > 0 && (
             <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs">
               {notificationCount}

@@ -8,10 +8,10 @@ type BottomNavProps = {
 };
 
 const navItems = [
-  { id: 'home', label: 'Home', icon: Home },
-  { id: 'board', label: 'Board', icon: MessageSquare },
-  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-  { id: 'other', label: 'Other', icon: MoreHorizontal },
+  { id: 'home', label: 'ホーム', icon: Home },
+  { id: 'board', label: '理念', icon: MessageSquare },
+  { id: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
+  { id: 'other', label: 'その他', icon: MoreHorizontal },
 ];
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {

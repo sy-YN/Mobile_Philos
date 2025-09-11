@@ -8,20 +8,20 @@ import { Building2 } from "lucide-react";
 const executiveMessages = [
   {
     id: 1,
-    author: "Tanaka, CEO",
+    author: "田中, CEO",
     avatar: "https://picsum.photos/seed/ceo/100/100",
-    title: "Strategy for Q4",
-    preview: "I will explain the key measures for the next quarter...",
-    time: "2h ago",
+    title: "第4四半期の戦略",
+    preview: "次の四半期の主要な施策について説明します...",
+    time: "2時間前",
     priority: "high" as const,
   },
   {
     id: 2,
-    author: "Sato, CTO",
+    author: "佐藤, CTO",
     avatar: "https://picsum.photos/seed/cto/100/100",
-    title: "Progress on DX Promotion",
-    preview: "The current status and future plans for digital transformation...",
-    time: "1d ago",
+    title: "DX推進の進捗",
+    preview: "デジタルトランスフォーメーションの現状と今後の計画...",
+    time: "1日前",
     priority: "medium" as const,
   },
 ];
@@ -51,7 +51,7 @@ export function HomeTab() {
       >
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary" />
-          Messages from Leadership
+          リーダーシップからのメッセージ
         </h2>
         <div className="space-y-3">
           {executiveMessages.map((message, index) => (

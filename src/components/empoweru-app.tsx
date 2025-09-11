@@ -12,9 +12,9 @@ import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
 
 const notifications: Notification[] = [
-  { id: 1, title: 'New Executive Message', message: 'Regarding Q4 goals', time: '5m ago' },
-  { id: 2, title: 'Board Update', message: 'A new post is available', time: '15m ago' },
-  { id: 3, title: 'Dashboard Updated', message: 'Weekly report is ready', time: '1h ago' },
+  { id: 1, title: '新しい経営陣メッセージ', message: '第4四半期の目標について', time: '5分前' },
+  { id: 2, title: '掲示板の更新', message: '新しい投稿があります', time: '15分前' },
+  { id: 3, title: 'ダッシュボード更新', message: '週間レポートの準備ができました', time: '1時間前' },
 ];
 
 export default function EmpowerUApp() {
