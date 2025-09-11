@@ -17,22 +17,22 @@ import {
 import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line } from "recharts";
 
 const salesChartData = [
-  { month: "4月", "売上金額": 50, "売上率": 55 },
-  { month: "5月", "売上金額": 60, "売上率": 62 },
-  { month: "6月", "売上金額": 75, "売上率": 78 },
-  { month: "7月", "売上金額": 65, "売上率": 70 },
-  { month: "8月", "売上金額": 80, "売上率": 85 },
-  { month: "9月", "売上金額": 90, "売上率": 95 },
+  { month: "4月", "売上": 50, "利益率": 15 },
+  { month: "5月", "売上": 60, "利益率": 18 },
+  { month: "6月", "売上": 75, "利益率": 20 },
+  { month: "7月", "売上": 65, "利益率": 17 },
+  { month: "8月", "売上": 80, "利益率": 22 },
+  { month: "9月", "売上": 90, "利益率": 25 },
 ];
 
 const salesChartConfig = {
-  "売上金額": {
-    label: "売上金額 (百万円)",
+  "売上": {
+    label: "売上 (百万円)",
     color: "hsl(var(--chart-1))",
     icon: BarChart,
   },
-  "売上率": {
-    label: "売上率 (%)",
+  "利益率": {
+    label: "利益率 (%)",
     color: "hsl(var(--chart-2))",
     icon: LineChart,
   },
@@ -214,8 +214,8 @@ export function DashboardTab() {
                       <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <ChartLegend content={<ChartLegendContent />} />
-                      <Bar dataKey="売上金額" fill="hsl(var(--chart-1))" radius={4} yAxisId="left" />
-                      <Line dataKey="売上率" type="monotone" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} yAxisId="right" />
+                      <Bar dataKey="売上" fill="hsl(var(--chart-1))" radius={4} yAxisId="left" />
+                      <Line dataKey="利益率" type="monotone" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} yAxisId="right" />
                     </ComposedChart>
                   </ChartContainer>
                 </CardContent>
