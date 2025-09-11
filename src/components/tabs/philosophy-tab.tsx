@@ -1,59 +1,103 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
-import { valuesItems } from '@/lib/company-philosophy';
-import { Gem } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { philosophyItems, valuesItems } from '@/lib/company-philosophy';
+import { BookOpen, Search } from 'lucide-react';
 
-export function PhilosophyTab() {
-  const [todayValue, setTodayValue] = useState(valuesItems[0]);
-  const [currentDate, setCurrentDate] = useState('');
-  const [animationClass, setAnimationClass] = useState('');
+type PhilosophyItem = {
+  id: string;
+  title: string;
+  content: string;
+};
 
-  useEffect(() => {
-    const date = new Date();
-    const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-    const valueIndex = dayOfYear % valuesItems.length;
-    setTodayValue(valuesItems[valueIndex]);
-    
-    const formattedDate = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-    }).format(date);
-    setCurrentDate(formattedDate);
-    
-    // Animation effect
-    setAnimationClass('animate-in fade-in duration-500');
-    const timer = setTimeout(() => setAnimationClass(''), 500);
-    return () => clearTimeout(timer);
+function PhilosophySection({ title, items, openItems, onToggle, searchTerm }: { title: string, items: PhilosophyItem[], openItems: string[], onToggle: (id: string) => void, searchTerm: string }) {
+  const filteredItems = items.filter(item =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  }, []);
+  if (searchTerm && filteredItems.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="p-4 flex flex-col items-center justify-center h-full text-center space-y-8">
-      <div className={`w-full max-w-sm ${animationClass}`}>
-        <div className="mb-4">
-          <p className="text-muted-foreground">{currentDate}</p>
-          <h1 className="text-2xl font-bold text-foreground font-headline">今日のPhilosophy</h1>
-        </div>
-        <Card className="shadow-2xl rounded-2xl overflow-hidden group">
-          <CardContent className="p-8 bg-gradient-to-br from-card to-muted/30 relative">
-            <Gem className="h-10 w-10 text-primary absolute -top-3 -left-3 opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-primary">{todayValue.title}</h2>
-              <p className="text-muted-foreground leading-relaxed text-lg">{todayValue.content}</p>
-            </div>
-            <Gem className="h-12 w-12 text-primary absolute -bottom-4 -right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
-          </CardContent>
-        </Card>
+    <div className="mb-6">
+      <h2 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+        <BookOpen className="h-5 w-5 text-primary" />
+        {title}
+      </h2>
+      <Accordion type="multiple" value={searchTerm ? filteredItems.map(item => item.id) : openItems} onValueChange={values => !searchTerm && values.forEach(onToggle)}>
+        {(searchTerm ? filteredItems : items).map(item => (
+          <AccordionItem value={item.id} key={item.id}>
+            <AccordionTrigger onClick={() => !searchTerm && onToggle(item.id)}>{item.title}</AccordionTrigger>
+            <AccordionContent>
+              <p className="text-base leading-relaxed text-muted-foreground">{item.content}</p>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
+  );
+}
+
+export function PhilosophyTab() {
+  const [openItems, setOpenItems] = useState<string[]>(['mission']);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleToggle = (id: string) => {
+    setOpenItems(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  return (
+    <div className="p-4">
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="企業理念を検索..."
+          className="pl-10"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
-       <div className="text-xs text-muted-foreground">
-        <p>毎日一つ、私たちの価値観を紹介します。</p>
-        <p>日付が変わると、新しいPhilosophyが表示されます。</p>
-      </div>
+
+      {searchTerm &&
+        !philosophyItems.some(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()) || item.content.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        !valuesItems.some(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()) || item.content.toLowerCase().includes(searchTerm.toLowerCase())) &&
+         (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <p className="text-muted-foreground">「{searchTerm}」に一致する結果は見つかりませんでした。</p>
+            </CardContent>
+          </Card>
+        )
+      }
+
+      <PhilosophySection 
+        title="企業理念" 
+        items={philosophyItems} 
+        openItems={openItems}
+        onToggle={handleToggle}
+        searchTerm={searchTerm}
+      />
+      <PhilosophySection 
+        title="私たちの価値観" 
+        items={valuesItems}
+        openItems={openItems}
+        onToggle={handleToggle}
+        searchTerm={searchTerm}
+      />
     </div>
   );
 }

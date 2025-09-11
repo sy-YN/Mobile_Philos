@@ -36,16 +36,11 @@ export default function EmpowerUApp() {
     }
   };
 
-  const handleCalendarClick = () => {
-    setActiveTab('philosophy');
-  };
-
   return (
     <AppShell>
       <AppHeader
         notificationCount={notifications.length}
         onNotificationClick={() => setShowNotifications(!showNotifications)}
-        onCalendarClick={handleCalendarClick}
       />
 
       <NotificationPanel
