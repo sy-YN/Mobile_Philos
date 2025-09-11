@@ -7,9 +7,9 @@ import { AppHeader } from '@/components/app-header';
 import { BottomNav } from '@/components/bottom-nav';
 import { NotificationPanel, type Notification } from '@/components/notification-panel';
 import { HomeTab } from '@/components/tabs/home-tab';
+import { PhilosophyTab } from '@/components/tabs/philosophy-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
-import { PhilosophyTab } from './tabs/philosophy-tab';
 
 const notifications: Notification[] = [
   { id: 1, title: '新しい経営陣メッセージ', message: '第4四半期の目標について', time: '5分前' },
@@ -20,10 +20,6 @@ const notifications: Notification[] = [
 export default function EmpowerUApp() {
   const [activeTab, setActiveTab] = useState('home');
   const [showNotifications, setShowNotifications] = useState(false);
-
-  const handleCalendarClick = () => {
-    setActiveTab('philosophy');
-  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -45,7 +41,6 @@ export default function EmpowerUApp() {
       <AppHeader
         notificationCount={notifications.length}
         onNotificationClick={() => setShowNotifications(!showNotifications)}
-        onCalendarClick={handleCalendarClick}
       />
 
       <NotificationPanel
