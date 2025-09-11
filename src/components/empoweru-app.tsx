@@ -10,6 +10,7 @@ import { HomeTab } from '@/components/tabs/home-tab';
 import { PhilosophyTab } from '@/components/tabs/philosophy-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
+import { CalendarTab } from '@/components/tabs/calendar-tab';
 
 const notifications: Notification[] = [
   { id: 1, title: '新しい経営陣メッセージ', message: '第4四半期の目標について', time: '5分前' },
@@ -22,7 +23,7 @@ export default function EmpowerUApp() {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const handleCalendarClick = () => {
-    setActiveTab('dashboard');
+    setActiveTab('calendar');
   };
 
   const renderContent = () => {
@@ -35,6 +36,8 @@ export default function EmpowerUApp() {
         return <DashboardTab />;
       case 'other':
         return <OtherTab />;
+      case 'calendar':
+        return <CalendarTab />;
       default:
         return <HomeTab />;
     }
