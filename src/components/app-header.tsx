@@ -13,7 +13,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
     <header className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-4 pt-8 pb-3 flex items-center justify-between shrink-0 z-20">
       <div className="flex items-center gap-2">
         <Building2 className="h-6 w-6 text-primary" />
-        <h1 className="text-lg font-bold text-foreground font-headline">EmpowerU</h1>
+        <h1 className="text-lg font-bold text-foreground font-headline">Philos</h1>
       </div>
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon" className="h-8 w-8">

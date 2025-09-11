@@ -51,7 +51,7 @@ export function HomeTab() {
       >
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary" />
-          リーダーシップからのメッセージ
+          経営層からのメッセージ
         </h2>
         <div className="space-y-3">
           {executiveMessages.map((message, index) => (
