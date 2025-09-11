@@ -296,30 +296,30 @@ export function DashboardTab() {
                       <span>編集</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="max-w-[90vw] sm:max-w-[425px] rounded-lg">
                     <DialogHeader>
                       <DialogTitle>個人目標の編集</DialogTitle>
                       <DialogDescription>
                         今月の個人目標と現在の達成率を設定してください。
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="goal" className="text-right">
+                    <div className="grid gap-6 py-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+                        <Label htmlFor="goal" className="text-left md:text-right">
                           目標
                         </Label>
                         <Input
                           id="goal"
                           value={tempPersonalGoal}
                           onChange={(e) => setTempPersonalGoal(e.target.value)}
-                          className="col-span-3"
+                          className="md:col-span-3"
                         />
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="progress" className="text-right">
+                      <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+                        <Label htmlFor="progress" className="text-left md:text-right">
                           達成率
                         </Label>
-                        <div className="col-span-3 flex items-center gap-4">
+                        <div className="md:col-span-3 flex items-center gap-4">
                            <Slider
                             id="progress"
                             min={0}
