@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -93,7 +93,7 @@ export function DashboardTab() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    if (value === "プロフィール") {
+    if (value === "個人") {
       setMonthlyTarget("新システムの機能をリリースまで行く");
       setShowAward(false);
     } else {
@@ -114,7 +114,7 @@ export function DashboardTab() {
         <TabsList className="grid w-full grid-cols-3 rounded-none h-auto p-0 bg-card border-b">
           <TabsTrigger value="目標" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">目標</TabsTrigger>
           <TabsTrigger value="売上" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">売上</TabsTrigger>
-          <TabsTrigger value="プロフィール" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">プロフィール</TabsTrigger>
+          <TabsTrigger value="個人" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">個人</TabsTrigger>
         </TabsList>
         
         <div className="p-4 space-y-6">
@@ -139,7 +139,7 @@ export function DashboardTab() {
             <div className="relative">
               <CircularProgress value={70} />
               
-              {activeTab === 'プロフィール' && (
+              {activeTab === '個人' && (
                 <div className="absolute -bottom-4 right-4">
                   <Button className="rounded-full shadow-lg">共有</Button>
                 </div>
@@ -253,22 +253,12 @@ export function DashboardTab() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="プロフィール" className="mt-0">
+          <TabsContent value="個人" className="mt-0">
              <div className="relative flex justify-center items-center gap-4 pt-10">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="rounded-full shadow-md gap-2">
-                      <span>部署名</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>営業部</DropdownMenuItem>
-                    <DropdownMenuItem>マーケティング部</DropdownMenuItem>
-                    <DropdownMenuItem>開発部</DropdownMenuItem>
-                    <DropdownMenuItem>人事部</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button className="rounded-full shadow-md gap-2">
+                  <Edit className="w-4 h-4" />
+                  <span>編集</span>
+                </Button>
 
                 <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
                   過去の目標
@@ -280,4 +270,3 @@ export function DashboardTab() {
     </div>
   );
 }
-
