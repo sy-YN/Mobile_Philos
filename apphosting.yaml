@@ -5,3 +5,24 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+  # The following environment variables are available to the app.
+  # These values are stored in Cloud Secret Manager.
+  # You can either set them directly in this file, or by visiting:
+  # https://console.cloud.google.com/security/secret-manager
+  # The values you set here will be deployed with your app.
+  # On your local machine, you can configure these values in .env
+  #
+  # firebase deploy --only apphosting --project=$PROJECT_ID
+  #
+  # You can also use firebase apphosting:secrets:set.
+  #
+  # firebase apphosting:secrets:set BASIC_AUTH_USER --project=$PROJECT_ID
+  # firebase apphosting:secrets:set BASIC_AUTH_PASS --project=$PROJECT_ID
+  #
+  # To unset a secret:
+  #
+  # firebase apphosting:secrets:set BASIC_AUTH_USER ""
+  #
+  secrets:
+    - BASIC_AUTH_USER
+    - BASIC_AUTH_PASS
