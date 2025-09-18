@@ -46,10 +46,6 @@ export function BoardPostCard({ post }: BoardPostCardProps) {
               <Heart className="h-4 w-4" />
               <span>{post.likes}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-auto px-2 py-1 hover:text-primary">
-              <MessageCircle className="h-4 w-4" />
-              <span>{post.comments}</span>
-            </Button>
           </div>
         </div>
       </div>
