@@ -38,7 +38,7 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   
   const handlePageFlip = () => {
     setIsExiting(true);
-    setTimeout(onNavigateHome, 400); 
+    setTimeout(onNavigateHome, 500); 
   };
 
   const dayOfWeek = today.toLocaleDateString('ja-JP', { weekday: 'long' });
@@ -55,45 +55,50 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
       )}
       onClick={handlePageFlip}
     >
-      <div className={cn(
-        "w-full max-w-sm h-[600px] bg-card rounded-lg shadow-2xl flex flex-col p-8 relative transition-transform duration-300 ease-in-out font-serif",
-        showAnimation ? 'scale-100' : 'scale-95',
-        isExiting && 'scale-95 -rotate-3'
-      )}>
-        {/* Rings */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-4">
-          <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>
-          <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>
+      <div className={cn("relative w-full max-w-sm h-[600px] transition-transform duration-500", isExiting && "scale-105")}>
+        {/* Stacked pages */}
+        <div className={cn("absolute inset-0 bg-card rounded-lg shadow-lg transition-transform duration-500", showAnimation ? "rotate-[-4deg]" : "rotate-0")}></div>
+        <div className={cn("absolute inset-0 bg-card rounded-lg shadow-lg transition-transform duration-500", showAnimation ? "rotate-[3deg]" : "rotate-0")}></div>
+
+        <div className={cn(
+          "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-transform duration-500 ease-in-out font-serif",
+          showAnimation ? 'scale-100 rotate-0' : 'scale-95 rotate-0',
+          isExiting && 'scale-95 -rotate-6'
+        )}>
+          {/* Rings */}
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-4">
+            <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>
+            <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>
+          </div>
+
+          <header className="text-center pt-8 border-b-2 border-muted pb-4">
+            <p className="text-lg font-medium text-muted-foreground tracking-widest">{dayOfWeek}</p>
+          </header>
+
+          <main className="flex-1 flex flex-col items-center justify-center text-center">
+            <p className="text-8xl font-bold text-foreground tracking-tighter">{day}</p>
+            <p className="text-2xl font-medium text-muted-foreground -mt-2">{month}, {year}</p>
+            
+            <div className="my-10">
+              <h1 className="text-4xl font-bold text-foreground mb-3 leading-snug">
+                {currentValue.title.split('. ')[1]}
+              </h1>
+              <p className="text-base text-muted-foreground px-4 leading-relaxed">
+                〜{currentValue.content}〜
+              </p>
+            </div>
+          </main>
+
+          <footer className="text-center">
+            <div className="flex flex-col items-center gap-2 drop-shadow-sm">
+              <button onClick={handleLike} className="transition-transform transform active:scale-125">
+                <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "fill-primary text-primary")} />
+              </button>
+              <span className="text-lg font-bold text-muted-foreground">{likes}</span>
+            </div>
+          </footer>
         </div>
-
-        <header className="text-center pt-8 border-b-2 border-muted pb-4">
-          <p className="text-lg font-medium text-primary tracking-widest">{dayOfWeek}</p>
-        </header>
-
-        <main className="flex-1 flex flex-col items-center justify-center text-center">
-          <p className="text-8xl font-bold text-foreground tracking-tighter">{day}</p>
-          <p className="text-2xl font-medium text-muted-foreground -mt-2">{month}, {year}</p>
-          
-          <div className="my-10">
-            <h1 className="text-4xl font-bold text-foreground mb-3 leading-snug">
-              {currentValue.title.split('. ')[1]}
-            </h1>
-            <p className="text-base text-muted-foreground px-4 leading-relaxed">
-              〜{currentValue.content}〜
-            </p>
-          </div>
-        </main>
-
-        <footer className="text-center">
-          <div className="flex flex-col items-center gap-2 drop-shadow-sm">
-            <button onClick={handleLike} className="transition-transform transform active:scale-125">
-              <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "fill-primary text-primary")} />
-            </button>
-            <span className="text-lg font-bold text-muted-foreground">{likes}</span>
-          </div>
-        </footer>
       </div>
     </div>
   );
 }
-
