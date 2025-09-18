@@ -72,7 +72,7 @@ export default function EmpowerUApp() {
       />
 
       <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-xs">
           {selectedNotification && (
             <>
               <DialogHeader>
