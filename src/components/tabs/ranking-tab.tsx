@@ -4,7 +4,7 @@ import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Eye } from 'luci
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { allTeamGoalsData as goalsData } from './dashboard-tab'; // ダッシュボードのデータを再利用
+import { allTeamGoalsData as goalsData } from './dashboard-tab';
 
 const videoRanking = [
     { id: 1, title: '第4四半期 全社ミーティング', likes: 152, views: 2340 },
