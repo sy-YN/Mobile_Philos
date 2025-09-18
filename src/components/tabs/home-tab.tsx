@@ -191,12 +191,14 @@ export function HomeTab() {
                       />
                       <div>
                         <DialogTitle className="mb-1">{message.title}</DialogTitle>
-                        <DialogDescription className="flex items-center gap-4">
-                          <span>{message.author}</span>
-                          <Badge variant={message.priority === "high" ? "destructive" : "secondary"}>
-                            {message.priority === "high" ? "重要" : "更新"}
-                          </Badge>
-                          <span>{message.time}</span>
+                        <DialogDescription asChild>
+                           <div className="text-sm text-muted-foreground flex items-center gap-4">
+                            <span>{message.author}</span>
+                            <Badge variant={message.priority === "high" ? "destructive" : "secondary"}>
+                              {message.priority === "high" ? "重要" : "更新"}
+                            </Badge>
+                            <span>{message.time}</span>
+                          </div>
                         </DialogDescription>
                       </div>
                     </div>
