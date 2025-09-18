@@ -178,7 +178,7 @@ export function HomeTab() {
                     style={{ transitionDelay: `${400 + index * 150}ms` }}
                   />
                 </DialogTrigger>
-                <DialogContent className="max-w-[calc(100%-2rem)] w-auto">
+                <DialogContent className="max-w-[calc(100vw-2rem)] w-full">
                   <DialogHeader>
                     <div className="flex items-start gap-4 mb-4">
                       <Image
