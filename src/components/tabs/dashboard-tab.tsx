@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -53,11 +53,13 @@ const salesChartConfig = {
   },
 };
 
-const teamGoalsData = [
+const allTeamGoalsData = [
     { id: 1, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', goal: '新規顧客を5件獲得する', progress: 60 },
     { id: 2, name: '鈴木 花子', avatar: 'https://picsum.photos/seed/p2/100/100', goal: '既存顧客の満足度調査を実施', progress: 90 },
     { id: 3, name: '伊藤 健太', avatar: 'https://picsum.photos/seed/p3/100/100', goal: '新機能のUIデザインを完成させる', progress: 30 },
     { id: 4, name: '渡辺 久美子', avatar: 'https://picsum.photos/seed/p4/100/100', goal: '採用面接を10件実施する', progress: 100 },
+    { id: 5, name: '田中 雄大', avatar: 'https://picsum.photos/seed/p5/100/100', goal: '新しいマーケティング戦略を立案する', progress: 75 },
+    { id: 6, name: '佐藤 あきら', avatar: 'https://picsum.photos/seed/p6/100/100', goal: '社内システムのバグを修正する', progress: 50 },
 ];
 
 const CircularProgress = ({ value }: { value: number }) => {
@@ -123,6 +125,8 @@ export function DashboardTab() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamGoalsDialogOpen, setIsTeamGoalsDialogOpen] = useState(false);
   
+  const [teamGoalsSearchTerm, setTeamGoalsSearchTerm] = useState('');
+
   const currentMonth = new Date().toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
   const latestSalesData = salesChartData[salesChartData.length - 1];
   const previousSalesData = salesChartData[salesChartData.length - 2];
@@ -149,6 +153,10 @@ export function DashboardTab() {
 
   const currentGoal = activeTab === "個人" ? personalGoal : departmentGoal;
   const currentProgress = activeTab === "個人" ? personalProgress : departmentProgress;
+
+  const filteredTeamGoals = allTeamGoalsData.filter(member =>
+    member.name.toLowerCase().includes(teamGoalsSearchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -196,33 +204,46 @@ export function DashboardTab() {
                       <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                           <Users className="w-5 h-5 text-primary" />
-                          チームの目標進捗
+                          メンバーの目標進捗
                         </DialogTitle>
                         <DialogDescription>
-                          開発部のメンバーの個人目標と進捗状況です。
+                          メンバーの個人目標と進捗状況を確認できます。
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto">
-                        {teamGoalsData.map((member) => (
-                          <div key={member.id} className="flex items-start gap-3">
-                             <Image
-                              src={member.avatar}
-                              alt={member.name}
-                              width={40}
-                              height={40}
-                              className="rounded-full mt-1"
-                              data-ai-hint="person portrait"
-                            />
-                            <div className="flex-1">
-                              <p className="font-semibold text-sm">{member.name}</p>
-                              <p className="text-xs text-muted-foreground mb-2">{member.goal}</p>
-                              <div className="flex items-center gap-2">
-                                <Progress value={member.progress} className="h-2" />
-                                <span className="text-xs font-mono text-muted-foreground w-10 text-right">{member.progress}%</span>
+                      <div className="relative my-4">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="名前で検索..."
+                          value={teamGoalsSearchTerm}
+                          onChange={(e) => setTeamGoalsSearchTerm(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                      <div className="space-y-4 max-h-[50vh] overflow-y-auto -mr-4 pr-4">
+                        {filteredTeamGoals.length > 0 ? (
+                          filteredTeamGoals.map((member) => (
+                            <div key={member.id} className="flex items-start gap-3">
+                              <Image
+                                src={member.avatar}
+                                alt={member.name}
+                                width={40}
+                                height={40}
+                                className="rounded-full mt-1"
+                                data-ai-hint="person portrait"
+                              />
+                              <div className="flex-1">
+                                <p className="font-semibold text-sm">{member.name}</p>
+                                <p className="text-xs text-muted-foreground mb-2">{member.goal}</p>
+                                <div className="flex items-center gap-2">
+                                  <Progress value={member.progress} className="h-2" />
+                                  <span className="text-xs font-mono text-muted-foreground w-10 text-right">{member.progress}%</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))
+                        ) : (
+                          <p className="text-sm text-muted-foreground text-center py-4">該当するメンバーはいません。</p>
+                        )}
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -392,3 +413,5 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
