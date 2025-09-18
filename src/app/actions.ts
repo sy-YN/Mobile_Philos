@@ -5,8 +5,7 @@ import { analyzeBoardPostSentiment, type AnalyzeBoardPostSentimentOutput } from 
 import { z } from 'zod';
 
 const formSchema = z.object({
-  title: z.string().min(3, 'タイトルは3文字以上で入力してください。'),
-  content: z.string().min(10, '内容は10文字以上で入力してください。'),
+  content: z.string().min(1, '内容は1文字以上で入力してください。'),
 });
 
 export type Post = {
@@ -25,7 +24,6 @@ export type FormState = {
   message: string;
   post?: Post;
   errors?: {
-    title?: string[];
     content?: string[];
   };
 };
@@ -35,7 +33,6 @@ export async function createPost(
   formData: FormData
 ): Promise<FormState> {
   const validatedFields = formSchema.safeParse({
-    title: formData.get('title'),
     content: formData.get('content'),
   });
 
@@ -46,7 +43,7 @@ export async function createPost(
     };
   }
 
-  const { title, content } = validatedFields.data;
+  const { content } = validatedFields.data;
 
   try {
     const analysis = await analyzeBoardPostSentiment({ text: content });
@@ -55,7 +52,7 @@ export async function createPost(
       id: Date.now(),
       author: 'あなた',
       avatar: 'https://picsum.photos/seed/you/100/100',
-      title,
+      title: '', // Title is no longer provided from the form
       content,
       likes: 0,
       comments: 0,
