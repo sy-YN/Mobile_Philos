@@ -14,7 +14,7 @@ import Image from 'next/image';
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size="icon" disabled={pending || disabled} className="shrink-0">
+    <Button type="submit" size="icon" disabled={pending || disabled} className="shrink-0 h-10 w-10">
       <Send className="h-4 w-4" />
       <span className="sr-only">投稿する</span>
     </Button>
@@ -66,9 +66,9 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
       <Image 
         src="https://picsum.photos/seed/you/100/100" 
         alt="あなたのプロフィール写真"
-        width={32}
-        height={32}
-        className="rounded-full mt-1.5"
+        width={40}
+        height={40}
+        className="rounded-full mt-1"
         data-ai-hint="person portrait"
       />
       <form ref={formRef} action={formAction} className="flex-1 flex items-center gap-2">
@@ -77,7 +77,7 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
           placeholder="コメントを追加..." 
           aria-label="投稿の内容"
           rows={1}
-          className="resize-none"
+          className="resize-none min-h-0 h-10 py-2"
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
