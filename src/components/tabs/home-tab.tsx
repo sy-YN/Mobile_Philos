@@ -178,7 +178,7 @@ export function HomeTab() {
                     style={{ transitionDelay: `${400 + index * 150}ms` }}
                   />
                 </DialogTrigger>
-                <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-md">
+                <DialogContent className="max-w-[calc(100%-2rem)] w-auto">
                   <DialogHeader>
                     <div className="flex items-start gap-4 mb-4">
                       <Image
@@ -192,7 +192,7 @@ export function HomeTab() {
                       <div>
                         <DialogTitle className="mb-1">{message.title}</DialogTitle>
                         <DialogDescription asChild>
-                           <div className="text-sm text-muted-foreground flex items-center gap-4">
+                           <div className="text-sm text-muted-foreground flex items-center gap-4 flex-wrap">
                             <span>{message.author}</span>
                             <Badge variant={message.priority === "high" ? "destructive" : "secondary"}>
                               {message.priority === "high" ? "重要" : "更新"}
