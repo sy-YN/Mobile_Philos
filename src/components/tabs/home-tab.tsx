@@ -155,16 +155,18 @@ export function HomeTab() {
           <Building2 className="h-5 w-5 text-primary" />
           経営層からのメッセージ
         </h2>
-        <div className="space-y-3">
-          {executiveMessages.map((message, index) => (
-            <ExecutiveMessageCard 
-              key={message.id} 
-              message={message}
-              className={`transition-all duration-500 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-              style={{ transitionDelay: `${400 + index * 150}ms` }}
-            />
-          ))}
-        </div>
+        <ScrollArea className="h-[200px] pr-4">
+          <div className="space-y-3">
+            {executiveMessages.map((message, index) => (
+              <ExecutiveMessageCard 
+                key={message.id} 
+                message={message}
+                className={`transition-all duration-500 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+                style={{ transitionDelay: `${400 + index * 150}ms` }}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </section>
     </div>
   );
