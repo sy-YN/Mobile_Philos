@@ -56,7 +56,7 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
       onClick={handlePageFlip}
     >
       <div className={cn(
-        "w-full max-w-[320px] h-[550px] bg-card rounded-lg shadow-2xl flex flex-col p-8 relative transition-transform duration-300 ease-in-out font-serif",
+        "w-full max-w-sm h-[600px] bg-card rounded-lg shadow-2xl flex flex-col p-8 relative transition-transform duration-300 ease-in-out font-serif",
         showAnimation ? 'scale-100' : 'scale-95',
         isExiting && 'scale-95 -rotate-3'
       )}>
@@ -67,7 +67,7 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
         </div>
 
         <header className="text-center pt-8 border-b-2 border-muted pb-4">
-          <p className="text-lg font-medium text-primary">{dayOfWeek}</p>
+          <p className="text-lg font-medium text-primary tracking-widest">{dayOfWeek}</p>
         </header>
 
         <main className="flex-1 flex flex-col items-center justify-center text-center">
@@ -75,24 +75,25 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
           <p className="text-2xl font-medium text-muted-foreground -mt-2">{month}, {year}</p>
           
           <div className="my-10">
-            <h1 className="text-2xl font-bold text-foreground mb-2">
+            <h1 className="text-4xl font-bold text-foreground mb-3 leading-snug">
               {currentValue.title.split('. ')[1]}
             </h1>
-            <p className="text-sm text-muted-foreground px-4 leading-relaxed">
+            <p className="text-base text-muted-foreground px-4 leading-relaxed">
               〜{currentValue.content}〜
             </p>
           </div>
         </main>
 
         <footer className="text-center">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 drop-shadow-sm">
             <button onClick={handleLike} className="transition-transform transform active:scale-125">
               <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "fill-primary text-primary")} />
             </button>
-            <span className="text-base font-bold text-muted-foreground">{likes}</span>
+            <span className="text-lg font-bold text-muted-foreground">{likes}</span>
           </div>
         </footer>
       </div>
     </div>
   );
 }
+
