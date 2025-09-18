@@ -2,16 +2,18 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { Play, Pause, PictureInPicture, Heart, Bot } from 'lucide-react';
+import { Play, Pause, PictureInPicture, Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 type VideoPlayerProps = {
+  src: string;
+  title: string;
+  subtitle: string;
   onPlayStateChange?: (isPlaying: boolean) => void;
 };
 
-
-export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
+export function VideoPlayer({ src, title, subtitle, onPlayStateChange }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
@@ -58,7 +60,7 @@ export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
     <div className="relative w-full h-full rounded-xl overflow-hidden bg-black group shadow-lg">
       <video
         ref={videoRef}
-        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        src={src}
         className="object-cover w-full h-full"
         loop
         playsInline
@@ -82,8 +84,8 @@ export function VideoPlayer({ onPlayStateChange }: VideoPlayerProps) {
       )}
 
       <div className="absolute bottom-4 left-4 text-white">
-        <h3 className="font-bold text-base drop-shadow-md font-headline">第4四半期 全社ミーティング</h3>
-        <p className="text-sm opacity-90 drop-shadow-md">CEOからのメッセージ</p>
+        <h3 className="font-bold text-base drop-shadow-md font-headline">{title}</h3>
+        <p className="text-sm opacity-90 drop-shadow-md">{subtitle}</p>
       </div>
 
       <div className="absolute top-4 right-4">

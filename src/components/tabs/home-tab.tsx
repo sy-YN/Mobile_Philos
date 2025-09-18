@@ -8,6 +8,11 @@ import { BoardPostForm } from "../board-post-form";
 import { BoardPostCard } from "../board-post-card";
 import type { Post } from "@/app/actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
 
 const executiveMessages = [
   {
@@ -29,6 +34,27 @@ const executiveMessages = [
     priority: "medium" as const,
   },
 ];
+
+const videos = [
+  {
+    id: 1,
+    src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    title: '第4四半期 全社ミーティング',
+    subtitle: 'CEOからのメッセージ',
+  },
+  {
+    id: 2,
+    src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    title: 'デザインチームより',
+    subtitle: '新プロダクトのコンセプト紹介',
+  },
+  {
+    id: 3,
+    src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    title: 'エンジニアチームより',
+    subtitle: 'ベータ版新機能のデモ',
+  },
+]
 
 const initialPosts: Post[] = [
   {
@@ -84,9 +110,21 @@ export function HomeTab() {
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
-        <div className="h-[240px] w-full">
-          <VideoPlayer />
-        </div>
+        <Carousel>
+          <CarouselContent>
+            {videos.map(video => (
+              <CarouselItem key={video.id}>
+                <div className="h-[240px] w-full">
+                  <VideoPlayer 
+                    src={video.src}
+                    title={video.title}
+                    subtitle={video.subtitle}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
 
       <section className="space-y-4">
