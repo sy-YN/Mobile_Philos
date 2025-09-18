@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit } from "lucide-react";
+import Image from "next/image";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import {
   ChartContainer,
   ChartTooltip,
@@ -50,6 +52,13 @@ const salesChartConfig = {
     icon: LineChart,
   },
 };
+
+const teamGoalsData = [
+    { id: 1, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', goal: '新規顧客を5件獲得する', progress: 60 },
+    { id: 2, name: '鈴木 花子', avatar: 'https://picsum.photos/seed/p2/100/100', goal: '既存顧客の満足度調査を実施', progress: 90 },
+    { id: 3, name: '伊藤 健太', avatar: 'https://picsum.photos/seed/p3/100/100', goal: '新機能のUIデザインを完成させる', progress: 30 },
+    { id: 4, name: '渡辺 久美子', avatar: 'https://picsum.photos/seed/p4/100/100', goal: '採用面接を10件実施する', progress: 100 },
+];
 
 const CircularProgress = ({ value }: { value: number }) => {
   const radius = 90;
@@ -111,7 +120,8 @@ export function DashboardTab() {
   const [tempPersonalProgress, setTempPersonalProgress] = useState(personalProgress);
 
   const [showAward, setShowAward] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isTeamGoalsDialogOpen, setIsTeamGoalsDialogOpen] = useState(false);
   
   const currentMonth = new Date().toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
   const latestSalesData = salesChartData[salesChartData.length - 1];
@@ -126,7 +136,7 @@ export function DashboardTab() {
   const handleSaveChanges = () => {
     setPersonalGoal(tempPersonalGoal);
     setPersonalProgress(tempPersonalProgress);
-    setIsDialogOpen(false);
+    setIsEditDialogOpen(false);
   };
   
   const handleOpenChange = (open: boolean) => {
@@ -134,7 +144,7 @@ export function DashboardTab() {
       setTempPersonalGoal(personalGoal);
       setTempPersonalProgress(personalProgress);
     }
-    setIsDialogOpen(open);
+    setIsEditDialogOpen(open);
   }
 
   const currentGoal = activeTab === "個人" ? personalGoal : departmentGoal;
@@ -178,7 +188,44 @@ export function DashboardTab() {
               
               {activeTab === '個人' && (
                 <div className="absolute -bottom-4 right-4">
-                  <Button className="rounded-full shadow-lg">共有</Button>
+                   <Dialog open={isTeamGoalsDialogOpen} onOpenChange={setIsTeamGoalsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="rounded-full shadow-lg">共有</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xs">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                          <Users className="w-5 h-5 text-primary" />
+                          チームの目標進捗
+                        </DialogTitle>
+                        <DialogDescription>
+                          開発部のメンバーの個人目標と進捗状況です。
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto">
+                        {teamGoalsData.map((member) => (
+                          <div key={member.id} className="flex items-start gap-3">
+                             <Image
+                              src={member.avatar}
+                              alt={member.name}
+                              width={40}
+                              height={40}
+                              className="rounded-full mt-1"
+                              data-ai-hint="person portrait"
+                            />
+                            <div className="flex-1">
+                              <p className="font-semibold text-sm">{member.name}</p>
+                              <p className="text-xs text-muted-foreground mb-2">{member.goal}</p>
+                              <div className="flex items-center gap-2">
+                                <Progress value={member.progress} className="h-2" />
+                                <span className="text-xs font-mono text-muted-foreground w-10 text-right">{member.progress}%</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
               
@@ -219,23 +266,21 @@ export function DashboardTab() {
           <TabsContent value="売上" className="mt-0">
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <Card className="bg-blue-500/10 border-blue-500/20">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-blue-600 dark:text-blue-400 mb-1">売上</CardTitle>
+                <Card>
+                  <CardHeader className="p-4 pb-0">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">売上</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-blue-800 dark:text-blue-300">¥{latestSalesData['売上'] * 1000000}</div>
+                  <CardContent className="p-4 pt-1">
+                    <div className="text-2xl font-bold">¥{latestSalesData['売上']}M</div>
                   </CardContent>
                 </Card>
-                <Card className="bg-green-500/10 border-green-500/20">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-green-600 dark:text-green-400 mb-1">利益率</CardTitle>
+                <Card>
+                  <CardHeader className="p-4 pb-0">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">利益率</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-green-800 dark:text-green-300">{latestSalesData['利益率']}%</div>
-                    <div className="text-xs text-green-500 dark:text-green-400">
-                      前月比 {latestSalesData['利益率'] - previousSalesData['利益率']}pt
-                    </div>
+                  <CardContent className="p-4 pt-1">
+                    <div className="text-2xl font-bold">{latestSalesData['利益率']}%</div>
+                     <p className="text-xs text-muted-foreground">前月比 {latestSalesData['利益率'] - previousSalesData['利益率']}pt</p>
                   </CardContent>
                 </Card>
               </div>
@@ -293,7 +338,7 @@ export function DashboardTab() {
           </TabsContent>
           <TabsContent value="個人" className="mt-0">
              <div className="relative flex justify-center items-center gap-4 pt-10">
-                <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+                <Dialog open={isEditDialogOpen} onOpenChange={handleOpenChange}>
                   <DialogTrigger asChild>
                     <Button className="rounded-full shadow-md gap-2">
                       <Edit className="w-4 h-4" />
