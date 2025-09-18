@@ -53,7 +53,7 @@ const salesChartConfig = {
   },
 };
 
-const allTeamGoalsData = [
+export const allTeamGoalsData = [
     { id: 1, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', goal: '新規顧客を5件獲得する', progress: 60 },
     { id: 2, name: '鈴木 花子', avatar: 'https://picsum.photos/seed/p2/100/100', goal: '既存顧客の満足度調査を実施', progress: 90 },
     { id: 3, name: '伊藤 健太', avatar: 'https://picsum.photos/seed/p3/100/100', goal: '新機能のUIデザインを完成させる', progress: 30 },
@@ -413,5 +413,3 @@ export function DashboardTab() {
     </div>
   );
 }
-
-    
