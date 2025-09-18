@@ -7,6 +7,7 @@ import { Building2, MessageSquare } from "lucide-react";
 import { BoardPostForm } from "../board-post-form";
 import { BoardPostCard } from "../board-post-card";
 import type { Post } from "@/app/actions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const executiveMessages = [
   {
@@ -49,7 +50,17 @@ const initialPosts: Post[] = [
     likes: 8,
     comments: 1,
     time: '3時間前'
-  }
+  },
+  {
+    id: 3,
+    author: '伊藤さん',
+    avatar: 'https://picsum.photos/seed/p3/100/100',
+    title: '未来への期待',
+    content: '新しいビジョンにワクワクしています。私たち一人ひとりがどう貢献できるか、考えていきたいです。',
+    likes: 25,
+    comments: 7,
+    time: '5時間前'
+  },
 ];
 
 
@@ -89,11 +100,13 @@ export function HomeTab() {
         <div
           className={`transition-all duration-700 delay-200 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
         >
-          <div className="space-y-3">
-            {posts.map(post => (
-              <BoardPostCard key={post.id} post={post} />
-            ))}
-          </div>
+          <ScrollArea className="h-[200px] pr-4">
+            <div className="space-y-3">
+              {posts.map(post => (
+                <BoardPostCard key={post.id} post={post} />
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </section>
       
