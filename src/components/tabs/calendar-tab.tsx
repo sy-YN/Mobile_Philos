@@ -9,26 +9,25 @@ import { cn } from '@/lib/utils';
 
 type CalendarTabProps = {
   onNavigateHome: () => void;
+  show: boolean;
 };
 
-export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
+export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
   const [today, setToday] = useState(new Date());
   const [currentValue, setCurrentValue] = useState(valuesItems[0]);
   const [likes, setLikes] = useState(111);
   const [isLiked, setIsLiked] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const date = new Date();
-    setToday(date);
-    const valueIndex = (date.getDate() - 1) % valuesItems.length;
-    setCurrentValue(valuesItems[valueIndex]);
-    
-    // Enter animation
-    const timer = setTimeout(() => setShowAnimation(true), 10); // small delay to ensure transition triggers
-    return () => clearTimeout(timer);
-  }, []);
+    if (show) {
+      setIsExiting(false);
+      const date = new Date();
+      setToday(date);
+      const valueIndex = (date.getDate() - 1) % valuesItems.length;
+      setCurrentValue(valuesItems[valueIndex]);
+    }
+  }, [show]);
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -38,7 +37,7 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   
   const handlePageFlip = () => {
     setIsExiting(true);
-    setTimeout(onNavigateHome, 500); 
+    setTimeout(onNavigateHome, 700); 
   };
 
   const dayOfWeek = today.toLocaleDateString('ja-JP', { weekday: 'long' });
@@ -46,25 +45,32 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   const month = today.toLocaleString('en-US', { month: 'long' });
   const year = today.getFullYear();
 
+  if (!show) {
+    return null;
+  }
+
   return (
     <div 
       className={cn(
-        "flex flex-col items-center justify-center h-full p-4 cursor-pointer bg-muted transition-opacity duration-300",
-        showAnimation ? 'opacity-100' : 'opacity-0',
-        isExiting && 'opacity-0'
+        "absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cursor-pointer bg-muted transition-opacity duration-300",
+        show ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
       onClick={handlePageFlip}
     >
-      <div className={cn("relative w-full max-w-sm h-[600px] transition-transform duration-500", isExiting && "scale-105")}>
+      <div 
+        className={cn("relative w-full max-w-sm h-[600px] transition-transform duration-700 ease-in-out", isExiting && "scale-125")}
+        style={{ perspective: '1000px' }}
+      >
         {/* Stacked pages */}
-        <div className={cn("absolute inset-0 bg-card rounded-lg shadow-lg transition-transform duration-500", showAnimation ? "rotate-[-4deg]" : "rotate-0")}></div>
-        <div className={cn("absolute inset-0 bg-card rounded-lg shadow-lg transition-transform duration-500", showAnimation ? "rotate-[3deg]" : "rotate-0")}></div>
+        <div className="absolute inset-0 bg-card rounded-lg shadow-lg rotate-[-4deg]"></div>
+        <div className="absolute inset-0 bg-card rounded-lg shadow-lg rotate-[3deg]"></div>
 
         <div className={cn(
-          "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-transform duration-500 ease-in-out font-serif",
-          showAnimation ? 'scale-100 rotate-0' : 'scale-95 rotate-0',
-          isExiting && 'scale-95 -rotate-6'
-        )}>
+          "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-transform duration-700 ease-in-out font-serif",
+          isExiting && 'transform-style-3d rotate-y-[-120deg] scale-75'
+        )}
+        style={{ transformOrigin: 'left center' }}
+        >
           {/* Rings */}
           <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-4">
             <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>

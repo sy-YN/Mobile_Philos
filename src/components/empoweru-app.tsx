@@ -30,9 +30,19 @@ export default function EmpowerUApp() {
   const [activeTab, setActiveTab] = useState('home');
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleCalendarClick = () => {
-    setActiveTab('calendar');
+    setShowCalendar(true);
+  };
+  
+  const handleTabChange = (tab: string) => {
+    if (tab === 'calendar') {
+      setShowCalendar(true);
+    } else {
+      setActiveTab(tab);
+      setShowCalendar(false);
+    }
   };
 
   const handleNotificationSelect = (notification: Notification) => {
@@ -41,22 +51,23 @@ export default function EmpowerUApp() {
   };
 
   const renderContent = () => {
-    switch (activeTab) {
-      case 'home':
-        return <HomeTab />;
-      case 'philosophy':
-        return <PhilosophyTab />;
-      case 'dashboard':
-        return <DashboardTab />;
-      case 'ranking':
-        return <RankingTab />;
-      case 'other':
-        return <OtherTab />;
-      case 'calendar':
-        return <CalendarTab onNavigateHome={() => setActiveTab('home')} />;
-      default:
-        return <HomeTab />;
-    }
+    const tabs: { [key: string]: JSX.Element } = {
+      home: <HomeTab />,
+      philosophy: <PhilosophyTab />,
+      dashboard: <DashboardTab />,
+      ranking: <RankingTab />,
+      other: <OtherTab />,
+    };
+
+    return (
+      <>
+        {Object.entries(tabs).map(([tabId, content]) => (
+          <div key={tabId} style={{ display: activeTab === tabId ? 'block' : 'none' }}>
+            {content}
+          </div>
+        ))}
+      </>
+    );
   };
 
   return (
@@ -92,13 +103,14 @@ export default function EmpowerUApp() {
 
 
       <main
-        className="h-[calc(100%-130px)] overflow-y-auto"
+        className="h-[calc(100%-130px)] overflow-y-auto relative"
         onClick={() => showNotifications && setShowNotifications(false)}
       >
         {renderContent()}
+        <CalendarTab show={showCalendar} onNavigateHome={() => setShowCalendar(false)} />
       </main>
 
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
     </AppShell>
   );
 }
