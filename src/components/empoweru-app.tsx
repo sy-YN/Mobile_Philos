@@ -9,6 +9,7 @@ import { NotificationPanel, type Notification } from '@/components/notification-
 import { HomeTab } from '@/components/tabs/home-tab';
 import { PhilosophyTab } from '@/components/tabs/philosophy-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
+import { RankingTab } from '@/components/tabs/ranking-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
 import { CalendarTab } from '@/components/tabs/calendar-tab';
 import {
@@ -47,6 +48,8 @@ export default function EmpowerUApp() {
         return <PhilosophyTab />;
       case 'dashboard':
         return <DashboardTab />;
+      case 'ranking':
+        return <RankingTab />;
       case 'other':
         return <OtherTab />;
       case 'calendar':

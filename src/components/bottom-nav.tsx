@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Home, BookOpen, BarChart3, MoreHorizontal } from "lucide-react";
+import { Home, BookOpen, BarChart3, Trophy, MoreHorizontal } from "lucide-react";
 
 type BottomNavProps = {
   activeTab: string;
@@ -11,6 +11,7 @@ const navItems = [
   { id: 'home', label: 'ホーム', icon: Home },
   { id: 'philosophy', label: '理念', icon: BookOpen },
   { id: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
+  { id: 'ranking', label: 'ランキング', icon: Trophy },
   { id: 'other', label: 'その他', icon: MoreHorizontal },
 ];
 
