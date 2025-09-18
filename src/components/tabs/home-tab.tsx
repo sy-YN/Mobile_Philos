@@ -7,12 +7,6 @@ import { Building2, MessageSquare } from "lucide-react";
 import { BoardPostForm } from "../board-post-form";
 import { BoardPostCard } from "../board-post-card";
 import type { Post } from "@/app/actions";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 const executiveMessages = [
   {
@@ -62,9 +56,6 @@ const initialPosts: Post[] = [
 export function HomeTab() {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
   const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<string[]>([]);
-
 
   const handlePostCreated = (post: Post) => {
     setPosts(prevPosts => [post, ...prevPosts]);
@@ -77,47 +68,37 @@ export function HomeTab() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (isVideoPlaying) {
-      setOpenAccordion(["comments"]);
-    }
-  }, [isVideoPlaying]);
-
   return (
     <div className="p-4 space-y-6">
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
         <div className="h-[240px] w-full">
-          <VideoPlayer onPlayStateChange={setIsVideoPlaying} />
+          <VideoPlayer />
         </div>
       </div>
 
-      <Accordion type="multiple" value={openAccordion} onValueChange={setOpenAccordion} className="w-full">
-        <AccordionItem value="comments">
-          <AccordionTrigger className="text-base font-medium hover:no-underline justify-start gap-2">
-            <MessageSquare className="h-5 w-5 text-primary" />
-            <span>コメント</span>
-          </AccordionTrigger>
-          <AccordionContent className="pt-2 space-y-4">
-             <section
-              className={`transition-all duration-700 delay-100 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-            >
-              <BoardPostForm onPostCreated={handlePostCreated} />
-            </section>
+      <section className="space-y-4">
+        <h2 className="text-base font-medium flex items-center gap-2">
+          <MessageSquare className="h-5 w-5 text-primary" />
+          <span>コメント</span>
+        </h2>
+        <div
+          className={`transition-all duration-700 delay-100 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        >
+          <BoardPostForm onPostCreated={handlePostCreated} />
+        </div>
 
-            <section
-              className={`transition-all duration-700 delay-200 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-            >
-              <div className="space-y-3">
-                {posts.map(post => (
-                  <BoardPostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+        <div
+          className={`transition-all duration-700 delay-200 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        >
+          <div className="space-y-3">
+            {posts.map(post => (
+              <BoardPostCard key={post.id} post={post} />
+            ))}
+          </div>
+        </div>
+      </section>
       
       <section
         className={`transition-all duration-700 delay-300 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}

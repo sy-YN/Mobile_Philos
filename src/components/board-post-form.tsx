@@ -8,7 +8,7 @@ import { createPost, type FormState, type Post } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
 function SubmitButton() {
@@ -56,10 +56,7 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-base">新規投稿を作成</CardTitle>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="p-4">
         <form ref={formRef} action={formAction} className="space-y-4">
           <div>
             <Input name="title" placeholder="投稿のタイトル" aria-label="投稿のタイトル" />
@@ -68,12 +65,14 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
             )}
           </div>
           <div>
-            <Textarea name="content" placeholder="何を考えていますか？" aria-label="投稿の内容" />
+            <Textarea name="content" placeholder="コメントを追加..." aria-label="投稿の内容" />
             {state.errors?.content && (
               <p className="text-xs text-destructive mt-1">{state.errors.content[0]}</p>
             )}
           </div>
-          <SubmitButton />
+          <div className="flex justify-end">
+            <SubmitButton />
+          </div>
         </form>
       </CardContent>
     </Card>
