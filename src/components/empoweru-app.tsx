@@ -23,7 +23,7 @@ import {
 const notifications: Notification[] = [
   { id: 1, title: '新しい経営陣メッセージ', message: '第4四半期の目標について', time: '5分前', fullContent: '社員の皆様、CEOの田中です。第4四半期に向けて、私たちは「顧客満足度の向上」と「新市場への展開」という2つの大きな目標を掲げます。皆様の協力が不可欠です。詳細は添付資料をご確認ください。' },
   { id: 2, title: '掲示板の更新', message: '新しい投稿があります', time: '15分前', fullContent: '山田さんが「新製品アイデア募集」という投稿をしました。素晴らしいアイデアだと思いますので、ぜひご覧いただき、コメントで議論を深めてください。' },
-  { id: 3, title: 'ダッシュボード更新', message: '週間レポートの準備ができました', time: '1時間前', fullContent: '先週の全部門のパフォーマンスをまとめた週間レポートがダッシュボードで確認可能になりました。各自、目標達成率や進捗を確認してください。' },
+  { id: 3, title: 'ダッシュボード更新', message: '週間レポートの準備ができました', time: '1時間前', fullContent: '先週の全部門のパフォーマンスをまとめた週間レポートが確認可能になりました。各自、目標達成率や進捗を確認してください。' },
 ];
 
 export default function EmpowerUApp() {
@@ -53,7 +53,7 @@ export default function EmpowerUApp() {
       case 'other':
         return <OtherTab />;
       case 'calendar':
-        return <CalendarTab />;
+        return <CalendarTab onNavigateHome={() => setActiveTab('home')} />;
       default:
         return <HomeTab />;
     }
