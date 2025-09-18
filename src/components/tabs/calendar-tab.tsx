@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -45,33 +46,44 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   return (
     <div 
       className={cn(
-        "flex flex-col items-center justify-center h-full p-8 cursor-pointer transition-all duration-500 ease-in-out",
-        showAnimation ? 'opacity-100 scale-100' : 'opacity-0 scale-110',
-        isExiting && 'opacity-0 scale-90'
+        "flex flex-col items-center justify-center h-full p-4 cursor-pointer bg-muted transition-all duration-500 ease-in-out",
+        showAnimation ? 'opacity-100' : 'opacity-0',
+        isExiting && 'opacity-0'
       )}
       onClick={handlePageFlip}
     >
-      <div className="text-center w-full flex-grow flex flex-col justify-center">
-        <p className="text-2xl text-primary mb-12 font-sans tracking-widest">
-          {formattedDate}
-        </p>
+      <div className={cn(
+        "bg-card rounded-2xl shadow-lg w-full h-full flex flex-col transition-all duration-500 ease-in-out transform",
+        showAnimation ? 'scale-100' : 'scale-110',
+        isExiting && 'scale-90'
+      )}>
+        <div className="flex justify-center items-center gap-1.5 pt-6 pb-4">
+          <div className="w-3 h-3 rounded-full bg-border"></div>
+          <div className="w-3 h-3 rounded-full bg-border"></div>
+          <div className="w-3 h-3 rounded-full bg-border"></div>
+        </div>
 
-        <h1 className="text-6xl font-bold text-primary mb-4 font-headline">
-          {currentValue.title.split('. ')[1]}
-        </h1>
+        <div className="text-center w-full flex-grow flex flex-col justify-center px-4">
+          <p className="text-2xl text-primary mb-12 font-sans tracking-widest">
+            {formattedDate}
+          </p>
 
-        <p className="text-base text-muted-foreground mb-16">
-          〜{currentValue.content}〜
-        </p>
+          <h1 className="text-6xl font-bold text-primary mb-4 font-headline">
+            {currentValue.title.split('. ')[1]}
+          </h1>
 
-        <div className="flex flex-col items-center gap-2">
-          <button onClick={handleLike} className="transition-transform transform active:scale-125">
-            <ThumbsUp className={cn("h-10 w-10 text-primary", isLiked && "fill-primary")} />
-          </button>
-          <span className="text-xl font-bold text-primary">{likes}</span>
+          <p className="text-base text-muted-foreground mb-16">
+            〜{currentValue.content}〜
+          </p>
+
+          <div className="flex flex-col items-center gap-2">
+            <button onClick={handleLike} className="transition-transform transform active:scale-125">
+              <ThumbsUp className={cn("h-10 w-10 text-primary", isLiked && "fill-primary")} />
+            </button>
+            <span className="text-xl font-bold text-primary">{likes}</span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
