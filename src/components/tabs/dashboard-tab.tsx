@@ -114,6 +114,9 @@ export function DashboardTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const currentMonth = new Date().toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
+  const latestSalesData = salesChartData[salesChartData.length - 1];
+  const previousSalesData = salesChartData[salesChartData.length - 2];
+
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -218,20 +221,21 @@ export function DashboardTab() {
               <div className="grid grid-cols-2 gap-4">
                 <Card className="bg-blue-500/10 border-blue-500/20">
                   <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-blue-600 dark:text-blue-400 mb-1">平均売上</CardTitle>
+                    <CardTitle className="text-sm text-blue-600 dark:text-blue-400 mb-1">売上</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-blue-800 dark:text-blue-300">¥2,850,000</div>
-                    <div className="text-xs text-blue-500 dark:text-blue-400">前月比 +12%</div>
+                    <div className="font-bold text-lg text-blue-800 dark:text-blue-300">¥{latestSalesData['売上'] * 1000000}</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-green-500/10 border-green-500/20">
                   <CardHeader className="p-4">
-                    <CardTitle className="text-sm text-green-600 dark:text-green-400 mb-1">合計売上見込み</CardTitle>
+                    <CardTitle className="text-sm text-green-600 dark:text-green-400 mb-1">利益率</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="font-bold text-lg text-green-800 dark:text-green-300">¥4,200,000</div>
-                    <div className="text-xs text-green-500 dark:text-green-400">目標達成まで 85%</div>
+                    <div className="font-bold text-lg text-green-800 dark:text-green-300">{latestSalesData['利益率']}%</div>
+                    <div className="text-xs text-green-500 dark:text-green-400">
+                      前月比 {latestSalesData['利益率'] - previousSalesData['利益率']}pt
+                    </div>
                   </CardContent>
                 </Card>
               </div>
