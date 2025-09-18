@@ -26,7 +26,8 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
     setCurrentValue(valuesItems[valueIndex]);
     
     // Enter animation
-    setShowAnimation(true);
+    const timer = setTimeout(() => setShowAnimation(true), 10); // small delay to ensure transition triggers
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLike = (e: React.MouseEvent) => {
@@ -37,7 +38,7 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   
   const handlePageFlip = () => {
     setIsExiting(true);
-    setTimeout(onNavigateHome, 500); // Match animation duration
+    setTimeout(onNavigateHome, 300); // Match animation duration
   };
 
   const dayOfWeek = today.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
@@ -46,42 +47,34 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
   return (
     <div 
       className={cn(
-        "flex flex-col items-center justify-center h-full p-4 cursor-pointer bg-muted transition-all duration-500 ease-in-out",
+        "flex flex-col items-center justify-center h-full p-4 cursor-pointer bg-background transition-opacity duration-300",
         showAnimation ? 'opacity-100' : 'opacity-0',
         isExiting && 'opacity-0'
       )}
       onClick={handlePageFlip}
     >
       <div className={cn(
-        "bg-card rounded-2xl shadow-lg w-full h-full flex flex-col transition-all duration-500 ease-in-out transform",
-        showAnimation ? 'scale-100' : 'scale-110',
-        isExiting && 'scale-90'
+        "w-full h-full flex flex-col justify-center text-center transition-transform duration-300 ease-in-out",
+        showAnimation ? 'scale-100' : 'scale-95',
+        isExiting && 'scale-95'
       )}>
-        <div className="flex justify-center items-center gap-1.5 pt-6 pb-4">
-          <div className="w-3 h-3 rounded-full bg-border"></div>
-          <div className="w-3 h-3 rounded-full bg-border"></div>
-          <div className="w-3 h-3 rounded-full bg-border"></div>
-        </div>
+        <p className="text-2xl text-primary mb-12 font-sans tracking-widest">
+          {formattedDate}
+        </p>
 
-        <div className="text-center w-full flex-grow flex flex-col justify-center px-4">
-          <p className="text-2xl text-primary mb-12 font-sans tracking-widest">
-            {formattedDate}
-          </p>
+        <h1 className="text-6xl font-bold text-primary mb-4 font-headline">
+          {currentValue.title.split('. ')[1]}
+        </h1>
 
-          <h1 className="text-6xl font-bold text-primary mb-4 font-headline">
-            {currentValue.title.split('. ')[1]}
-          </h1>
+        <p className="text-base text-muted-foreground mb-16">
+          〜{currentValue.content}〜
+        </p>
 
-          <p className="text-base text-muted-foreground mb-16">
-            〜{currentValue.content}〜
-          </p>
-
-          <div className="flex flex-col items-center gap-2">
-            <button onClick={handleLike} className="transition-transform transform active:scale-125">
-              <ThumbsUp className={cn("h-10 w-10 text-primary", isLiked && "fill-primary")} />
-            </button>
-            <span className="text-xl font-bold text-primary">{likes}</span>
-          </div>
+        <div className="flex flex-col items-center gap-2">
+          <button onClick={handleLike} className="transition-transform transform active:scale-125">
+            <ThumbsUp className={cn("h-10 w-10 text-primary", isLiked && "fill-primary")} />
+          </button>
+          <span className="text-xl font-bold text-primary">{likes}</span>
         </div>
       </div>
     </div>
