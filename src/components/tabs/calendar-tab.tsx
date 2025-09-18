@@ -52,11 +52,11 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
       onClick={handlePageFlip}
     >
       <div className="text-center w-full flex-grow flex flex-col justify-center">
-        <p className="text-lg text-foreground/80 mb-12 font-sans tracking-widest">
+        <p className="text-lg text-primary mb-12 font-sans tracking-widest">
           {formattedDate}
         </p>
 
-        <h1 className="text-5xl font-bold text-foreground mb-4 font-headline">
+        <h1 className="text-5xl font-bold text-primary mb-4 font-headline">
           {currentValue.title.split('. ')[1]}
         </h1>
 
@@ -66,11 +66,12 @@ export function CalendarTab({ onNavigateHome }: CalendarTabProps) {
 
         <div className="flex flex-col items-center gap-2">
           <button onClick={handleLike} className="transition-transform transform active:scale-125">
-            <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "text-primary fill-primary")} />
+            <ThumbsUp className={cn("h-8 w-8 text-primary", isLiked && "fill-primary")} />
           </button>
-          <span className="text-lg font-bold text-foreground">{likes}</span>
+          <span className="text-lg font-bold text-primary">{likes}</span>
         </div>
       </div>
     </div>
   );
 }
+
