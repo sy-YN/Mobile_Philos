@@ -7,15 +7,17 @@ export type Notification = {
   title: string;
   message: string;
   time: string;
+  fullContent?: string;
 };
 
 type NotificationPanelProps = {
   isOpen: boolean;
   notifications: Notification[];
   onClose: () => void;
+  onNotificationSelect: (notification: Notification) => void;
 };
 
-export function NotificationPanel({ isOpen, notifications, onClose }: NotificationPanelProps) {
+export function NotificationPanel({ isOpen, notifications, onNotificationSelect, onClose }: NotificationPanelProps) {
   return (
     <div
       className={cn(
@@ -29,11 +31,18 @@ export function NotificationPanel({ isOpen, notifications, onClose }: Notificati
         </CardHeader>
         <CardContent className="p-0 max-h-64 overflow-y-auto">
           {notifications.map((notification, index) => (
-            <div key={notification.id} className={cn("p-4 hover:bg-muted/50", index < notifications.length - 1 && "border-b")}>
+            <button
+              key={notification.id}
+              onClick={() => onNotificationSelect(notification)}
+              className={cn(
+                "w-full text-left p-4 hover:bg-muted/50 transition-colors",
+                index < notifications.length - 1 && "border-b"
+              )}
+            >
               <p className="font-semibold text-sm text-card-foreground">{notification.title}</p>
               <p className="text-sm text-muted-foreground">{notification.message}</p>
               <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
-            </div>
+            </button>
           ))}
         </CardContent>
       </Card>
