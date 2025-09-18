@@ -20,7 +20,7 @@ type ExecutiveMessageCardProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export function ExecutiveMessageCard({ message, className, ...props }: ExecutiveMessageCardProps) {
   return (
-    <Card className={cn("p-4", className)} {...props}>
+    <Card className={cn("p-4 cursor-pointer hover:bg-muted/50 transition-colors", className)} {...props}>
       <div className="flex items-start gap-4">
         <Image
           src={message.avatar}
