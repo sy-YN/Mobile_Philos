@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { createPost, type FormState, type Post } from '@/app/actions';
+import { createPost, type FormState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -23,13 +23,10 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
 
 const initialState: FormState = {
   message: '',
+  success: false,
 };
 
-type BoardPostFormProps = {
-  onPostCreated: (post: Post) => void;
-};
-
-export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
+export function BoardPostForm() {
   const [state, formAction] = useActionState(createPost, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
@@ -37,29 +34,22 @@ export function BoardPostForm({ onPostCreated }: BoardPostFormProps) {
 
   useEffect(() => {
     if (state.message) {
-      if (state.post) {
+      if (state.success) {
         toast({
           title: "成功",
           description: state.message,
         });
-        onPostCreated(state.post);
         formRef.current?.reset();
         setContent('');
-      } else if (state.errors) {
+      } else {
         toast({
           title: "エラー",
-          description: state.errors.content?.[0] || '入力内容を確認してください。',
-          variant: "destructive",
-        });
-      } else {
-         toast({
-          title: "エラー",
-          description: state.message,
+          description: state.errors?.content?.[0] || state.message || '入力内容を確認してください。',
           variant: "destructive",
         });
       }
     }
-  }, [state, onPostCreated, toast]);
+  }, [state, toast]);
 
   return (
     <div className="flex items-start gap-3 w-full">

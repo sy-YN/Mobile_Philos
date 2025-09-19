@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
+import { Skeleton } from "../ui/skeleton";
 
 const executiveMessages = [
   {
@@ -68,44 +71,38 @@ const videos = [
   },
 ]
 
-const initialPosts: Post[] = [
-  {
-    id: 1,
-    author: '山田さん',
-    avatar: 'https://picsum.photos/seed/p1/100/100',
-    content: 'CEOのメッセージ、非常に感銘を受けました。特にDXの推進に関する部分は、今後の会社の成長に不可欠だと感じています。',
-    likes: 12,
-    comments: 3,
-    time: '1時間前'
-  },
-  {
-    id: 2,
-    author: '鈴木さん',
-    avatar: 'https://picsum.photos/seed/p2/100/100',
-    content: '動画、とても分かりやすかったです！倍速機能も便利ですね。',
-    likes: 8,
-    comments: 1,
-    time: '3時間前'
-  },
-  {
-    id: 3,
-    author: '伊藤さん',
-    avatar: 'https://picsum.photos/seed/p3/100/100',
-    content: '新しいビジョンにワクワクしています。私たち一人ひとりがどう貢献できるか、考えていきたいです。',
-    likes: 25,
-    comments: 7,
-    time: '5時間前'
-  },
-];
-
-
 export function HomeTab() {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handlePostCreated = (post: Post) => {
-    setPosts(prevPosts => [post, ...prevPosts]);
-  };
+  useEffect(() => {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const postsData: Post[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        postsData.push({
+          id: doc.id,
+          author: data.author,
+          avatar: data.avatar,
+          content: data.content,
+          likes: data.likes,
+          analysis: data.analysis,
+          createdAt: data.createdAt,
+          time: data.createdAt.toDate().toISOString(),
+        });
+      });
+      setPosts(postsData);
+      setLoading(false);
+    }, (error) => {
+        console.error("Error fetching posts:", error);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -142,16 +139,34 @@ export function HomeTab() {
           <span>コメント</span>
         </h2>
         
-        <BoardPostForm onPostCreated={handlePostCreated} />
+        <BoardPostForm />
 
         <div
           className={`transition-all duration-700 delay-200 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
         >
           <ScrollArea className="h-[200px] pr-4">
             <div className="space-y-3">
-              {posts.map(post => (
-                <BoardPostCard key={post.id} post={post} />
-              ))}
+              {loading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 border rounded-lg">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-1/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
+                  </div>
+                ))
+              ) : posts.length > 0 ? (
+                  posts.map(post => (
+                    <BoardPostCard key={post.id} post={post} />
+                  ))
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>まだコメントがありません。</p>
+                  <p className="text-sm">最初のコメントを投稿しましょう！</p>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </div>

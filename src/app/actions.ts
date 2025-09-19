@@ -3,25 +3,33 @@
 
 import { analyzeBoardPostSentiment, type AnalyzeBoardPostSentimentOutput } from '@/ai/flows/analyze-board-post-sentiment';
 import { z } from 'zod';
+import { initializeApp, getApps } from 'firebase-admin/app';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+
+if (!getApps().length) {
+  initializeApp();
+}
+
+const db = getFirestore();
 
 const formSchema = z.object({
   content: z.string().min(1, '内容は1文字以上で入力してください。'),
 });
 
 export type Post = {
-  id: number;
+  id: string;
   author: string;
   avatar: string;
   content: string;
   likes: number;
-  comments: number;
-  time: string;
+  time: string | Date;
   analysis?: AnalyzeBoardPostSentimentOutput;
+  createdAt: Timestamp;
 };
 
 export type FormState = {
   message: string;
-  post?: Post;
+  success: boolean;
   errors?: {
     content?: string[];
   };
@@ -38,6 +46,7 @@ export async function createPost(
   if (!validatedFields.success) {
     return {
       message: '検証に失敗しました。',
+      success: false,
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
@@ -47,20 +56,20 @@ export async function createPost(
   try {
     const analysis = await analyzeBoardPostSentiment({ text: content });
 
-    const newPost: Post = {
-      id: Date.now(),
-      author: 'あなた',
-      avatar: 'https://picsum.photos/seed/you/100/100',
+    const newPost = {
+      author: 'あなた', // In a real app, this would come from user session
+      avatar: `https://picsum.photos/seed/${Date.now()}/100/100`,
       content,
       likes: 0,
-      comments: 0,
-      time: 'たった今',
       analysis,
+      createdAt: Timestamp.now(),
     };
 
-    return { message: '投稿が正常に作成されました。', post: newPost };
+    await db.collection('posts').add(newPost);
+
+    return { message: '投稿が正常に作成されました。', success: true };
   } catch (error) {
-    console.error(error);
-    return { message: '感情分析中にエラーが発生しました。' };
+    console.error("Error creating post:", error);
+    return { message: '投稿中にエラーが発生しました。', success: false };
   }
 }
