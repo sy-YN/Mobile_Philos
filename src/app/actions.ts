@@ -12,7 +12,6 @@ export type Post = {
   id: number;
   author: string;
   avatar: string;
-  title: string;
   content: string;
   likes: number;
   comments: number;
@@ -52,7 +51,6 @@ export async function createPost(
       id: Date.now(),
       author: 'あなた',
       avatar: 'https://picsum.photos/seed/you/100/100',
-      title: '', // Title is no longer provided from the form
       content,
       likes: 0,
       comments: 0,
