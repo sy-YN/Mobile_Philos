@@ -1,18 +1,17 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { createPost, type FormState } from '@/app/actions';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { analyzeBoardPostSentiment } from '@/ai/flows/analyze-board-post-sentiment';
 
-function SubmitButton({ disabled }: { disabled: boolean }) {
-  const { pending } = useFormStatus();
+function SubmitButton({ disabled, pending }: { disabled: boolean; pending: boolean }) {
   return (
     <Button type="submit" size="icon" disabled={pending || disabled} className="shrink-0 h-10 w-10">
       <Send className="h-4 w-4" />
@@ -21,35 +20,57 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
   );
 }
 
-const initialState: FormState = {
-  message: '',
-  success: false,
-};
-
 export function BoardPostForm() {
-  const [state, formAction] = useActionState(createPost, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (state.message) {
-      if (state.success) {
-        toast({
-          title: "成功",
-          description: state.message,
-        });
-        formRef.current?.reset();
-        setContent('');
-      } else {
-        toast({
-          title: "エラー",
-          description: state.errors?.content?.[0] || state.message || '入力内容を確認してください。',
-          variant: "destructive",
-        });
-      }
+  const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!content.trim()) {
+      toast({
+        title: "エラー",
+        description: '内容は1文字以上で入力してください。',
+        variant: "destructive",
+      });
+      return;
     }
-  }, [state, toast]);
+
+    setIsSubmitting(true);
+
+    try {
+      const analysis = await analyzeBoardPostSentiment({ text: content });
+
+      const newPost = {
+        author: '鈴木 雄大', // In a real app, this would come from user session
+        avatar: 'https://picsum.photos/seed/yudai/100/100',
+        content,
+        likes: 0,
+        analysis,
+        createdAt: serverTimestamp(),
+      };
+
+      await addDoc(collection(db, "posts"), newPost);
+      
+      toast({
+        title: "成功",
+        description: "投稿が正常に作成されました。",
+      });
+      setContent('');
+      formRef.current?.reset();
+
+    } catch (error) {
+      console.error("Error creating post:", error);
+      toast({
+        title: "エラー",
+        description: "投稿中にエラーが発生しました。",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex items-start gap-3 w-full">
@@ -61,7 +82,7 @@ export function BoardPostForm() {
         className="rounded-full mt-1"
         data-ai-hint="person portrait"
       />
-      <form ref={formRef} action={formAction} className="flex-1 flex items-center gap-2">
+      <form ref={formRef} onSubmit={handleCreatePost} className="flex-1 flex items-center gap-2">
         <Textarea 
           name="content" 
           placeholder="コメントを追加..." 
@@ -71,7 +92,7 @@ export function BoardPostForm() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <SubmitButton disabled={!content.trim()} />
+        <SubmitButton disabled={!content.trim()} pending={isSubmitting} />
       </form>
     </div>
   );
