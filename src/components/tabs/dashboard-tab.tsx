@@ -292,7 +292,7 @@ export function DashboardTab() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">売上</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-1">
-                    <div className="text-2xl font-bold">¥{latestSalesData['売上'] * 100}万円</div>
+                    <div className="text-2xl font-bold">{latestSalesData['売上'] * 100}万円</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -413,5 +413,3 @@ export function DashboardTab() {
     </div>
   );
 }
-
-    
