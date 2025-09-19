@@ -54,8 +54,8 @@ export function BoardPostForm() {
   return (
     <div className="flex items-start gap-3 w-full">
       <Image 
-        src="https://picsum.photos/seed/you/100/100" 
-        alt="あなたのプロフィール写真"
+        src="https://picsum.photos/seed/yudai/100/100" 
+        alt="鈴木 雄大のプロフィール写真"
         width={40}
         height={40}
         className="rounded-full mt-1"

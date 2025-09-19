@@ -57,8 +57,8 @@ export async function createPost(
     const analysis = await analyzeBoardPostSentiment({ text: content });
 
     const newPost = {
-      author: 'あなた', // In a real app, this would come from user session
-      avatar: `https://picsum.photos/seed/${Date.now()}/100/100`,
+      author: '鈴木 雄大', // In a real app, this would come from user session
+      avatar: 'https://picsum.photos/seed/yudai/100/100',
       content,
       likes: 0,
       analysis,
