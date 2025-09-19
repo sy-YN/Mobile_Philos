@@ -29,7 +29,6 @@ export function BoardPostCard({ post }: BoardPostCardProps) {
             <span className="font-semibold text-card-foreground">{post.author}</span>
             <span className="text-xs text-muted-foreground">{post.time}</span>
           </div>
-          <h3 className="font-medium text-card-foreground mb-2">{post.title}</h3>
           <p className="text-sm text-muted-foreground mb-3">{post.content}</p>
 
           {needsModeration && (

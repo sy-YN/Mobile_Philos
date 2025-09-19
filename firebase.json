@@ -11,5 +11,9 @@
         "function": "server"
       }
     ]
+  },
+  "functions": {
+    "source": "lib/functions",
+    "runtime": "nodejs20"
   }
 }
