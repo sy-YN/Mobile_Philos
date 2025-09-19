@@ -1,4 +1,3 @@
-// src/ai/flows/analyze-board-post-sentiment.ts
 'use server';
 /**
  * @fileOverview Analyzes the sentiment of discussion board posts to identify posts that may require moderation.
@@ -10,7 +9,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { experimental_taintObjectReference as taintObjectReference } from 'react';
 
 const AnalyzeBoardPostSentimentInputSchema = z.object({
   text: z.string().describe('The text content of the discussion board post.'),
@@ -32,11 +30,6 @@ export type AnalyzeBoardPostSentimentOutput = z.infer<typeof AnalyzeBoardPostSen
 export async function analyzeBoardPostSentiment(input: AnalyzeBoardPostSentimentInput): Promise<AnalyzeBoardPostSentimentOutput> {
   return analyzeBoardPostSentimentFlow(input);
 }
-
-taintObjectReference(
-  'The analyzeBoardPostSentiment function is a server-only export.',
-  analyzeBoardPostSentiment
-);
 
 const prompt = ai.definePrompt({
   name: 'analyzeBoardPostSentimentPrompt',
