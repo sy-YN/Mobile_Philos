@@ -82,16 +82,19 @@ export function HomeTab() {
       const postsData: Post[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        postsData.push({
-          id: doc.id,
-          author: data.author,
-          avatar: data.avatar,
-          content: data.content,
-          likes: data.likes,
-          analysis: data.analysis,
-          createdAt: data.createdAt,
-          time: data.createdAt.toDate().toISOString(),
-        });
+        // createdAt might be null temporarily on the client, so we guard against it.
+        if (data.createdAt) {
+          postsData.push({
+            id: doc.id,
+            author: data.author,
+            avatar: data.avatar,
+            content: data.content,
+            likes: data.likes,
+            analysis: data.analysis,
+            createdAt: data.createdAt,
+            time: data.createdAt.toDate().toISOString(),
+          });
+        }
       });
       setPosts(postsData);
       setLoading(false);
