@@ -7,9 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase'; // Client SDK
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { analyzeBoardPostSentiment } from '@/ai/flows/analyze-board-post-sentiment';
+import { createPostWithAnalysis } from '@/app/actions';
 
 function SubmitButton({ disabled, pending }: { disabled: boolean; pending: boolean }) {
   return (
@@ -40,25 +40,30 @@ export function BoardPostForm() {
     setIsSubmitting(true);
 
     try {
-      const analysis = await analyzeBoardPostSentiment({ text: content });
-
-      const newPost = {
-        author: '鈴木 雄大', // In a real app, this would come from user session
+      // 1. Create the initial post document in Firestore from the client
+      const newPostData = {
+        author: '鈴木 雄大',
         avatar: 'https://picsum.photos/seed/yudai/100/100',
         content,
         likes: 0,
-        analysis,
         createdAt: serverTimestamp(),
+        // analysis will be added later by the server action
       };
 
-      await addDoc(collection(db, "posts"), newPost);
+      const docRef = await addDoc(collection(db, "posts"), newPostData);
       
       toast({
         title: "成功",
-        description: "投稿が正常に作成されました。",
+        description: "投稿が正常に作成されました。AIが内容を分析中です...",
       });
+
+      // Reset form on the client immediately
       setContent('');
       formRef.current?.reset();
+      
+      // 2. Call the server action to perform AI analysis and update the post
+      // This happens in the background and doesn't block the UI
+      await createPostWithAnalysis(docRef.id, content);
 
     } catch (error) {
       console.error("Error creating post:", error);
