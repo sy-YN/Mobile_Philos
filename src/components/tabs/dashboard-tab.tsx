@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search, Cell } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart";
-import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, DotProps } from "recharts";
+import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, DotProps, Cell, Dot } from "recharts";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
