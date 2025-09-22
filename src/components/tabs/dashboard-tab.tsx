@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search, Dot } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart";
-import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, DotProps, Cell, Dot } from "recharts";
+import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell } from "recharts";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
@@ -307,18 +307,14 @@ export function DashboardTab() {
                       dataKey="売上"
                       radius={4}
                       yAxisId="left"
-                    >
-                      {salesChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={index === salesChartData.length - 1 ? "hsl(var(--primary))" : "hsl(var(--chart-1))"} />
-                      ))}
-                    </Bar>
+                      fill="hsl(var(--chart-1))"
+                    />
                     <Line
                       dataKey="利益率"
                       type="monotone"
                       stroke="hsl(var(--chart-2))"
                       strokeWidth={2}
                       yAxisId="right"
-                      dot={<CustomizedDot />}
                       activeDot={{ r: 6 }}
                     />
                   </ComposedChart>
@@ -510,3 +506,5 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
