@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -53,13 +54,13 @@ export function PhilosophyTab() {
               <Card 
                 key={item.id}
                 className={cn(
-                  "p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/80 transition-colors",
+                  "p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/80 transition-colors text-card-foreground",
                   selectedItem.id === item.id && "bg-muted/80 ring-2 ring-primary"
                 )}
                 onClick={() => setSelectedItem(item)}
               >
                 <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", item.iconBg)}>
-                  <item.icon className="w-6 h-6 text-white" />
+                  <item.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <span className="font-semibold">{item.title}</span>
               </Card>
@@ -72,7 +73,7 @@ export function PhilosophyTab() {
         <div className="bg-card border-t p-4 rounded-t-2xl shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.5)]">
           <div className="flex items-center gap-3 mb-3">
               <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center", selectedItem.iconBg)}>
-                <selectedItem.icon className="w-7 h-7 text-white" />
+                <selectedItem.icon className="w-7 h-7 text-primary-foreground" />
               </div>
             <h3 className="text-2xl font-bold">{selectedItem.title}</h3>
           </div>
