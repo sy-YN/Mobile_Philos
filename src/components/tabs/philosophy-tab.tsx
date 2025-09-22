@@ -36,11 +36,11 @@ export function PhilosophyTab() {
       <section>
         <Sheet>
           <SheetTrigger asChild>
-            <Card className="p-4 bg-red-500 text-white cursor-pointer hover:bg-red-600 transition-colors">
-              <div className="text-sm font-semibold mb-3">今日の理念</div>
+            <Card className="p-4 bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 transition-colors">
+              <div className="text-sm font-semibold mb-3 opacity-80">今日の理念</div>
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center">
-                  <todaysPhilosophy.icon className="w-10 h-10 text-red-500" />
+                  <todaysPhilosophy.icon className="w-10 h-10 text-primary" />
                 </div>
                 <div className="text-2xl font-bold">
                   {todaysPhilosophy.title}し続ける
