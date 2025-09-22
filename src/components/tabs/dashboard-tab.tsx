@@ -111,7 +111,7 @@ const CircularProgress = ({ value }: { value: number }) => {
 
 
 export function DashboardTab() {
-  const [activeTab, setActiveTab] = useState("目標");
+  const [activeTab, setActiveTab] = useState("売上");
   
   const [departmentGoal, setDepartmentGoal] = useState("企業理念促進");
   const [departmentProgress, setDepartmentProgress] = useState(70);
@@ -168,8 +168,8 @@ export function DashboardTab() {
       
       <Tabs value={activeTab} onValueChange={handleTabChange} className="flex-grow">
         <TabsList className="grid w-full grid-cols-3 rounded-none h-auto p-0 bg-card border-b">
-          <TabsTrigger value="目標" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">目標</TabsTrigger>
           <TabsTrigger value="売上" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">売上</TabsTrigger>
+          <TabsTrigger value="目標" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">目標</TabsTrigger>
           <TabsTrigger value="個人" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">個人</TabsTrigger>
         </TabsList>
         
@@ -262,28 +262,6 @@ export function DashboardTab() {
             </div>
           </div>
           
-          <TabsContent value="目標" className="mt-0">
-             <div className="relative flex justify-center items-center gap-4 pt-10">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="rounded-full shadow-md gap-2">
-                      <span>部署名</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>営業部</DropdownMenuItem>
-                    <DropdownMenuItem>マーケティング部</DropdownMenuItem>
-                    <DropdownMenuItem>開発部</DropdownMenuItem>
-                    <DropdownMenuItem>人事部</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
-                  過去の目標
-                </Button>
-            </div>
-          </TabsContent>
           <TabsContent value="売上" className="mt-0">
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
@@ -357,6 +335,28 @@ export function DashboardTab() {
               </Card>
             </div>
           </TabsContent>
+          <TabsContent value="目標" className="mt-0">
+             <div className="relative flex justify-center items-center gap-4 pt-10">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="rounded-full shadow-md gap-2">
+                      <span>部署名</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>営業部</DropdownMenuItem>
+                    <DropdownMenuItem>マーケティング部</DropdownMenuItem>
+                    <DropdownMenuItem>開発部</DropdownMenuItem>
+                    <DropdownMenuItem>人事部</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
+                  過去の目標
+                </Button>
+            </div>
+          </TabsContent>
           <TabsContent value="個人" className="mt-0">
              <div className="relative flex justify-center items-center gap-4 pt-10">
                 <Dialog open={isEditDialogOpen} onOpenChange={handleOpenChange}>
@@ -413,3 +413,5 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
