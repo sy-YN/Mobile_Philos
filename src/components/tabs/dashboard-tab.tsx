@@ -187,21 +187,31 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
 
 
   useEffect(() => {
+    let goal, progress;
     if (activeTab === 'グループ') {
-      setIsAwardLoading(true);
-      generateGoalAward({ goal: departmentGoal, progress: departmentProgress })
-        .then(result => {
-          setAwardMessage(result.awardMessage);
-        })
-        .catch(error => {
-          console.error("Error generating award message:", error);
-          setAwardMessage('素晴らしい進捗です！'); // Fallback message
-        })
-        .finally(() => {
-          setIsAwardLoading(false);
-        });
+      goal = departmentGoal;
+      progress = departmentProgress;
+    } else if (activeTab === '個人') {
+      goal = personalGoal;
+      progress = personalProgress;
+    } else {
+      return; // If not group or personal tab, do nothing.
     }
-  }, [activeTab, departmentGoal, departmentProgress]);
+  
+    setIsAwardLoading(true);
+    generateGoalAward({ goal, progress })
+      .then(result => {
+        setAwardMessage(result.awardMessage);
+      })
+      .catch(error => {
+        console.error("Error generating award message:", error);
+        setAwardMessage('素晴らしい進捗です！'); // Fallback message
+      })
+      .finally(() => {
+        setIsAwardLoading(false);
+      });
+  
+  }, [activeTab, departmentGoal, departmentProgress, personalGoal, personalProgress]);
 
 
   const handleTabChange = (value: string) => {
@@ -227,6 +237,20 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
 
   const filteredTeamGoals = allTeamGoalsData.filter(member =>
     member.name.toLowerCase().includes(teamGoalsSearchTerm.toLowerCase())
+  );
+
+  const AwardMessageDisplay = () => (
+    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 text-center">
+      <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg min-h-[40px]">
+        <Award className="w-4 h-4" />
+        <span className="flex-1">
+          <Balancer>
+            {isAwardLoading ? '分析中...' : awardMessage}
+          </Balancer>
+        </span>
+      </div>
+      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary"></div>
+    </div>
   );
 
   return (
@@ -404,20 +428,7 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
 
               <div className="relative">
                 <CircularProgress value={departmentProgress} />
-                
-                {activeTab === 'グループ' && (
-                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 text-center">
-                    <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg min-h-[40px]">
-                      <Award className="w-4 h-4" />
-                      <span className="flex-1">
-                        <Balancer>
-                          {isAwardLoading ? '分析中...' : awardMessage}
-                        </Balancer>
-                      </span>
-                    </div>
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary"></div>
-                  </div>
-                )}
+                {activeTab === 'グループ' && <AwardMessageDisplay />}
               </div>
               <div className="relative flex justify-center items-center gap-4 pt-10">
                   <DropdownMenu>
@@ -462,6 +473,8 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
               <div className="relative">
                 <CircularProgress value={personalProgress} />
                 
+                {activeTab === '個人' && <AwardMessageDisplay />}
+
                 <div className="absolute -bottom-4 right-4">
                     <Dialog open={isTeamGoalsDialogOpen} onOpenChange={setIsTeamGoalsDialogOpen}>
                       <DialogTrigger asChild>
