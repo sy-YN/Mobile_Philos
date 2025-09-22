@@ -1,6 +1,6 @@
 
 'use client';
-import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Crown, Users, BookOpen, Medal, Star } from 'lucide-react';
+import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Crown, Users, BookOpen, Medal, Star, Film, Megaphone } from 'lucide-react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -31,6 +31,18 @@ const departmentPhilosophyRanking = [
     { id: 1, name: '開発部', score: 95 },
     { id: 2, name: '人事部', score: 88 },
     { id: 3, name: '営業部', score: 85 },
+];
+
+const shortVideoRanking = [
+    { id: 1, title: '第4四半期 全社ミーティング', views: 1280 },
+    { id: 2, title: '新プロダクトのコンセプト紹介', views: 980 },
+    { id: 3, title: 'ベータ版新機能のデモ', views: 750 },
+];
+
+const executiveMessageRanking = [
+    { id: 1, title: '第4四半期の戦略 (CEO)', views: 1520 },
+    { id: 2, title: 'DX推進の進捗 (CTO)', views: 1100 },
+    { id: 3, title: '新市場への展開について', views: 850 },
 ];
 
 
@@ -139,6 +151,44 @@ export function RankingTab() {
                                         index={index}
                                         title={item.name}
                                         value={`${item.score} pt`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                   <Film className="text-purple-500" />
+                                   ショート動画 視聴数
+                                </CardTitle>
+                                 <CardDescription>社内向けショート動画の再生回数</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(shortVideoRanking, (item, index) => (
+                                    <RankingListItem
+                                        key={item.id}
+                                        index={index}
+                                        title={item.title}
+                                        value={`${item.views} 回`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                   <Megaphone className="text-orange-500" />
+                                   経営層メッセージ 閲覧数
+                                </CardTitle>
+                                 <CardDescription>経営層からのメッセージの閲覧回数</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(executiveMessageRanking, (item, index) => (
+                                    <RankingListItem
+                                        key={item.id}
+                                        index={index}
+                                        title={item.title}
+                                        value={`${item.views} 回`}
                                     />
                                 ))}
                             </CardContent>
