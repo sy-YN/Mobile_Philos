@@ -1,9 +1,10 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search, Cell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -29,12 +30,12 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart";
-import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line } from "recharts";
+import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, DotProps } from "recharts";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
   { month: "5月", "売上": 60, "利益率": 18 },
-  { month: "6月", "売上": 75, "利益率": 20 },
+  { month: "6月", "  売上": 75, "利益率": 20 },
   { month: "7月", "売上": 65, "利益率": 17 },
   { month: "8月", "売上": 80, "利益率": 22 },
   { month: "9月", "売上": 90, "利益率": 25 },
@@ -109,6 +110,26 @@ const CircularProgress = ({ value }: { value: number }) => {
   );
 };
 
+const CustomizedDot: React.FC<any> = (props: any) => {
+  const { cx, cy, stroke, payload, value, index } = props;
+  const isLast = index === salesChartData.length - 1;
+
+  if (isLast) {
+    return (
+      <Dot
+        cx={cx}
+        cy={cy}
+        r={5}
+        strokeWidth={2}
+        fill="hsl(var(--primary))"
+        stroke="hsl(var(--background))"
+      />
+    );
+  }
+
+  return <Dot cx={cx} cy={cy} r={3} fill={stroke} stroke="none" />;
+};
+
 
 export function DashboardTab() {
   const [activeTab, setActiveTab] = useState("売上");
@@ -121,7 +142,7 @@ export function DashboardTab() {
   const [tempPersonalGoal, setTempPersonalGoal] = useState(personalGoal);
   const [tempPersonalProgress, setTempPersonalProgress] = useState(personalProgress);
 
-  const [showAward, setShowAward] = useState(true);
+  const [showAward, setShowAward] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamGoalsDialogOpen, setIsTeamGoalsDialogOpen] = useState(false);
   
@@ -173,247 +194,264 @@ export function DashboardTab() {
           <TabsTrigger value="個人" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">個人</TabsTrigger>
         </TabsList>
         
-        <div className="p-4 space-y-6">
-          <div className={`${activeTab === "売上" ? 'hidden' : 'block'}`}>
-            <div className="flex items-center justify-between">
-              <Button variant="link" className="text-accent text-sm p-0 h-auto gap-2">
-                <TrendingUp className="w-4 h-4" />
-                1年前を見る
-              </Button>
-              <div className="text-xs text-muted-foreground">株式会社テックソリューション</div>
-            </div>
-
-            <div className="mt-6 mb-6">
-              <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full text-sm">
-                <Target className="w-4 h-4 text-accent" />
-                <span className="text-foreground/80">月間目標</span>
-                <span className="font-semibold text-accent">{currentGoal}</span>
-              </div>
-            </div>
-
-            <div className="relative">
-              <CircularProgress value={currentProgress} />
-              
-              {activeTab === '個人' && (
-                <div className="absolute -bottom-4 right-4">
-                   <Dialog open={isTeamGoalsDialogOpen} onOpenChange={setIsTeamGoalsDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="rounded-full shadow-lg">共有</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-xs">
-                      <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                          <Users className="w-5 h-5 text-primary" />
-                          メンバーの目標進捗
-                        </DialogTitle>
-                        <DialogDescription>
-                          メンバーの個人目標と進捗状況を確認できます。
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="relative my-4">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          placeholder="名前で検索..."
-                          value={teamGoalsSearchTerm}
-                          onChange={(e) => setTeamGoalsSearchTerm(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                      <div className="space-y-4 max-h-[50vh] overflow-y-auto -mr-4 pr-4">
-                        {filteredTeamGoals.length > 0 ? (
-                          filteredTeamGoals.map((member) => (
-                            <div key={member.id} className="flex items-start gap-3">
-                              <Image
-                                src={member.avatar}
-                                alt={member.name}
-                                width={40}
-                                height={40}
-                                className="rounded-full mt-1"
-                                data-ai-hint="person portrait"
-                              />
-                              <div className="flex-1">
-                                <p className="font-semibold text-sm">{member.name}</p>
-                                <p className="text-xs text-muted-foreground mb-2">{member.goal}</p>
-                                <div className="flex items-center gap-2">
-                                  <Progress value={member.progress} className="h-2" />
-                                  <span className="text-xs font-mono text-muted-foreground w-10 text-right">{member.progress}%</span>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-sm text-muted-foreground text-center py-4">該当するメンバーはいません。</p>
-                        )}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              )}
-              
-              {showAward && (
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-                  <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg">
-                    <Award className="w-4 h-4" />
-                    <span>理念浸透が向上しました！</span>
-                  </div>
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary"></div>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          <TabsContent value="売上" className="mt-0">
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader className="p-4 pb-0">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の売上</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-1">
-                    <div className="text-2xl font-bold">{latestSalesData['売上'] * 100}万円</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="p-4 pb-0">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の利益率</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-1">
-                    <div className="text-2xl font-bold">{latestSalesData['利益率']}%</div>
-                     <p className="text-xs text-muted-foreground">前月比 {latestSalesData['利益率'] - previousSalesData['利益率']}pt</p>
-                  </CardContent>
-                </Card>
-              </div>
+        <TabsContent value="売上" className="mt-0">
+          <div className="p-4 space-y-6">
+            <div className="grid grid-cols-2 gap-4">
               <Card>
-                <CardHeader>
-                  <CardTitle>売上推移</CardTitle>
+                <CardHeader className="p-4 pb-0">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">今月の売上</CardTitle>
                 </CardHeader>
-                <CardContent className="h-[22rem] -mx-4">
-                  <ChartContainer config={salesChartConfig}>
-                    <ComposedChart data={salesChartData}>
-                      <CartesianGrid vertical={false} />
-                      <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        tickMargin={10}
-                        axisLine={false}
-                      />
-                      <YAxis
-                        yAxisId="left"
-                        orientation="left"
-                        stroke="hsl(var(--chart-1))"
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis
-                        yAxisId="right"
-                        orientation="right"
-                        stroke="hsl(var(--chart-2))"
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent indicator="dot" />}
-                      />
-                      <ChartLegend content={<ChartLegendContent />} />
-                      <Bar
-                        dataKey="売上"
-                        fill="hsl(var(--chart-1))"
-                        radius={4}
-                        yAxisId="left"
-                      />
-                      <Line
-                        dataKey="利益率"
-                        type="monotone"
-                        stroke="hsl(var(--chart-2))"
-                        strokeWidth={2}
-                        yAxisId="right"
-                      />
-                    </ComposedChart>
-                  </ChartContainer>
+                <CardContent className="p-4 pt-1">
+                  <div className="text-2xl font-bold">{latestSalesData['売上'] * 100}万円</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="p-4 pb-0">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">今月の利益率</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-1">
+                  <div className="text-2xl font-bold">{latestSalesData['利益率']}%</div>
+                    <p className="text-xs text-muted-foreground">前月比 {latestSalesData['利益率'] - previousSalesData['利益率']}pt</p>
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-          <TabsContent value="グループ" className="mt-0">
-             <div className="relative flex justify-center items-center gap-4 pt-10">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="rounded-full shadow-md gap-2">
-                      <span>部署名</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>営業部</DropdownMenuItem>
-                    <DropdownMenuItem>マーケティング部</DropdownMenuItem>
-                    <DropdownMenuItem>開発部</DropdownMenuItem>
-                    <DropdownMenuItem>人事部</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
-                  過去の目標
+            <Card>
+              <CardHeader>
+                <CardTitle>売上推移</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[22rem] -mx-4">
+                <ChartContainer config={salesChartConfig}>
+                  <ComposedChart data={salesChartData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      stroke="hsl(var(--chart-1))"
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke="hsl(var(--chart-2))"
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="dot" />}
+                    />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar
+                      dataKey="売上"
+                      radius={4}
+                      yAxisId="left"
+                    >
+                      {salesChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={index === salesChartData.length - 1 ? "hsl(var(--primary))" : "hsl(var(--chart-1))"} />
+                      ))}
+                    </Bar>
+                    <Line
+                      dataKey="利益率"
+                      type="monotone"
+                      stroke="hsl(var(--chart-2))"
+                      strokeWidth={2}
+                      yAxisId="right"
+                      dot={<CustomizedDot />}
+                      activeDot={{ r: 6 }}
+                    />
+                  </ComposedChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="グループ" className="mt-0">
+            <div className="p-4 space-y-6">
+              <div className="flex items-center justify-between">
+                <Button variant="link" className="text-accent text-sm p-0 h-auto gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  1年前を見る
                 </Button>
-            </div>
-          </TabsContent>
-          <TabsContent value="個人" className="mt-0">
-             <div className="relative flex justify-center items-center gap-4 pt-10">
-                <Dialog open={isEditDialogOpen} onOpenChange={handleOpenChange}>
-                  <DialogTrigger asChild>
-                    <Button className="rounded-full shadow-md gap-2">
-                      <Edit className="w-4 h-4" />
-                      <span>編集</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-xs">
-                    <DialogHeader>
-                      <DialogTitle>個人目標の編集</DialogTitle>
-                      <DialogDescription>
-                        今月の個人目標と現在の達成率を設定してください。
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="goal">目標</Label>
-                        <Input
-                          id="goal"
-                          value={tempPersonalGoal}
-                          onChange={(e) => setTempPersonalGoal(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="progress">達成率 ({tempPersonalProgress}%)</Label>
-                        <Slider
-                          id="progress"
-                          min={0}
-                          max={100}
-                          step={5}
-                          value={[tempPersonalProgress]}
-                          onValueChange={(value) => setTempPersonalProgress(value[0])}
-                        />
-                      </div>
+                <div className="text-xs text-muted-foreground">株式会社テックソリューション</div>
+              </div>
+
+              <div className="mt-6 mb-6">
+                <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full text-sm">
+                  <Target className="w-4 h-4 text-accent" />
+                  <span className="text-foreground/80">月間目標</span>
+                  <span className="font-semibold text-accent">{departmentGoal}</span>
+                </div>
+              </div>
+
+              <div className="relative">
+                <CircularProgress value={departmentProgress} />
+                
+                {showAward && (
+                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
+                    <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg">
+                      <Award className="w-4 h-4" />
+                      <span>理念浸透が向上しました！</span>
                     </div>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                         <Button type="button" variant="outline">キャンセル</Button>
-                      </DialogClose>
-                      <Button type="submit" onClick={handleSaveChanges}>保存</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary"></div>
+                  </div>
+                )}
+              </div>
+              <div className="relative flex justify-center items-center gap-4 pt-10">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="rounded-full shadow-md gap-2">
+                        <span>部署名</span>
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>営業部</DropdownMenuItem>
+                      <DropdownMenuItem>マーケティング部</DropdownMenuItem>
+                      <DropdownMenuItem>開発部</DropdownMenuItem>
+                      <DropdownMenuItem>人事部</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-                <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
-                  過去の目標
-                </Button>
+                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
+                    過去の目標
+                  </Button>
+              </div>
             </div>
-          </TabsContent>
-        </div>
+        </TabsContent>
+        <TabsContent value="個人" className="mt-0">
+           <div className="p-4 space-y-6">
+              <div className="flex items-center justify-between">
+                <Button variant="link" className="text-accent text-sm p-0 h-auto gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  1年前を見る
+                </Button>
+                <div className="text-xs text-muted-foreground">株式会社テックソリューション</div>
+              </div>
+
+              <div className="mt-6 mb-6">
+                <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full text-sm">
+                  <Target className="w-4 h-4 text-accent" />
+                  <span className="text-foreground/80">月間目標</span>
+                  <span className="font-semibold text-accent">{personalGoal}</span>
+                </div>
+              </div>
+
+              <div className="relative">
+                <CircularProgress value={personalProgress} />
+                
+                <div className="absolute -bottom-4 right-4">
+                    <Dialog open={isTeamGoalsDialogOpen} onOpenChange={setIsTeamGoalsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="rounded-full shadow-lg">共有</Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-xs">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Users className="w-5 h-5 text-primary" />
+                            メンバーの目標進捗
+                          </DialogTitle>
+                          <DialogDescription>
+                            メンバーの個人目標と進捗状況を確認できます。
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="relative my-4">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="名前で検索..."
+                            value={teamGoalsSearchTerm}
+                            onChange={(e) => setTeamGoalsSearchTerm(e.target.value)}
+                            className="pl-10"
+                          />
+                        </div>
+                        <div className="space-y-4 max-h-[50vh] overflow-y-auto -mr-4 pr-4">
+                          {filteredTeamGoals.length > 0 ? (
+                            filteredTeamGoals.map((member) => (
+                              <div key={member.id} className="flex items-start gap-3">
+                                <Image
+                                  src={member.avatar}
+                                  alt={member.name}
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full mt-1"
+                                  data-ai-hint="person portrait"
+                                />
+                                <div className="flex-1">
+                                  <p className="font-semibold text-sm">{member.name}</p>
+                                  <p className="text-xs text-muted-foreground mb-2">{member.goal}</p>
+                                  <div className="flex items-center gap-2">
+                                    <Progress value={member.progress} className="h-2" />
+                                    <span className="text-xs font-mono text-muted-foreground w-10 text-right">{member.progress}%</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">該当するメンバーはいません。</p>
+                          )}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                </div>
+              </div>
+              <div className="relative flex justify-center items-center gap-4 pt-10">
+                  <Dialog open={isEditDialogOpen} onOpenChange={handleOpenChange}>
+                    <DialogTrigger asChild>
+                      <Button className="rounded-full shadow-md gap-2">
+                        <Edit className="w-4 h-4" />
+                        <span>編集</span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xs">
+                      <DialogHeader>
+                        <DialogTitle>個人目標の編集</DialogTitle>
+                        <DialogDescription>
+                          今月の個人目標と現在の達成率を設定してください。
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="goal">目標</Label>
+                          <Input
+                            id="goal"
+                            value={tempPersonalGoal}
+                            onChange={(e) => setTempPersonalGoal(e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="progress">達成率 ({tempPersonalProgress}%)</Label>
+                          <Slider
+                            id="progress"
+                            min={0}
+                            max={100}
+                            step={5}
+                            value={[tempPersonalProgress]}
+                            onValueChange={(value) => setTempPersonalProgress(value[0])}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button type="button" variant="outline">キャンセル</Button>
+                        </DialogClose>
+                        <Button type="submit" onClick={handleSaveChanges}>保存</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
+                    過去の目標
+                  </Button>
+              </div>
+            </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
 }
-
-    
-
-    
