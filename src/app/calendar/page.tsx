@@ -47,7 +47,7 @@ export default function CalendarPage() {
   
   const handlePageFlip = () => {
     setIsExiting(true);
-    setTimeout(() => router.push('/'), 700); 
+    setTimeout(() => router.push('/home'), 700); 
   };
 
   const dayOfWeek = today.toLocaleDateString('ja-JP', { weekday: 'long' });
