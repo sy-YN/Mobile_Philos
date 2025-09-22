@@ -52,8 +52,8 @@ export const valuesItems = [
     title: '創造',
     content: '既存の枠にとらわれず、自由な発想とアイデアで、新しい価値を創り出します。',
     icon: Lightbulb,
-    color: 'text-yellow-400',
-    iconBg: 'bg-yellow-400',
+    color: 'text-purple-500',
+    iconBg: 'bg-purple-500',
   },
   {
     id: 'value-6',
@@ -68,8 +68,8 @@ export const valuesItems = [
     title: 'スピード',
     content: '市場の変化や顧客のニーズに迅速に対応し、機動的な意思決定と行動を心がけます。',
     icon: Zap,
-    color: 'text-yellow-600',
-    iconBg: 'bg-yellow-600',
+    color: 'text-orange-500',
+    iconBg: 'bg-orange-500',
   },
   {
     id: 'value-8',
