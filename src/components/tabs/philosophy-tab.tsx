@@ -6,6 +6,7 @@ import { valuesItems } from '@/lib/company-philosophy';
 import { Card } from "@/components/ui/card";
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
+import { ScrollArea } from '../ui/scroll-area';
 
 export function PhilosophyTab() {
   const [isClient, setIsClient] = useState(false);
