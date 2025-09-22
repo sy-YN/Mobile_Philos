@@ -48,7 +48,7 @@ export function PhilosophyTab() {
               </div>
             </Card>
           </SheetTrigger>
-          <SheetContent side="bottom" className="max-h-[80vh]">
+          <SheetContent side="bottom" className="h-auto max-h-[80vh]">
             <SheetHeader>
               <div className="flex items-center gap-3 mb-2">
                 <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", todaysPhilosophy.iconBg)}>
@@ -76,7 +76,7 @@ export function PhilosophyTab() {
                   <span className="font-semibold">{item.title}</span>
                 </Card>
               </SheetTrigger>
-              <SheetContent side="bottom" className="max-h-[80vh]">
+              <SheetContent side="bottom" className="h-auto max-h-[80vh]">
                 <SheetHeader>
                   <div className="flex items-center gap-3 mb-2">
                      <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", item.iconBg)}>
