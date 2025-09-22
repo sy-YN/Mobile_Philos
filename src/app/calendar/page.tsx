@@ -56,8 +56,7 @@ export default function CalendarPage() {
   const year = today.getFullYear();
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-8">
-      <div className={cn(isDarkMode && 'dark')}>
+    <main className={cn("flex min-h-screen w-full items-center justify-center bg-white dark:bg-background p-4 sm:p-8", isDarkMode && 'dark')}>
         <AppShell>
           <div 
             className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer bg-background"
@@ -121,7 +120,6 @@ export default function CalendarPage() {
             </div>
           </div>
         </AppShell>
-      </div>
     </main>
   );
 }
