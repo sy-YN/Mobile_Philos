@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { valuesItems } from '@/lib/company-philosophy';
 import { ThumbsUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AppShell } from '@/components/app-shell';
 
 export default function CalendarPage() {
   const router = useRouter();
@@ -17,11 +18,9 @@ export default function CalendarPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // This component can be mounted on the client side, so we can check localStorage.
     const darkModeValue = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModeValue);
     
-    // Listen for changes from other tabs/windows
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'darkMode') {
         setIsDarkMode(event.newValue === 'true');
@@ -57,14 +56,15 @@ export default function CalendarPage() {
   const year = today.getFullYear();
 
   return (
-    <main className="flex-1 flex items-center justify-center min-h-screen bg-white">
+    <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-8">
       <div className={cn(isDarkMode && 'dark')}>
+        <AppShell>
           <div 
-            className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer"
+            className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer bg-background"
             onClick={handlePageFlip}
           >
             <div 
-              className={cn("relative w-full max-w-sm h-[600px]")}
+              className="relative w-full max-w-sm h-[600px]"
               style={{ perspective: '1000px' }}
             >
               {/* Stacked pages */}
@@ -120,6 +120,7 @@ export default function CalendarPage() {
               </div>
             </div>
           </div>
+        </AppShell>
       </div>
     </main>
   );
