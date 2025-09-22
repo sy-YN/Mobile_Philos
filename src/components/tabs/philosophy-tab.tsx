@@ -5,7 +5,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { valuesItems } from '@/lib/company-philosophy';
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
-import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function PhilosophyTab() {
@@ -24,8 +23,6 @@ export function PhilosophyTab() {
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
     return valuesItems[dayOfYear % valuesItems.length];
   }, [isClient]);
-
-  const myPhilosophies = [valuesItems[3], valuesItems[0], valuesItems[4]];
 
   return (
     <div className="p-4 space-y-8">
@@ -89,21 +86,6 @@ export function PhilosophyTab() {
           ))}
         </div>
       </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-foreground mb-3">マイ理念</h2>
-        <div className="space-y-2">
-          {myPhilosophies.map(item => (
-            <Card key={item.id} className="p-3 flex items-center gap-3">
-              <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", item.iconBg)}>
-                <item.icon className="w-6 h-6 text-white" />
-              </div>
-              <span className="font-semibold">{item.title}</span>
-            </Card>
-          ))}
-        </div>
-      </section>
-
     </div>
   );
 }
