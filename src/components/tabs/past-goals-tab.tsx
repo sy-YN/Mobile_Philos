@@ -1,14 +1,6 @@
 
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
 import { ChartContainer } from "@/components/ui/chart";
@@ -51,11 +43,11 @@ const generatePastGoals = (): PastGoal[] => {
     data.push({
       month,
       year,
-      goal: goals[i],
+      goal: goals[i % goals.length], // Ensure we don't go out of bounds
       achievement,
     });
   }
-  return data;
+  return data.reverse(); // Show most recent first
 };
 
 const chartConfig = {
@@ -81,7 +73,7 @@ export function PastGoalsTab({ show, departmentName, onNavigateBack }: PastGoals
 
   return (
     <div className={cn("absolute inset-0 z-30 bg-background flex flex-col transition-opacity duration-300", show ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
-      <header className="px-4 py-3 flex items-center border-b shrink-0">
+      <header className="px-4 py-3 flex items-center border-b shrink-0 sticky top-0 bg-background/95 backdrop-blur-sm z-10">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onNavigateBack}>
           <ArrowLeft className="h-5 w-5" />
           <span className="sr-only">戻る</span>
@@ -94,60 +86,53 @@ export function PastGoalsTab({ show, departmentName, onNavigateBack }: PastGoals
       </header>
       <div className="flex-1 overflow-y-auto">
         <p className="p-4 text-sm text-muted-foreground">過去12ヶ月の部署目標とその達成状況です。</p>
-        <Table>
-          <TableHeader className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
-            <TableRow>
-              <TableHead className="w-[100px]">年月</TableHead>
-              <TableHead>目標</TableHead>
-              <TableHead className="w-[150px]">達成率</TableHead>
-              <TableHead className="w-[120px] text-center">推移</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {pastGoals.map((item, index) => (
-              <TableRow key={`${item.year}-${item.month}`}>
-                <TableCell className="font-medium">
-                  <div>{item.year}年</div>
+        <div className="divide-y border-t">
+          {pastGoals.map((item, index) => (
+            <div key={`${item.year}-${item.month}`} className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-medium w-24 shrink-0">
+                  <div className="text-xs text-muted-foreground">{item.year}年</div>
                   <div className="text-lg font-bold">{item.month}</div>
-                </TableCell>
-                <TableCell>{item.goal}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
+                </div>
+                <p className="flex-1 text-sm font-medium text-left">{item.goal}</p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="w-1/2">
+                   <div className="flex items-center gap-2">
                     <Progress value={item.achievement} className="h-2" />
                     <span className="text-xs font-mono w-10 text-right">
                       {item.achievement}%
                     </span>
                   </div>
-                </TableCell>
-                <TableCell>
-                    <div className="h-10 w-full">
-                         <ChartContainer config={chartConfig} className="w-full h-full aspect-auto">
-                            <AreaChart
-                                accessibilityLayer
-                                data={pastGoals.slice(Math.max(0, index - 5), index + 1)}
-                                margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                            >
-                                <defs>
-                                    <linearGradient id={`fill-gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} stopOpacity={0.8}/>
-                                        <stop offset="95%" stopColor={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} stopOpacity={0.1}/>
-                                    </linearGradient>
-                                </defs>
-                                <Area
-                                    dataKey="achievement"
-                                    type="natural"
-                                    fill={`url(#fill-gradient-${index})`}
-                                    stroke={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"}
-                                    stackId="a"
-                                />
-                            </AreaChart>
-                        </ChartContainer>
-                    </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </div>
+                 <div className="w-1/2 h-10">
+                   <ChartContainer config={chartConfig} className="w-full h-full aspect-auto">
+                      <AreaChart
+                          accessibilityLayer
+                          data={pastGoals.slice(index, Math.min(index + 6, pastGoals.length)).reverse()}
+                          margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                      >
+                          <defs>
+                              <linearGradient id={`fill-gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="5%" stopColor={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} stopOpacity={0.8}/>
+                                  <stop offset="95%" stopColor={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} stopOpacity={0.1}/>
+                              </linearGradient>
+                          </defs>
+                          <Area
+                              dataKey="achievement"
+                              type="natural"
+                              fill={`url(#fill-gradient-${index})`}
+                              stroke={item.achievement >= 80 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"}
+                              stackId="a"
+                          />
+                      </AreaChart>
+                  </ChartContainer>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
