@@ -93,8 +93,9 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
             <p className="text-2xl font-medium text-muted-foreground -mt-2">{month}, {year}</p>
             
             <div className="my-10">
+              <p className="text-sm font-medium text-muted-foreground mb-2">理念</p>
               <h1 className="text-4xl font-bold text-foreground mb-3 leading-snug">
-                {currentValue.title.split('. ')[1]}
+                {currentValue.title}
               </h1>
               <p className="text-base text-muted-foreground px-4 leading-relaxed">
                 〜{currentValue.content}〜
