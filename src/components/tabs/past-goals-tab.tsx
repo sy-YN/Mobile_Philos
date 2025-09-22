@@ -10,10 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Minus, ArrowLeft } from "lucide-react";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { ArrowLeft } from "lucide-react";
+import { ChartContainer } from "@/components/ui/chart";
+import { Area, AreaChart } from "recharts";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -23,7 +22,6 @@ type PastGoal = {
   year: number;
   goal: string;
   achievement: number;
-  trend: "up" | "down" | "stable";
 };
 
 const generatePastGoals = (): PastGoal[] => {
@@ -49,27 +47,12 @@ const generatePastGoals = (): PastGoal[] => {
     const month = `${date.getMonth() + 1}月`;
     const year = date.getFullYear();
     const achievement = Math.floor(Math.random() * 61) + 40; // 40% to 100%
-    const lastAchievement = data[data.length -1]?.achievement ?? achievement;
-    
-    let trend: 'up' | 'down' | 'stable';
-    if(i === 11) {
-        trend = 'stable';
-    } else {
-        if (achievement > lastAchievement + 5) {
-            trend = "up";
-        } else if (achievement < lastAchievement - 5) {
-            trend = "down";
-        } else {
-            trend = "stable";
-        }
-    }
     
     data.push({
       month,
       year,
       goal: goals[i],
       achievement,
-      trend,
     });
   }
   return data;
