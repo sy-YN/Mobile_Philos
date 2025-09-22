@@ -66,10 +66,10 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
         <div className="absolute inset-0 bg-card rounded-lg shadow-lg rotate-[3deg]"></div>
 
         <div className={cn(
-          "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-transform duration-700 ease-in-out font-serif",
-          isExiting && '[transform:rotateY(-120deg)_scale(0.75)]'
+          "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-all duration-700 ease-in-out font-serif",
+          isExiting && 'opacity-0 [transform:rotate(-30deg)_translate(100%,-50%)_scale(0.5)]'
         )}
-        style={{ transformOrigin: 'left center' }}
+        style={{ transformOrigin: 'bottom left' }}
         >
           {/* Rings */}
           <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-4">
