@@ -1,21 +1,30 @@
 
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
+import { cn } from '@/lib/utils';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isExiting, setIsExiting] = useState(false);
 
   const handleStart = () => {
-    router.push('/calendar');
+    setIsExiting(true);
+    setTimeout(() => {
+      router.push('/calendar');
+    }, 500);
   };
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-8">
         <AppShell>
             <div
-                className="relative flex h-full w-full cursor-pointer flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-background to-background text-foreground"
+                className={cn(
+                    "relative flex h-full w-full cursor-pointer flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-background to-background text-foreground transition-all duration-500 ease-in-out",
+                    isExiting && "scale-95 opacity-0"
+                )}
                 onClick={handleStart}
             >
                 <div className="absolute inset-0 z-0">
