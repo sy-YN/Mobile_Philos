@@ -6,6 +6,7 @@ import { ExecutiveMessageCard } from "@/components/executive-message-card";
 import { Building2, MessageSquare } from "lucide-react";
 import { BoardPostForm } from "../board-post-form";
 import { BoardPostCard } from "../board-post-card";
+import { BoardPostReplyForm } from "../board-post-reply-form";
 import type { Post } from "@/app/actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -80,6 +81,8 @@ export function HomeTab() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
+  const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
+  const isExecutive = true; // TODO: Replace with real authentication logic
 
 
   useEffect(() => {
@@ -110,7 +113,6 @@ export function HomeTab() {
       const postsData: Post[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        // createdAt might be null temporarily on the client, so we guard against it.
         if (data.createdAt) {
           postsData.push({
             id: doc.id,
@@ -203,7 +205,22 @@ export function HomeTab() {
                 ))
               ) : posts.length > 0 ? (
                   posts.map(post => (
-                    <BoardPostCard key={post.id} post={post} />
+                    <div key={post.id}>
+                      <BoardPostCard 
+                        post={post} 
+                        isExecutive={isExecutive}
+                        onReplyClick={() => setReplyingToPostId(replyingToPostId === post.id ? null : post.id)}
+                        isReplying={replyingToPostId === post.id}
+                      />
+                      {replyingToPostId === post.id && (
+                        <div className="pl-12 pt-2">
+                          <BoardPostReplyForm 
+                            postId={post.id}
+                            onReplySuccess={() => setReplyingToPostId(null)}
+                          />
+                        </div>
+                      )}
+                    </div>
                   ))
               ) : (
                 <div className="text-center text-muted-foreground py-8">
@@ -271,3 +288,5 @@ export function HomeTab() {
     </div>
   );
 }
+
+    
