@@ -178,6 +178,7 @@ export function DashboardTab() {
   const currentMonth = new Date().toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
   const latestSalesData = salesChartData[salesChartData.length - 1];
   const previousSalesData = salesChartData[salesChartData.length - 2];
+  const latestSalesProfitData = salesProfitChartData[salesProfitChartData.length - 1];
 
 
   const handleTabChange = (value: string) => {
@@ -297,6 +298,26 @@ export function DashboardTab() {
                 </ChartContainer>
               </CardContent>
             </Card>
+
+            <div className="grid grid-cols-2 gap-4">
+                <Card>
+                    <CardHeader className="p-4 pb-0">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の売上</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-1">
+                    <div className="text-2xl font-bold">{latestSalesProfitData['売上'] * 100}万円</div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="p-4 pb-0">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の純利益</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-1">
+                    <div className="text-2xl font-bold">{latestSalesProfitData['純利益'] * 100}万円</div>
+                    </CardContent>
+                </Card>
+            </div>
+
             <Card>
               <CardHeader>
                 <CardTitle>売上・純利益推移</CardTitle>
@@ -524,9 +545,3 @@ export function DashboardTab() {
     </div>
   );
 }
-
-    
-    
-    
-
-    
