@@ -58,7 +58,7 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
       onClick={handlePageFlip}
     >
       <div 
-        className={cn("relative w-full max-w-sm h-[600px] transition-transform duration-700 ease-in-out", isExiting && "scale-125")}
+        className={cn("relative w-full max-w-sm h-[600px]")}
         style={{ perspective: '1000px' }}
       >
         {/* Stacked pages */}
@@ -67,7 +67,7 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
 
         <div className={cn(
           "absolute inset-0 w-full h-full bg-card rounded-lg shadow-2xl flex flex-col p-8 transition-transform duration-700 ease-in-out font-serif",
-          isExiting && 'transform-style-3d rotate-y-[-120deg] scale-75'
+          isExiting && '[transform:rotateY(-120deg)_scale(0.75)]'
         )}
         style={{ transformOrigin: 'left center' }}
         >
