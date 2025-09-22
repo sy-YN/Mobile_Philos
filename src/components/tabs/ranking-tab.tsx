@@ -50,7 +50,7 @@ export function RankingTab() {
             </header>
 
             <Tabs defaultValue="individual" className="w-full flex-grow flex flex-col">
-                <TabsList className="grid w-full grid-cols-3 shrink-0">
+                <TabsList className="grid w-full grid-cols-2 shrink-0">
                     <TabsTrigger value="individual">
                         <Trophy className="h-4 w-4 mr-2" />
                         個人
@@ -58,10 +58,6 @@ export function RankingTab() {
                     <TabsTrigger value="department">
                         <Users className="h-4 w-4 mr-2" />
                         部署
-                    </TabsTrigger>
-                    <TabsTrigger value="philosophy">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        理念体現
                     </TabsTrigger>
                 </TabsList>
                 <div className="flex-grow overflow-y-auto mt-4 -mr-4 pr-4">
@@ -148,29 +144,6 @@ export function RankingTab() {
                             </CardContent>
                         </Card>
                     </TabsContent>
-                    <TabsContent value="philosophy" className="space-y-6 m-0">
-                        {valuesItems.map(valueItem => (
-                            <Card key={valueItem.id}>
-                                <CardHeader>
-                                    <CardTitle className="text-base flex items-center gap-2">
-                                       <valueItem.icon className={cn("h-5 w-5", valueItem.color.replace('bg-', 'text-').split('/')[0])} />
-                                       「{valueItem.title}」体現ランキング
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    {renderRankingList([...individualMvpRanking].sort(() => 0.5 - Math.random()), (item, index) => (
-                                        <RankingListItem
-                                            key={item.id}
-                                            index={index}
-                                            avatar={item.avatar}
-                                            title={item.name}
-                                            value={`${(item.score - index * 3 - Math.random() * 5).toFixed(1)} pt`}
-                                        />
-                                    ))}
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </TabsContent>
                 </div>
             </Tabs>
         </div>
@@ -198,5 +171,3 @@ const RankingListItem = ({ index, avatar, title, subtitle, value }: { index: num
         </div>
     );
 };
-
-    
