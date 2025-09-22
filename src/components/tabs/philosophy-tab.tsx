@@ -59,9 +59,7 @@ export function PhilosophyTab() {
                 )}
                 onClick={() => setSelectedItem(item)}
               >
-                <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", item.iconBg)}>
-                  <item.icon className="w-6 h-6 text-primary-foreground" />
-                </div>
+                <item.icon className="w-6 h-6 text-card-foreground/50" />
                 <span className="font-semibold">{item.title}</span>
               </Card>
             ))}
