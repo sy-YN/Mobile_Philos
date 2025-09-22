@@ -36,14 +36,22 @@ export default function EmpowerUApp() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    // This component can be mounted on the client side, so we can check localStorage.
     const darkModeValue = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModeValue);
-  }, []);
+    
+    // Listen for changes from other tabs/windows
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'darkMode') {
+        setIsDarkMode(event.newValue === 'true');
+      }
+    };
 
-  const handleDarkModeChange = (enabled: boolean) => {
-    setIsDarkMode(enabled);
-    localStorage.setItem('darkMode', String(enabled));
-  };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -69,7 +77,7 @@ export default function EmpowerUApp() {
       philosophy: <PhilosophyTab />,
       dashboard: <DashboardTab onShowPastGoals={handleShowPastGoals} />,
       ranking: <RankingTab />,
-      other: <OtherTab isDarkMode={isDarkMode} onDarkModeChange={handleDarkModeChange} />,
+      other: <OtherTab />,
     };
 
     return (
