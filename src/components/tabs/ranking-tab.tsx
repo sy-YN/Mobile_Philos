@@ -27,12 +27,6 @@ const departmentAchievementRanking = [
     { id: 3, name: 'マーケティング部', progress: 92 },
 ];
 
-const departmentPhilosophyRanking = [
-    { id: 1, name: '開発部', score: 95 },
-    { id: 2, name: '人事部', score: 88 },
-    { id: 3, name: '営業部', score: 85 },
-];
-
 const totalEmployees = 1550;
 
 const shortVideoRanking = [
@@ -134,25 +128,6 @@ export function RankingTab() {
                                         index={index}
                                         title={item.name}
                                         value={`${item.progress}%`}
-                                    />
-                                ))}
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                   <BookOpen className="text-green-500" />
-                                   部署別 理念浸透スコア
-                                </CardTitle>
-                                 <CardDescription>理念の理解度や実践度をスコア化</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {renderRankingList(departmentPhilosophyRanking, (item, index) => (
-                                    <RankingListItem
-                                        key={item.id}
-                                        index={index}
-                                        title={item.name}
-                                        value={`${item.score} pt`}
                                     />
                                 ))}
                             </CardContent>
