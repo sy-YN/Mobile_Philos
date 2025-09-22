@@ -8,7 +8,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleStart = () => {
-    router.push('/home');
+    router.push('/calendar');
   };
 
   return (
