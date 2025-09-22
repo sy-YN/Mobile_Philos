@@ -270,6 +270,61 @@ export function DashboardTab() {
                 </ChartContainer>
               </CardContent>
             </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>売上推移</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[22rem] -mx-4">
+                <ChartContainer config={salesChartConfig}>
+                  <ComposedChart data={salesChartData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      stroke="hsl(var(--chart-1))"
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke="hsl(var(--chart-2))"
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="dot" />}
+                    />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar
+                      dataKey="売上"
+                      radius={4}
+                      yAxisId="left"
+                    >
+                      {salesChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={index === salesChartData.length - 1 ? "hsl(var(--primary))" : "hsl(var(--chart-1))"} />
+                      ))}
+                    </Bar>
+                    <Line
+                      dataKey="利益率"
+                      type="monotone"
+                      stroke="hsl(var(--chart-2))"
+                      strokeWidth={2}
+                      yAxisId="right"
+                      dot={<CustomizedDot />}
+                      activeDot={{ r: 6 }}
+                    />
+                  </ComposedChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
         <TabsContent value="グループ" className="mt-0">
