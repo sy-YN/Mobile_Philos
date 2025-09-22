@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Post } from '@/app/actions';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, AlertTriangle } from "lucide-react";
+import { Heart, AlertTriangle, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -12,9 +12,12 @@ import { Timestamp } from "firebase/firestore";
 
 type BoardPostCardProps = {
   post: Post;
+  isExecutive?: boolean;
+  onReplyClick?: () => void;
+  isReplying?: boolean;
 };
 
-export function BoardPostCard({ post }: BoardPostCardProps) {
+export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying }: BoardPostCardProps) {
   const needsModeration = post.analysis?.requiresModeration;
 
   const getTimeAgo = () => {
@@ -64,9 +67,17 @@ export function BoardPostCard({ post }: BoardPostCardProps) {
               <Heart className="h-4 w-4" />
               <span>{post.likes}</span>
             </Button>
+            {isExecutive && (
+              <Button variant="ghost" size="sm" className={cn("flex items-center gap-1.5 h-auto px-2 py-1", isReplying ? "text-primary" : "hover:text-primary")} onClick={onReplyClick}>
+                <MessageSquare className="h-4 w-4" />
+                <span>返信する (経営陣のみ)</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
     </Card>
   );
 }
+
+    

@@ -1,146 +1,227 @@
 
 'use client';
-import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Eye } from 'lucide-react';
+import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Crown, Users, BookOpen, Medal, Star, Film, Megaphone } from 'lucide-react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { allTeamGoalsData as goalsData } from './dashboard-tab';
+import { valuesItems } from '@/lib/company-philosophy';
+import { cn } from '@/lib/utils';
 
-const videoRanking = [
-    { id: 1, title: '第4四半期 全社ミーティング', likes: 152, views: 2340 },
-    { id: 2, title: 'デザインチームより', likes: 98, views: 1823 },
-    { id: 3, title: 'エンジニアチームより', likes: 73, views: 1204 },
+
+const individualMvpRanking = [
+    { id: 1, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', score: 98.5 },
+    { id: 2, name: '渡辺 久美子', avatar: 'https://picsum.photos/seed/p4/100/100', score: 95.2 },
+    { id: 3, name: '田中 雄大', avatar: 'https://picsum.photos/seed/p5/100/100', score: 92.8 },
 ];
 
-const postRanking = [
-    { id: 1, author: '伊藤さん', content: '新しいビジョンにワクワクしています。私たち一人ひとりがどう貢献できるか...', likes: 25 },
-    { id: 2, author: '山田さん', content: 'CEOのメッセージ、非常に感銘を受けました。特にDXの推進に関する部分は...', likes: 12 },
-    { id: 3, author: '鈴木さん', content: '動画、とても分かりやすかったです！倍速機能も便利ですね。', likes: 8 },
+const individualLikesRanking = [
+    { id: 1, name: '伊藤 健太', avatar: 'https://picsum.photos/seed/p3/100/100', likes: 152 },
+    { id: 2, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', likes: 148 },
+    { id: 3, name: '佐藤 あきら', avatar: 'https://picsum.photos/seed/p6/100/100', likes: 121 },
+];
+
+const individualCommentsRanking = [
+    { id: 1, name: '佐藤 あきら', avatar: 'https://picsum.photos/seed/p6/100/100', comments: 78 },
+    { id: 2, name: '鈴木 花子', avatar: 'https://picsum.photos/seed/p2/100/100', comments: 65 },
+    { id: 3, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', comments: 59 },
+];
+
+const departmentAchievementRanking = [
+    { id: 1, name: '営業部', progress: 115 },
+    { id: 2, name: '開発部', progress: 98 },
+    { id: 3, name: 'マーケティング部', progress: 92 },
+];
+
+const totalEmployees = 1550;
+
+const shortVideoRanking = [
+    { id: 1, title: '第4四半期 全社ミーティング', viewers: 1280, totalAudience: totalEmployees },
+    { id: 2, title: '新プロダクトのコンセプト紹介', viewers: 980, totalAudience: totalEmployees },
+    { id: 3, title: 'ベータ版新機能のデモ', viewers: 750, totalAudience: totalEmployees },
+];
+
+const executiveMessageRanking = [
+    { id: 1, title: '第4四半期の戦略 (CEO)', viewers: 1520, totalAudience: totalEmployees },
+    { id: 2, title: 'DX推進の進捗 (CTO)', viewers: 1100, totalAudience: totalEmployees },
+    { id: 3, title: '新市場への展開について', viewers: 850, totalAudience: totalEmployees },
 ];
 
 
 export function RankingTab() {
-
-    const goalAchievers = [...goalsData].sort((a, b) => b.progress - a.progress).slice(0, 3);
     
     const renderRankingList = (items: any[], renderItem: (item: any, index: number) => React.ReactNode) => (
-        <div className="space-y-4">
+        <div className="space-y-3">
             {items.map((item, index) => renderItem(item, index))}
         </div>
     );
 
     return (
-        <div className="p-4">
-            <header className="flex items-center gap-2 mb-6 pt-2">
+        <div className="p-4 h-full flex flex-col">
+            <header className="flex items-center gap-2 mb-6 pt-2 shrink-0">
                 <Trophy className="h-6 w-6 text-primary" />
-                <h2 className="text-xl font-bold text-foreground font-headline">ランキング</h2>
+                <h2 className="text-xl font-bold text-foreground font-headline">月間ランキング</h2>
             </header>
 
-            <Tabs defaultValue="engagement" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="engagement">
-                        <Heart className="h-4 w-4 mr-2" />
-                        エンゲージメント
+            <Tabs defaultValue="individual" className="w-full flex-grow flex flex-col">
+                <TabsList className="grid w-full grid-cols-2 shrink-0">
+                    <TabsTrigger value="individual">
+                        <Trophy className="h-4 w-4 mr-2" />
+                        個人
                     </TabsTrigger>
-                    <TabsTrigger value="achievement">
-                        <Target className="h-4 w-4 mr-2" />
-                        目標達成
+                    <TabsTrigger value="department">
+                        <Users className="h-4 w-4 mr-2" />
+                        部署
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="engagement" className="space-y-6 mt-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                                <Heart className="text-red-500" />
-                                動画いいね数 TOP3
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                           {renderRankingList(videoRanking, (item, index) => (
-                               <RankingListItem key={item.id} index={index} title={item.title} value={`${item.likes} いいね`} />
-                           ))}
-                        </CardContent>
-                    </Card>
+                <div className="flex-grow overflow-y-auto mt-4 -mr-4 pr-4">
+                    <TabsContent value="individual" className="space-y-6 m-0">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                    <Award className="text-yellow-500" />
+                                    個人MVP
+                                </CardTitle>
+                                <CardDescription>目標達成、理念体現などを総合評価</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                               {renderRankingList(individualMvpRanking, (item, index) => (
+                                   <RankingListItem 
+                                       key={item.id} 
+                                       index={index}
+                                       avatar={item.avatar}
+                                       title={item.name} 
+                                       value={`${item.score} pt`}
+                                   />
+                               ))}
+                            </CardContent>
+                        </Card>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                                <Eye className="text-blue-500" />
-                                動画視聴回数 TOP3
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                           {renderRankingList(videoRanking.sort((a,b) => b.views - a.views), (item, index) => (
-                               <RankingListItem key={item.id} index={index} title={item.title} value={`${item.views} 回`} />
-                           ))}
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                                <MessageSquare className="text-green-500" />
-                                コメントいいね数 TOP3
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {renderRankingList(postRanking, (item, index) => (
-                                <RankingListItem 
-                                    key={item.id} 
-                                    index={index} 
-                                    title={`${item.author}: 「${item.content}」`}
-                                    value={`${item.likes} いいね`}
-                                />
-                            ))}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-                <TabsContent value="achievement" className="space-y-6 mt-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                               <Award className="text-yellow-500" />
-                               個人目標達成率 TOP3
-                            </CardTitle>
-                             <CardDescription>今月の目標達成率が高いメンバーです。</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {renderRankingList(goalAchievers, (item, index) => (
-                                <RankingListItem
-                                    key={item.id}
-                                    index={index}
-                                    avatar={item.avatar}
-                                    title={item.name}
-                                    subtitle={item.goal}
-                                    value={`${item.progress}%`}
-                                />
-                            ))}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                    <Heart className="text-red-500" />
+                                    いいね獲得数
+                                </CardTitle>
+                                <CardDescription>投稿やコメントへのいいね総数</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(individualLikesRanking, (item, index) => (
+                                    <RankingListItem 
+                                        key={item.id} 
+                                        index={index} 
+                                        avatar={item.avatar}
+                                        title={item.name}
+                                        value={`${item.likes} いいね`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                        
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                    <MessageSquare className="text-green-500" />
+                                    コメント投稿数
+                                </CardTitle>
+                                <CardDescription>掲示板への投稿と返信の総数</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(individualCommentsRanking, (item, index) => (
+                                    <RankingListItem 
+                                        key={item.id} 
+                                        index={index} 
+                                        avatar={item.avatar}
+                                        title={item.name}
+                                        value={`${item.comments} 回`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="department" className="space-y-6 m-0">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                   <Target className="text-blue-500" />
+                                   部署別 目標達成率
+                                </CardTitle>
+                                 <CardDescription>部署ごとの月間目標の達成率</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(departmentAchievementRanking, (item, index) => (
+                                    <RankingListItem
+                                        key={item.id}
+                                        index={index}
+                                        title={item.name}
+                                        value={`${item.progress}%`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                   <Film className="text-purple-500" />
+                                   ショート動画 視聴率
+                                </CardTitle>
+                                 <CardDescription>社内向けショート動画の視聴率</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(shortVideoRanking, (item, index) => (
+                                    <RankingListItem
+                                        key={item.id}
+                                        index={index}
+                                        title={item.title}
+                                        value={`${item.viewers} / ${item.totalAudience} 人`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                   <Megaphone className="text-orange-500" />
+                                   経営層メッセージ 閲覧率
+                                </CardTitle>
+                                 <CardDescription>経営層からのメッセージの閲覧率</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(executiveMessageRanking, (item, index) => (
+                                    <RankingListItem
+                                        key={item.id}
+                                        index={index}
+                                        title={item.title}
+                                        value={`${item.viewers} / ${item.totalAudience} 人`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </div>
             </Tabs>
         </div>
     );
 }
 
 const RankingListItem = ({ index, avatar, title, subtitle, value }: { index: number; avatar?: string; title: string; subtitle?: string; value: string; }) => {
-    const medals = [
-        "border-yellow-400 bg-yellow-400/10", // Gold
-        "border-gray-400 bg-gray-400/10", // Silver
-        "border-yellow-700 bg-yellow-700/10" // Bronze
+    const rankIcons = [
+        <Crown key="1" className="text-yellow-400 fill-yellow-400" />,
+        <Medal key="2" className="text-gray-400 fill-gray-400" />,
+        <Star key="3" className="text-yellow-700 fill-yellow-700" />
     ];
     
     return (
-        <div className="flex items-center gap-4">
-            <div className={`flex items-center justify-center font-bold text-lg w-8 h-8 rounded-full border-2 ${medals[index] || 'border-border'}`}>
-                {index + 1}
+        <div className="flex items-center gap-4 p-2 rounded-lg transition-colors hover:bg-muted/50">
+            <div className={`flex items-center justify-center font-bold text-lg w-8 h-8 shrink-0`}>
+                {rankIcons[index] || <span className="text-muted-foreground text-sm w-5 text-center">{index + 1}</span>}
             </div>
             {avatar && <Image src={avatar} alt={title} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" />}
             <div className="flex-1 min-w-0">
                 <p className="font-semibold truncate text-sm">{title}</p>
                 {subtitle && <p className="text-xs text-muted-foreground truncate">{subtitle}</p>}
             </div>
-            <div className="font-bold text-right">{value}</div>
+            <div className="font-bold text-right text-sm">{value}</div>
         </div>
     );
 };

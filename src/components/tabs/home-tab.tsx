@@ -6,12 +6,14 @@ import { ExecutiveMessageCard } from "@/components/executive-message-card";
 import { Building2, MessageSquare } from "lucide-react";
 import { BoardPostForm } from "../board-post-form";
 import { BoardPostCard } from "../board-post-card";
+import { BoardPostReplyForm } from "../board-post-reply-form";
 import type { Post } from "@/app/actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel"
 import {
   Dialog,
@@ -26,6 +28,7 @@ import { Badge } from "../ui/badge";
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const executiveMessages = [
   {
@@ -75,6 +78,34 @@ export function HomeTab() {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
+  const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
+  const isExecutive = true; // TODO: Replace with real authentication logic
+
+
+  useEffect(() => {
+    if (!carouselApi) {
+      return
+    }
+
+    const onSelect = () => {
+      setSelectedIndex(carouselApi.selectedScrollSnap())
+    }
+
+    setScrollSnaps(carouselApi.scrollSnapList())
+    carouselApi.on('select', onSelect)
+    
+    return () => {
+      carouselApi.off('select', onSelect)
+    }
+  }, [carouselApi])
+
+  const scrollTo = (index: number) => {
+    carouselApi?.scrollTo(index)
+  }
+
 
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -82,7 +113,6 @@ export function HomeTab() {
       const postsData: Post[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        // createdAt might be null temporarily on the client, so we guard against it.
         if (data.createdAt) {
           postsData.push({
             id: doc.id,
@@ -119,7 +149,7 @@ export function HomeTab() {
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
-        <Carousel>
+        <Carousel setApi={setCarouselApi}>
           <CarouselContent>
             {videos.map(video => (
               <CarouselItem key={video.id}>
@@ -134,6 +164,19 @@ export function HomeTab() {
             ))}
           </CarouselContent>
         </Carousel>
+        <div className="flex justify-center gap-2 mt-3">
+          {scrollSnaps.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={cn(
+                "h-1 w-6 rounded-full transition-all",
+                selectedIndex === index ? "w-6 bg-white" : "bg-gray-500"
+              )}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
       <section className="space-y-4">
@@ -162,7 +205,22 @@ export function HomeTab() {
                 ))
               ) : posts.length > 0 ? (
                   posts.map(post => (
-                    <BoardPostCard key={post.id} post={post} />
+                    <div key={post.id}>
+                      <BoardPostCard 
+                        post={post} 
+                        isExecutive={isExecutive}
+                        onReplyClick={() => setReplyingToPostId(replyingToPostId === post.id ? null : post.id)}
+                        isReplying={replyingToPostId === post.id}
+                      />
+                      {replyingToPostId === post.id && (
+                        <div className="pl-12 pt-2">
+                          <BoardPostReplyForm 
+                            postId={post.id}
+                            onReplySuccess={() => setReplyingToPostId(null)}
+                          />
+                        </div>
+                      )}
+                    </div>
                   ))
               ) : (
                 <div className="text-center text-muted-foreground py-8">
@@ -230,3 +288,5 @@ export function HomeTab() {
     </div>
   );
 }
+
+    

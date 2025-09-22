@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { philosophyItems, valuesItems } from '@/lib/company-philosophy';
 import {
   Accordion,
@@ -9,95 +9,138 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { BookOpen, Star, Search } from 'lucide-react';
+import { BookOpen, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Card } from '../ui/card';
 
 export function PhilosophyTab() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredPhilosophyItems, setFilteredPhilosophyItems] = useState(philosophyItems);
-  const [filteredValuesItems, setFilteredValuesItems] = useState(valuesItems);
-  const [activeAccordion, setActiveAccordion] = useState<string[]>([]);
 
-  useEffect(() => {
-    const lowercasedFilter = searchTerm.toLowerCase();
-
-    const filteredPhilosophy = philosophyItems.filter(item =>
-      item.title.toLowerCase().includes(lowercasedFilter) ||
-      item.content.toLowerCase().includes(lowercasedFilter)
-    );
-    setFilteredPhilosophyItems(filteredPhilosophy);
-
-    const filteredValues = valuesItems.filter(item =>
-      item.title.toLowerCase().includes(lowercasedFilter) ||
-      item.content.toLowerCase().includes(lowercasedFilter)
-    );
-    setFilteredValuesItems(filteredValues);
-
-    if (searchTerm) {
-      const philosophyIds = filteredPhilosophy.map(item => item.id);
-      const valuesIds = filteredValues.map(item => item.id);
-      setActiveAccordion([...philosophyIds, ...valuesIds]);
-    } else {
-      setActiveAccordion([]);
+  const filteredItems = useMemo(() => {
+    if (!searchTerm) {
+      return { philosophy: [], values: [] };
     }
+    const lowercasedFilter = searchTerm.toLowerCase();
+    const philosophy = philosophyItems.filter(
+      (item) =>
+        item.title.toLowerCase().includes(lowercasedFilter) ||
+        item.content.toLowerCase().includes(lowercasedFilter)
+    );
+    const values = valuesItems.filter(
+      (item) =>
+        item.title.toLowerCase().includes(lowercasedFilter) ||
+        item.content.toLowerCase().includes(lowercasedFilter)
+    );
+    return { philosophy, values };
   }, [searchTerm]);
 
+  const hasSearchResults = filteredItems.philosophy.length > 0 || filteredItems.values.length > 0;
+
   return (
-    <div className="p-4 space-y-6">
-      <div className="relative">
+    <div className="p-4">
+      <header className="flex items-center gap-2 mb-4 pt-2 shrink-0">
+        <BookOpen className="h-6 w-6 text-primary" />
+        <h2 className="text-xl font-bold text-foreground font-headline">企業理念</h2>
+      </header>
+
+      <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          type="search"
-          placeholder="理念や価値観を検索..."
-          className="pl-10"
+          type="text"
+          placeholder="理念を検索..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
         />
       </div>
 
-      <div>
-        <h2 className="text-lg font-semibold text-foreground font-headline mb-4">企業理念</h2>
-        <Accordion type="multiple" value={searchTerm ? activeAccordion : ['mission', 'vision']} onValueChange={setActiveAccordion} className="w-full space-y-4">
-          {filteredPhilosophyItems.map(item => (
-            <AccordionItem value={item.id} key={item.id} className="bg-card rounded-lg border">
-               <AccordionTrigger className="px-6 py-4 text-base font-medium hover:no-underline">
-                <div className="flex items-center gap-3">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  <span>{item.title}</span>
+      {searchTerm ? (
+        <div className="space-y-4">
+          {hasSearchResults ? (
+            <>
+              {filteredItems.philosophy.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-muted-foreground">理念・ビジョン</h3>
+                  {filteredItems.philosophy.map(item => (
+                    <Card key={item.id} className="p-4">
+                      <h4 className="font-semibold text-card-foreground mb-1">{item.title}</h4>
+                      <p className="text-sm text-muted-foreground">{item.content}</p>
+                    </Card>
+                  ))}
                 </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6 pt-0">
-                <p className="text-muted-foreground">{item.content}</p>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-        {filteredPhilosophyItems.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center pt-4">該当する項目はありません。</p>
-        )}
-      </div>
+              )}
+              {filteredItems.values.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-muted-foreground">行動指針</h3>
+                  {filteredItems.values.map(item => (
+                    <Card key={item.id} className="p-4">
+                      <div className="flex items-center gap-3 mb-1">
+                        <item.icon className="w-5 h-5 text-primary" />
+                        <h4 className="font-semibold text-card-foreground">{item.title}</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground ml-8">{item.content}</p>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">「{searchTerm}」に一致する項目は見つかりませんでした。</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <Accordion type="single" collapsible defaultValue="philosophy" className="w-full">
+          <AccordionItem value="philosophy">
+            <AccordionTrigger className="text-lg font-semibold">
+              私たちの理念
+            </AccordionTrigger>
+            <AccordionContent>
+              <Accordion type="multiple" className="w-full space-y-2">
+                <AccordionItem value="mission">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                    {philosophyItems[0].title}
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pt-2 text-muted-foreground">
+                    {philosophyItems[0].content}
+                  </AccordionContent>
+                </AccordionItem>
 
-      <div>
-        <h3 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
-          <Star className="h-5 w-5 text-yellow-500" />
-          私たちの価値観 (Values)
-        </h3>
-        <Accordion type="multiple" value={activeAccordion} onValueChange={setActiveAccordion} className="w-full space-y-2">
-           {filteredValuesItems.map(item => (
-            <AccordionItem value={item.id} key={item.id} className="bg-card rounded-lg border">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline">
-                {item.title}
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4 pt-0">
-                <p className="text-muted-foreground text-sm">{item.content}</p>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+                <AccordionItem value="vision">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                    {philosophyItems[1].title}
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pt-2 text-muted-foreground">
+                    {philosophyItems[1].content}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="values">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                    行動指針
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-2">
+                    <div className="space-y-4 p-4 border rounded-md">
+                      {valuesItems.map(item => (
+                        <div key={item.id}>
+                          <div className="flex items-center gap-3 mb-1">
+                            <item.icon className="w-5 h-5 text-primary" />
+                            <h4 className="font-semibold text-card-foreground">{item.title}</h4>
+                          </div>
+                          <p className="text-sm text-muted-foreground ml-8">
+                            {item.content}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
-        {filteredValuesItems.length === 0 && searchTerm && (
-          <p className="text-sm text-muted-foreground text-center pt-4">該当する項目はありません。</p>
-        )}
-      </div>
+      )}
     </div>
   );
 }

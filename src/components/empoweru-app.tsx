@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/app-shell';
 import { AppHeader } from '@/components/app-header';
 import { BottomNav } from '@/components/bottom-nav';
@@ -11,7 +11,8 @@ import { PhilosophyTab } from '@/components/tabs/philosophy-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { RankingTab } from '@/components/tabs/ranking-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
-import { CalendarTab } from '@/components/tabs/calendar-tab';
+import { PastGoalsTab } from '@/components/tabs/past-goals-tab';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -30,19 +31,30 @@ export default function EmpowerUApp() {
   const [activeTab, setActiveTab] = useState('home');
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showPastGoals, setShowPastGoals] = useState(false);
+  const [pastGoalsDepartment, setPastGoalsDepartment] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const handleCalendarClick = () => {
-    setShowCalendar(true);
-  };
+  useEffect(() => {
+    // This component can be mounted on the client side, so we can check localStorage.
+    const darkModeValue = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(darkModeValue);
+    
+    // Listen for changes from other tabs/windows
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'darkMode') {
+        setIsDarkMode(event.newValue === 'true');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
   
   const handleTabChange = (tab: string) => {
-    if (tab === 'calendar') {
-      setShowCalendar(true);
-    } else {
-      setActiveTab(tab);
-      setShowCalendar(false);
-    }
+    setActiveTab(tab);
   };
 
   const handleNotificationSelect = (notification: Notification) => {
@@ -50,11 +62,20 @@ export default function EmpowerUApp() {
     setShowNotifications(false);
   };
 
+  const handleShowPastGoals = (department: string) => {
+    setPastGoalsDepartment(department);
+    setShowPastGoals(true);
+  };
+
+  const handleHidePastGoals = () => {
+    setShowPastGoals(false);
+  };
+
   const renderContent = () => {
     const tabs: { [key: string]: JSX.Element } = {
       home: <HomeTab />,
       philosophy: <PhilosophyTab />,
-      dashboard: <DashboardTab />,
+      dashboard: <DashboardTab onShowPastGoals={handleShowPastGoals} />,
       ranking: <RankingTab />,
       other: <OtherTab />,
     };
@@ -62,7 +83,7 @@ export default function EmpowerUApp() {
     return (
       <>
         {Object.entries(tabs).map(([tabId, content]) => (
-          <div key={tabId} style={{ display: activeTab === tabId ? 'block' : 'none' }}>
+          <div key={tabId} style={{ display: activeTab === tabId && !showPastGoals ? 'block' : 'none' }}>
             {content}
           </div>
         ))}
@@ -71,46 +92,51 @@ export default function EmpowerUApp() {
   };
 
   return (
-    <AppShell>
-      <AppHeader
-        notificationCount={notifications.length}
-        onNotificationClick={() => setShowNotifications(!showNotifications)}
-        onCalendarClick={handleCalendarClick}
-      />
+    <div className={cn(isDarkMode && 'dark')}>
+      <AppShell>
+        <AppHeader
+          notificationCount={notifications.length}
+          onNotificationClick={() => setShowNotifications(!showNotifications)}
+        />
 
-      <NotificationPanel
-        isOpen={showNotifications}
-        notifications={notifications}
-        onClose={() => setShowNotifications(false)}
-        onNotificationSelect={handleNotificationSelect}
-      />
+        <NotificationPanel
+          isOpen={showNotifications}
+          notifications={notifications}
+          onClose={() => setShowNotifications(false)}
+          onNotificationSelect={handleNotificationSelect}
+        />
 
-      <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
-        <DialogContent className="max-w-xs">
-          {selectedNotification && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{selectedNotification.title}</DialogTitle>
-                <DialogDescription>{selectedNotification.time}</DialogDescription>
-              </DialogHeader>
-              <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto">
-                <p>{selectedNotification.fullContent}</p>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+        <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
+          <DialogContent className="max-w-xs">
+            {selectedNotification && (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{selectedNotification.title}</DialogTitle>
+                  <DialogDescription>{selectedNotification.time}</DialogDescription>
+                </DialogHeader>
+                <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto">
+                  <p>{selectedNotification.fullContent}</p>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
 
 
-      <main
-        className="h-[calc(100%-130px)] overflow-y-auto relative"
-        onClick={() => showNotifications && setShowNotifications(false)}
-      >
-        {renderContent()}
-        <CalendarTab show={showCalendar} onNavigateHome={() => setShowCalendar(false)} />
-      </main>
+        <main
+          className="h-[calc(100%-130px)] overflow-y-auto relative"
+          onClick={() => showNotifications && setShowNotifications(false)}
+        >
+          {renderContent()}
+          <PastGoalsTab 
+            show={showPastGoals} 
+            departmentName={pastGoalsDepartment} 
+            onNavigateBack={handleHidePastGoals} 
+          />
+        </main>
 
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-    </AppShell>
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      </AppShell>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Home, BookOpen, BarChart3, Trophy, MoreHorizontal } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type BottomNavProps = {
   activeTab: string;
@@ -27,8 +28,8 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
             className="flex flex-col items-center gap-1 h-auto py-2 px-3 rounded-lg"
             onClick={() => onTabChange(item.id)}
           >
-            <item.icon className="h-5 w-5" />
-            <span className="text-xs font-medium">{item.label}</span>
+            <item.icon className={cn("h-5 w-5", activeTab !== item.id && "text-foreground/80")} />
+            <span className={cn("text-xs font-medium", activeTab !== item.id && "text-foreground/80")}>{item.label}</span>
           </Button>
         ))}
       </div>
