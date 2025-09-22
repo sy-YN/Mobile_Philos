@@ -77,11 +77,18 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
             <div className="w-3 h-3 rounded-full bg-muted ring-2 ring-gray-400"></div>
           </div>
 
-          <header className="text-center pt-8 border-b-2 border-muted pb-4">
+          <header className="text-center pt-8 pb-1 relative z-10">
             <p className="text-lg font-medium text-muted-foreground tracking-widest">{dayOfWeek}</p>
           </header>
+          
+          <div className="relative -mt-1 h-4 w-full overflow-hidden">
+            <svg viewBox="0 0 320 16" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full text-card fill-current">
+              <path d="M0 4 Q 5 10, 10 4 Q 15 10, 20 4 Q 25 10, 30 4 Q 35 10, 40 4 Q 45 10, 50 4 Q 55 10, 60 4 Q 65 10, 70 4 Q 75 10, 80 4 Q 85 10, 90 4 Q 95 10, 100 4 Q 105 10, 110 4 Q 115 10, 120 4 Q 125 10, 130 4 Q 135 10, 140 4 Q 145 10, 150 4 Q 155 10, 160 4 Q 165 10, 170 4 Q 175 10, 180 4 Q 185 10, 190 4 Q 195 10, 200 4 Q 205 10, 210 4 Q 215 10, 220 4 Q 225 10, 230 4 Q 235 10, 240 4 Q 245 10, 250 4 Q 255 10, 260 4 Q 265 10, 270 4 Q 275 10, 280 4 Q 285 10, 290 4 Q 295 10, 300 4 Q 305 10, 310 4 Q 315 10, 320 4 L 320 0 L 0 0 Z" />
+            </svg>
+          </div>
 
-          <main className="flex-1 flex flex-col items-center justify-center text-center">
+
+          <main className="flex-1 flex flex-col items-center justify-center text-center bg-card z-0 pt-4">
             <p className="text-8xl font-bold text-foreground tracking-tighter">{day}</p>
             <p className="text-2xl font-medium text-muted-foreground -mt-2">{month}, {year}</p>
             
@@ -95,7 +102,7 @@ export function CalendarTab({ onNavigateHome, show }: CalendarTabProps) {
             </div>
           </main>
 
-          <footer className="text-center">
+          <footer className="text-center bg-card pb-4">
             <div className="flex flex-col items-center gap-2 drop-shadow-sm">
               <button onClick={handleLike} className="transition-transform transform active:scale-125">
                 <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "fill-primary text-primary")} />
