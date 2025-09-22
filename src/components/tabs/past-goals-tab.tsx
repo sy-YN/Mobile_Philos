@@ -14,25 +14,44 @@ type PastGoal = {
   year: number;
   goal: string;
   achievement: number;
+  rank?: number;
+  totalParticipants?: number;
 };
 
-const generatePastGoals = (): PastGoal[] => {
-  const goals = [
-    "新規顧客獲得数10%増",
-    "既存顧客満足度95%達成",
-    "新機能Aのリリース",
-    "マーケティング費用5%削減",
-    "チーム全体の生産性15%向上",
-    "採用プロセス改善",
-    "社内研修プログラムの刷新",
-    "カスタマーサポート応答時間短縮",
-    "WebサイトのCVR 3%改善",
-    "新規事業のPoC実施",
-    "アライアンスパートナー2社獲得",
-    "DX推進計画の策定",
-  ];
+const generatePastGoals = (isIndividual: boolean): PastGoal[] => {
+  const goals = isIndividual 
+    ? [
+        "新規契約を5件獲得",
+        "担当顧客の満足度アンケート実施",
+        "新機能のプロトタイプ作成",
+        "ウェビナー資料の作成",
+        "チームのコードレビューを10件実施",
+        "技術ブログ記事の執筆",
+        "採用候補者との面談5件",
+        "社内ツールの改善提案",
+        "競合製品の分析レポート作成",
+        "自身のOKR達成",
+        "新技術の学習とチームへの共有",
+        "クライアントへの新提案",
+      ]
+    : [
+        "新規顧客獲得数10%増",
+        "既存顧客満足度95%達成",
+        "新機能Aのリリース",
+        "マーケティング費用5%削減",
+        "チーム全体の生産性15%向上",
+        "採用プロセス改善",
+        "社内研修プログラムの刷新",
+        "カスタマーサポート応答時間短縮",
+        "WebサイトのCVR 3%改善",
+        "新規事業のPoC実施",
+        "アライアンスパートナー2社獲得",
+        "DX推進計画の策定",
+      ];
+      
   const data: PastGoal[] = [];
   const now = new Date();
+  const totalParticipants = 120;
 
   for (let i = 11; i >= 0; i--) {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -40,12 +59,19 @@ const generatePastGoals = (): PastGoal[] => {
     const year = date.getFullYear();
     const achievement = Math.floor(Math.random() * 61) + 40; // 40% to 100%
     
-    data.push({
+    const goalData: PastGoal = {
       month,
       year,
       goal: goals[i % goals.length], // Ensure we don't go out of bounds
       achievement,
-    });
+    };
+
+    if (isIndividual) {
+      goalData.rank = Math.floor(Math.random() * 20) + 1; // Random rank 1-20
+      goalData.totalParticipants = totalParticipants;
+    }
+    
+    data.push(goalData);
   }
   return data.reverse(); // Show most recent first
 };
@@ -65,7 +91,8 @@ type PastGoalsTabProps = {
 
 
 export function PastGoalsTab({ show, departmentName, onNavigateBack }: PastGoalsTabProps) {
-  const pastGoals = useMemo(() => generatePastGoals(), []);
+  const isIndividual = departmentName === "個人";
+  const pastGoals = useMemo(() => generatePastGoals(isIndividual), [isIndividual]);
 
   if (!show) {
     return null;
@@ -85,16 +112,21 @@ export function PastGoalsTab({ show, departmentName, onNavigateBack }: PastGoals
         <div className="w-8"></div>
       </header>
       <div className="flex-1 overflow-y-auto">
-        <p className="p-4 text-sm text-muted-foreground">過去12ヶ月の部署目標とその達成状況です。</p>
+        <p className="p-4 text-sm text-muted-foreground">過去12ヶ月の{isIndividual ? "個人" : "部署"}目標とその達成状況です。</p>
         <div className="divide-y border-t">
           {pastGoals.map((item, index) => (
             <div key={`${item.year}-${item.month}`} className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="font-medium w-24 shrink-0">
+              <div className="flex items-start justify-between mb-3 gap-4">
+                <div className="w-24 shrink-0">
                   <div className="text-xs text-muted-foreground">{item.year}年</div>
                   <div className="text-lg font-bold">{item.month}</div>
+                   {isIndividual && item.rank && item.totalParticipants && (
+                    <div className="text-xs text-primary font-semibold mt-1">
+                      {item.rank}位 / {item.totalParticipants}人中
+                    </div>
+                  )}
                 </div>
-                <p className="flex-1 text-sm font-medium text-left">{item.goal}</p>
+                <p className="flex-1 text-sm font-medium text-left pt-1">{item.goal}</p>
               </div>
 
               <div className="flex items-center gap-4">
