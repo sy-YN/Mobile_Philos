@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppShell } from '@/components/app-shell';
 import { AppHeader } from '@/components/app-header';
 import { BottomNav } from '@/components/bottom-nav';
@@ -12,6 +12,7 @@ import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { RankingTab } from '@/components/tabs/ranking-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
 import { PastGoalsTab } from '@/components/tabs/past-goals-tab';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,17 @@ export default function EmpowerUApp() {
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [showPastGoals, setShowPastGoals] = useState(false);
   const [pastGoalsDepartment, setPastGoalsDepartment] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const darkModeValue = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(darkModeValue);
+  }, []);
+
+  const handleDarkModeChange = (enabled: boolean) => {
+    setIsDarkMode(enabled);
+    localStorage.setItem('darkMode', String(enabled));
+  };
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -57,7 +69,7 @@ export default function EmpowerUApp() {
       philosophy: <PhilosophyTab />,
       dashboard: <DashboardTab onShowPastGoals={handleShowPastGoals} />,
       ranking: <RankingTab />,
-      other: <OtherTab />,
+      other: <OtherTab isDarkMode={isDarkMode} onDarkModeChange={handleDarkModeChange} />,
     };
 
     return (
@@ -72,49 +84,51 @@ export default function EmpowerUApp() {
   };
 
   return (
-    <AppShell>
-      <AppHeader
-        notificationCount={notifications.length}
-        onNotificationClick={() => setShowNotifications(!showNotifications)}
-      />
-
-      <NotificationPanel
-        isOpen={showNotifications}
-        notifications={notifications}
-        onClose={() => setShowNotifications(false)}
-        onNotificationSelect={handleNotificationSelect}
-      />
-
-      <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
-        <DialogContent className="max-w-xs">
-          {selectedNotification && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{selectedNotification.title}</DialogTitle>
-                <DialogDescription>{selectedNotification.time}</DialogDescription>
-              </DialogHeader>
-              <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto">
-                <p>{selectedNotification.fullContent}</p>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-
-      <main
-        className="h-[calc(100%-130px)] overflow-y-auto relative"
-        onClick={() => showNotifications && setShowNotifications(false)}
-      >
-        {renderContent()}
-        <PastGoalsTab 
-          show={showPastGoals} 
-          departmentName={pastGoalsDepartment} 
-          onNavigateBack={handleHidePastGoals} 
+    <div className={cn(isDarkMode && 'dark')}>
+      <AppShell>
+        <AppHeader
+          notificationCount={notifications.length}
+          onNotificationClick={() => setShowNotifications(!showNotifications)}
         />
-      </main>
 
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-    </AppShell>
+        <NotificationPanel
+          isOpen={showNotifications}
+          notifications={notifications}
+          onClose={() => setShowNotifications(false)}
+          onNotificationSelect={handleNotificationSelect}
+        />
+
+        <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
+          <DialogContent className="max-w-xs">
+            {selectedNotification && (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{selectedNotification.title}</DialogTitle>
+                  <DialogDescription>{selectedNotification.time}</DialogDescription>
+                </DialogHeader>
+                <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto">
+                  <p>{selectedNotification.fullContent}</p>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+
+
+        <main
+          className="h-[calc(100%-130px)] overflow-y-auto relative"
+          onClick={() => showNotifications && setShowNotifications(false)}
+        >
+          {renderContent()}
+          <PastGoalsTab 
+            show={showPastGoals} 
+            departmentName={pastGoalsDepartment} 
+            onNavigateBack={handleHidePastGoals} 
+          />
+        </main>
+
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      </AppShell>
+    </div>
   );
 }

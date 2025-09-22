@@ -15,8 +15,12 @@ export default function CalendarPage() {
   const [likes, setLikes] = useState(111);
   const [isLiked, setIsLiked] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    const darkModeValue = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(darkModeValue);
+    
     const date = new Date();
     setToday(date);
     const valueIndex = (date.getDate() - 1) % valuesItems.length;
@@ -41,7 +45,7 @@ export default function CalendarPage() {
 
   return (
     <main className="flex-1 flex items-center justify-center min-h-screen bg-white">
-      <div className="dark">
+      <div className={cn(isDarkMode && 'dark')}>
         <AppShell>
           <div 
             className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer bg-muted"
