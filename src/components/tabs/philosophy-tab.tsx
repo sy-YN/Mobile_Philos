@@ -54,7 +54,7 @@ export function PhilosophyTab() {
               <Card 
                 key={item.id}
                 className={cn(
-                  "p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/80 transition-colors text-card-foreground",
+                  "p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/80 transition-colors",
                   selectedItem.id === item.id && "bg-muted/80 ring-2 ring-primary"
                 )}
                 onClick={() => setSelectedItem(item)}
@@ -62,7 +62,7 @@ export function PhilosophyTab() {
                 <div className={cn("w-10 h-10 rounded-md flex items-center justify-center", item.iconBg)}>
                   <item.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <span className="font-semibold">{item.title}</span>
+                <span className="font-semibold text-card-foreground">{item.title}</span>
               </Card>
             ))}
           </div>
