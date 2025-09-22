@@ -134,7 +134,7 @@ export function DashboardTab() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    setShowAward(value === "目標");
+    setShowAward(value === "グループ");
   };
 
   const handleSaveChanges = () => {
@@ -169,7 +169,7 @@ export function DashboardTab() {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="flex-grow">
         <TabsList className="grid w-full grid-cols-3 rounded-none h-auto p-0 bg-card border-b">
           <TabsTrigger value="売上" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">売上</TabsTrigger>
-          <TabsTrigger value="目標" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">目標</TabsTrigger>
+          <TabsTrigger value="グループ" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">グループ</TabsTrigger>
           <TabsTrigger value="個人" className="rounded-none py-3 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary">個人</TabsTrigger>
         </TabsList>
         
@@ -335,7 +335,7 @@ export function DashboardTab() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="目標" className="mt-0">
+          <TabsContent value="グループ" className="mt-0">
              <div className="relative flex justify-center items-center gap-4 pt-10">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -413,5 +413,7 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
 
     
