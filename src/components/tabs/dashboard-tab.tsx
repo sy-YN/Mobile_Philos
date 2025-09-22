@@ -31,6 +31,7 @@ import {
   ChartLegendContent
 } from "@/components/ui/chart";
 import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell, Dot } from "recharts";
+import { PastGoalsDialog } from "@/components/past-goals-dialog";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
@@ -161,6 +162,7 @@ const CustomizedDotPlain: React.FC<any> = (props: any) => {
 export function DashboardTab() {
   const [activeTab, setActiveTab] = useState("売上");
   
+  const [departmentName, setDepartmentName] = useState("営業部");
   const [departmentGoal, setDepartmentGoal] = useState("企業理念促進");
   const [departmentProgress, setDepartmentProgress] = useState(70);
   const [personalGoal, setPersonalGoal] = useState("新システムの機能をリリースまで行く");
@@ -397,21 +399,26 @@ export function DashboardTab() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className="rounded-full shadow-md gap-2">
-                        <span>部署名</span>
+                        <span>{departmentName}</span>
                         <ChevronDown className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>営業部</DropdownMenuItem>
-                      <DropdownMenuItem>マーケティング部</DropdownMenuItem>
-                      <DropdownMenuItem>開発部</DropdownMenuItem>
-                      <DropdownMenuItem>人事部</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setDepartmentName('営業部')}>営業部</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setDepartmentName('マーケティング部')}>マーケティング部</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setDepartmentName('開発部')}>開発部</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setDepartmentName('人事部')}>人事部</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
-                    過去の目標
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
+                        過去の目標
+                      </Button>
+                    </DialogTrigger>
+                    <PastGoalsDialog departmentName={departmentName} />
+                  </Dialog>
               </div>
             </div>
         </TabsContent>
@@ -545,3 +552,5 @@ export function DashboardTab() {
     </div>
   );
 }
+
+    
