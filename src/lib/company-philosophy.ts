@@ -21,7 +21,6 @@ export const valuesItems = [
     content: '失敗を恐れず、常に新しいことに取り組み、自らの限界を超えていく姿勢を大切にします。',
     icon: Flame,
     color: 'text-red-500',
-    iconBg: 'bg-red-500',
   },
   {
     id: 'value-2',
@@ -29,7 +28,6 @@ export const valuesItems = [
     content: '日々の学びと経験を通じて、個人としても組織としても、継続的に成長し続けることを目指します。',
     icon: Leaf,
     color: 'text-green-500',
-    iconBg: 'bg-green-500',
   },
   {
     id: 'value-3',
@@ -37,7 +35,6 @@ export const valuesItems = [
     content: '顧客、仲間、社会に対して、常に正直で真摯な態度で向き合い、信頼関係を築きます。',
     icon: Handshake,
     color: 'text-blue-500',
-    iconBg: 'bg-blue-500',
   },
   {
     id: 'value-4',
@@ -45,7 +42,6 @@ export const valuesItems = [
     content: '常にお客様の視点に立ち、期待を超える価値を提供することで、最高の満足を追求します。',
     icon: Star,
     color: 'text-yellow-500',
-    iconBg: 'bg-yellow-500',
   },
   {
     id: 'value-5',
@@ -53,7 +49,6 @@ export const valuesItems = [
     content: '既存の枠にとらわれず、自由な発想とアイデアで、新しい価値を創り出します。',
     icon: Lightbulb,
     color: 'text-purple-500',
-    iconBg: 'bg-purple-500',
   },
   {
     id: 'value-6',
@@ -61,7 +56,6 @@ export const valuesItems = [
     content: '多様な個性、意見、文化を認め合い、互いに敬意を払うことで、強いチームワークを育みます。',
     icon: Bird,
     color: 'text-teal-500',
-    iconBg: 'bg-teal-500',
   },
   {
     id: 'value-7',
@@ -69,7 +63,6 @@ export const valuesItems = [
     content: '市場の変化や顧客のニーズに迅速に対応し、機動的な意思決定と行動を心がけます。',
     icon: Zap,
     color: 'text-orange-500',
-    iconBg: 'bg-orange-500',
   },
   {
     id: 'value-8',
@@ -77,6 +70,5 @@ export const valuesItems = [
     content: '事業活動を通じて、より良い社会の実現に貢献し、持続可能な未来を築く責任を果たします。',
     icon: Globe,
     color: 'text-sky-500',
-    iconBg: 'bg-sky-500',
   },
 ];
