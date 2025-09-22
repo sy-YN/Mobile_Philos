@@ -31,6 +31,8 @@ import {
   ChartLegendContent
 } from "@/components/ui/chart";
 import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell, Dot } from "recharts";
+import { generateGoalAward } from "@/ai/flows/generate-goal-award";
+import { Balancer } from "react-wrap-balancer";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
@@ -170,7 +172,9 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
   const [tempPersonalGoal, setTempPersonalGoal] = useState(personalGoal);
   const [tempPersonalProgress, setTempPersonalProgress] = useState(personalProgress);
 
-  const [showAward, setShowAward] = useState(false);
+  const [awardMessage, setAwardMessage] = useState('分析中...');
+  const [isAwardLoading, setIsAwardLoading] = useState(true);
+
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamGoalsDialogOpen, setIsTeamGoalsDialogOpen] = useState(false);
   
@@ -182,9 +186,26 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
   const latestSalesProfitData = salesProfitChartData[salesProfitChartData.length - 1];
 
 
+  useEffect(() => {
+    if (activeTab === 'グループ') {
+      setIsAwardLoading(true);
+      generateGoalAward({ goal: departmentGoal, progress: departmentProgress })
+        .then(result => {
+          setAwardMessage(result.awardMessage);
+        })
+        .catch(error => {
+          console.error("Error generating award message:", error);
+          setAwardMessage('素晴らしい進捗です！'); // Fallback message
+        })
+        .finally(() => {
+          setIsAwardLoading(false);
+        });
+    }
+  }, [activeTab, departmentGoal, departmentProgress]);
+
+
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    setShowAward(value === "グループ");
   };
 
   const handleSaveChanges = () => {
@@ -384,11 +405,15 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
               <div className="relative">
                 <CircularProgress value={departmentProgress} />
                 
-                {showAward && (
-                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-                    <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg">
+                {activeTab === 'グループ' && (
+                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 text-center">
+                    <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg min-h-[40px]">
                       <Award className="w-4 h-4" />
-                      <span>理念浸透が向上しました！</span>
+                      <span className="flex-1">
+                        <Balancer>
+                          {isAwardLoading ? '分析中...' : awardMessage}
+                        </Balancer>
+                      </span>
                     </div>
                     <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary"></div>
                   </div>
@@ -546,5 +571,3 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
     </div>
   );
 }
-
-    
