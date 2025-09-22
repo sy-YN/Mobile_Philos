@@ -31,7 +31,6 @@ import {
   ChartLegendContent
 } from "@/components/ui/chart";
 import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell, Dot } from "recharts";
-import { PastGoalsDialog } from "@/components/past-goals-dialog";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
@@ -159,7 +158,7 @@ const CustomizedDotPlain: React.FC<any> = (props: any) => {
 };
 
 
-export function DashboardTab() {
+export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department: string) => void }) {
   const [activeTab, setActiveTab] = useState("売上");
   
   const [departmentName, setDepartmentName] = useState("営業部");
@@ -411,14 +410,9 @@ export function DashboardTab() {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
-                        過去の目標
-                      </Button>
-                    </DialogTrigger>
-                    <PastGoalsDialog departmentName={departmentName} />
-                  </Dialog>
+                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent" onClick={() => onShowPastGoals(departmentName)}>
+                    過去の目標
+                  </Button>
               </div>
             </div>
         </TabsContent>
@@ -542,7 +536,7 @@ export function DashboardTab() {
                     </DialogContent>
                   </Dialog>
 
-                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent">
+                  <Button variant="outline" className="rounded-full shadow-sm border-accent/30 text-accent hover:bg-accent/10 hover:text-accent" onClick={() => onShowPastGoals("個人")}>
                     過去の目標
                   </Button>
               </div>

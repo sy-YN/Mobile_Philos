@@ -2,12 +2,6 @@
 'use client';
 
 import {
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -17,10 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, ArrowLeft } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { useMemo } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 type PastGoal = {
   month: string;
@@ -79,17 +75,6 @@ const generatePastGoals = (): PastGoal[] => {
   return data;
 };
 
-const TrendIcon = ({ trend }: { trend: "up" | "down" | "stable" }) => {
-  switch (trend) {
-    case "up":
-      return <TrendingUp className="h-4 w-4 text-green-500" />;
-    case "down":
-      return <TrendingDown className="h-4 w-4 text-red-500" />;
-    default:
-      return <Minus className="h-4 w-4 text-muted-foreground" />;
-  }
-};
-
 const chartConfig = {
   achievement: {
     label: "達成率",
@@ -97,18 +82,35 @@ const chartConfig = {
   },
 };
 
-export function PastGoalsDialog({ departmentName }: { departmentName: string }) {
+type PastGoalsTabProps = {
+  show: boolean;
+  departmentName: string;
+  onNavigateBack: () => void;
+};
+
+
+export function PastGoalsTab({ show, departmentName, onNavigateBack }: PastGoalsTabProps) {
   const pastGoals = useMemo(() => generatePastGoals(), []);
 
+  if (!show) {
+    return null;
+  }
+
   return (
-    <DialogContent className="max-w-lg">
-      <DialogHeader>
-        <DialogTitle>過去の目標 - {departmentName}</DialogTitle>
-        <DialogDescription>
-          過去12ヶ月の部署目標とその達成状況です。
-        </DialogDescription>
-      </DialogHeader>
-      <div className="max-h-[60vh] overflow-y-auto -mx-6">
+    <div className={cn("absolute inset-0 z-30 bg-background flex flex-col transition-opacity duration-300", show ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+      <header className="px-4 py-3 flex items-center border-b shrink-0">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onNavigateBack}>
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">戻る</span>
+        </Button>
+        <div className="text-center flex-1">
+          <h1 className="text-base font-semibold text-foreground">過去の目標</h1>
+          <p className="text-sm text-muted-foreground">{departmentName}</p>
+        </div>
+        <div className="w-8"></div>
+      </header>
+      <div className="flex-1 overflow-y-auto">
+        <p className="p-4 text-sm text-muted-foreground">過去12ヶ月の部署目標とその達成状況です。</p>
         <Table>
           <TableHeader className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
             <TableRow>
@@ -164,6 +166,6 @@ export function PastGoalsDialog({ departmentName }: { departmentName: string }) 
           </TableBody>
         </Table>
       </div>
-    </DialogContent>
+    </div>
   );
 }
