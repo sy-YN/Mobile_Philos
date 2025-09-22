@@ -289,7 +289,7 @@ export function DashboardTab() {
               <div className="grid grid-cols-2 gap-4">
                 <Card>
                   <CardHeader className="p-4 pb-0">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">売上</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の売上</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-1">
                     <div className="text-2xl font-bold">{latestSalesData['売上'] * 100}万円</div>
@@ -297,7 +297,7 @@ export function DashboardTab() {
                 </Card>
                 <Card>
                   <CardHeader className="p-4 pb-0">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">利益率</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">今月の利益率</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-1">
                     <div className="text-2xl font-bold">{latestSalesData['利益率']}%</div>
