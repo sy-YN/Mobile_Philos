@@ -21,6 +21,12 @@ const individualLikesRanking = [
     { id: 3, name: '佐藤 あきら', avatar: 'https://picsum.photos/seed/p6/100/100', likes: 121 },
 ];
 
+const individualCommentsRanking = [
+    { id: 1, name: '佐藤 あきら', avatar: 'https://picsum.photos/seed/p6/100/100', comments: 78 },
+    { id: 2, name: '鈴木 花子', avatar: 'https://picsum.photos/seed/p2/100/100', comments: 65 },
+    { id: 3, name: '山田 太郎', avatar: 'https://picsum.photos/seed/p1/100/100', comments: 59 },
+];
+
 const departmentAchievementRanking = [
     { id: 1, name: '営業部', progress: 115 },
     { id: 2, name: '開発部', progress: 98 },
@@ -107,6 +113,27 @@ export function RankingTab() {
                                         avatar={item.avatar}
                                         title={item.name}
                                         value={`${item.likes} いいね`}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
+                        
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-base flex items-center gap-2">
+                                    <MessageSquare className="text-green-500" />
+                                    コメント投稿数
+                                </CardTitle>
+                                <CardDescription>掲示板への投稿と返信の総数</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {renderRankingList(individualCommentsRanking, (item, index) => (
+                                    <RankingListItem 
+                                        key={item.id} 
+                                        index={index} 
+                                        avatar={item.avatar}
+                                        title={item.name}
+                                        value={`${item.comments} 回`}
                                     />
                                 ))}
                             </CardContent>
