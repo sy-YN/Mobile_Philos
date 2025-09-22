@@ -70,7 +70,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying }: B
             {isExecutive && (
               <Button variant="ghost" size="sm" className={cn("flex items-center gap-1.5 h-auto px-2 py-1", isReplying ? "text-primary" : "hover:text-primary")} onClick={onReplyClick}>
                 <MessageSquare className="h-4 w-4" />
-                <span>返信する</span>
+                <span>返信する (経営陣のみ)</span>
               </Button>
             )}
           </div>
