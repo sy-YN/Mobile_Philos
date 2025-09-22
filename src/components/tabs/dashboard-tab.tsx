@@ -41,6 +41,15 @@ const salesChartData = [
   { month: "9月", "売上": 90, "利益率": 25 },
 ];
 
+const salesProfitChartData = [
+  { month: "4月", "売上": 50, "純利益": 7.5 },
+  { month: "5月", "売上": 60, "純利益": 10.8 },
+  { month: "6月", "売上": 75, "純利益": 15 },
+  { month: "7月", "売上": 65, "純利益": 11.05 },
+  { month: "8月", "売上": 80, "純利益": 17.6 },
+  { month: "9月", "売上": 90, "純利益": 22.5 },
+];
+
 const salesChartConfig = {
   "売上": {
     label: "売上 (百万円)",
@@ -49,6 +58,19 @@ const salesChartConfig = {
   },
   "利益率": {
     label: "利益率 (%)",
+    color: "hsl(var(--chart-2))",
+    icon: LineChart,
+  },
+};
+
+const salesProfitChartConfig = {
+  "売上": {
+    label: "売上 (百万円)",
+    color: "hsl(var(--chart-1))",
+    icon: BarChart,
+  },
+  "純利益": {
+    label: "純利益 (百万円)",
     color: "hsl(var(--chart-2))",
     icon: LineChart,
   },
@@ -272,11 +294,11 @@ export function DashboardTab() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>売上推移</CardTitle>
+                <CardTitle>売上・純利益推移</CardTitle>
               </CardHeader>
               <CardContent className="h-[22rem] -mx-4">
-                <ChartContainer config={salesChartConfig}>
-                  <ComposedChart data={salesChartData}>
+                <ChartContainer config={salesProfitChartConfig}>
+                  <ComposedChart data={salesProfitChartData}>
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="month"
@@ -288,13 +310,6 @@ export function DashboardTab() {
                       yAxisId="left"
                       orientation="left"
                       stroke="hsl(var(--chart-1))"
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      stroke="hsl(var(--chart-2))"
                       tickLine={false}
                       axisLine={false}
                     />
@@ -310,11 +325,11 @@ export function DashboardTab() {
                       fill="hsl(var(--chart-1))"
                     />
                     <Line
-                      dataKey="利益率"
+                      dataKey="純利益"
                       type="monotone"
                       stroke="hsl(var(--chart-2))"
                       strokeWidth={2}
-                      yAxisId="right"
+                      yAxisId="left"
                       activeDot={{ r: 6 }}
                     />
                   </ComposedChart>
@@ -507,4 +522,6 @@ export function DashboardTab() {
   );
 }
 
+    
+    
     
