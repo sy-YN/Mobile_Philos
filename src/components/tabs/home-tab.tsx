@@ -12,6 +12,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel"
 import {
   Dialog,
@@ -26,6 +27,7 @@ import { Badge } from "../ui/badge";
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const executiveMessages = [
   {
@@ -75,6 +77,32 @@ export function HomeTab() {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
+
+
+  useEffect(() => {
+    if (!carouselApi) {
+      return
+    }
+
+    const onSelect = () => {
+      setSelectedIndex(carouselApi.selectedScrollSnap())
+    }
+
+    setScrollSnaps(carouselApi.scrollSnapList())
+    carouselApi.on('select', onSelect)
+    
+    return () => {
+      carouselApi.off('select', onSelect)
+    }
+  }, [carouselApi])
+
+  const scrollTo = (index: number) => {
+    carouselApi?.scrollTo(index)
+  }
+
 
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -119,7 +147,7 @@ export function HomeTab() {
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
-        <Carousel>
+        <Carousel setApi={setCarouselApi}>
           <CarouselContent>
             {videos.map(video => (
               <CarouselItem key={video.id}>
@@ -134,6 +162,19 @@ export function HomeTab() {
             ))}
           </CarouselContent>
         </Carousel>
+        <div className="flex justify-center gap-2 mt-3">
+          {scrollSnaps.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={cn(
+                "h-1 w-6 rounded-full transition-all",
+                selectedIndex === index ? "w-6 bg-white" : "bg-white/50"
+              )}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
       <section className="space-y-4">
