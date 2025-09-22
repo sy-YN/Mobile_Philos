@@ -18,7 +18,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
       </div>
       <div className="flex items-center gap-1">
         <Link href="/calendar">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground">
             <CalendarIcon className="h-4 w-4" />
             <span className="sr-only">カレンダーを開く</span>
           </Button>
@@ -26,7 +26,7 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-8 w-8"
+          className="relative h-8 w-8 text-foreground"
           onClick={onNotificationClick}
         >
           <Bell className="h-4 w-4" />
