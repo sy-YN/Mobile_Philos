@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search, Dot } from "lucide-react";
+import { HelpCircle, Settings, TrendingUp, Target, ChevronDown, Award, BarChart, LineChart, Edit, Users, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart";
-import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell } from "recharts";
+import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Cell, Dot } from "recharts";
 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
@@ -72,7 +72,7 @@ const salesProfitChartConfig = {
   "純利益": {
     label: "純利益 (百万円)",
     color: "hsl(var(--chart-2))",
-    icon: LineChart,
+    icon: BarChart,
   },
 };
 
@@ -149,6 +149,11 @@ const CustomizedDot: React.FC<any> = (props: any) => {
     );
   }
 
+  return <Dot cx={cx} cy={cy} r={3} fill={stroke} stroke="none" />;
+};
+
+const CustomizedDotPlain: React.FC<any> = (props: any) => {
+  const { cx, cy, stroke } = props;
   return <Dot cx={cx} cy={cy} r={3} fill={stroke} stroke="none" />;
 };
 
@@ -324,13 +329,11 @@ export function DashboardTab() {
                       yAxisId="left"
                       fill="hsl(var(--chart-1))"
                     />
-                    <Line
+                    <Bar
                       dataKey="純利益"
-                      type="monotone"
-                      stroke="hsl(var(--chart-2))"
-                      strokeWidth={2}
+                      radius={4}
                       yAxisId="left"
-                      activeDot={{ r: 6 }}
+                      fill="hsl(var(--chart-2))"
                     />
                   </ComposedChart>
                 </ChartContainer>
