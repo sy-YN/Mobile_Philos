@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { valuesItems } from '@/lib/company-philosophy';
 import { ThumbsUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AppShell } from '@/components/app-shell';
 
 export default function CalendarPage() {
   const router = useRouter();
@@ -18,13 +17,27 @@ export default function CalendarPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    // This component can be mounted on the client side, so we can check localStorage.
     const darkModeValue = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModeValue);
     
+    // Listen for changes from other tabs/windows
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'darkMode') {
+        setIsDarkMode(event.newValue === 'true');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     const date = new Date();
     setToday(date);
     const valueIndex = (date.getDate() - 1) % valuesItems.length;
     setCurrentValue(valuesItems[valueIndex]);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleLike = (e: React.MouseEvent) => {
@@ -46,7 +59,6 @@ export default function CalendarPage() {
   return (
     <main className="flex-1 flex items-center justify-center min-h-screen bg-white">
       <div className={cn(isDarkMode && 'dark')}>
-        <AppShell>
           <div 
             className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer bg-muted"
             onClick={handlePageFlip}
@@ -108,7 +120,6 @@ export default function CalendarPage() {
               </div>
             </div>
           </div>
-        </AppShell>
       </div>
     </main>
   );
