@@ -169,7 +169,7 @@ export function HomeTab() {
               onClick={() => scrollTo(index)}
               className={cn(
                 "h-1 w-6 rounded-full transition-all",
-                selectedIndex === index ? "w-6 bg-white" : "bg-white/50"
+                selectedIndex === index ? "w-6 bg-white" : "bg-gray-500"
               )}
               aria-label={`Go to slide ${index + 1}`}
             />
