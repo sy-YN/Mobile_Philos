@@ -11,7 +11,6 @@ import { PhilosophyTab } from '@/components/tabs/philosophy-tab';
 import { DashboardTab } from '@/components/tabs/dashboard-tab';
 import { RankingTab } from '@/components/tabs/ranking-tab';
 import { OtherTab } from '@/components/tabs/other-tab';
-import { CalendarTab } from '@/components/tabs/calendar-tab';
 import { PastGoalsTab } from '@/components/tabs/past-goals-tab';
 import {
   Dialog,
@@ -31,21 +30,11 @@ export default function EmpowerUApp() {
   const [activeTab, setActiveTab] = useState('home');
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [showPastGoals, setShowPastGoals] = useState(false);
   const [pastGoalsDepartment, setPastGoalsDepartment] = useState('');
-
-  const handleCalendarClick = () => {
-    setShowCalendar(true);
-  };
   
   const handleTabChange = (tab: string) => {
-    if (tab === 'calendar') {
-      setShowCalendar(true);
-    } else {
-      setActiveTab(tab);
-      setShowCalendar(false);
-    }
+    setActiveTab(tab);
   };
 
   const handleNotificationSelect = (notification: Notification) => {
@@ -87,7 +76,6 @@ export default function EmpowerUApp() {
       <AppHeader
         notificationCount={notifications.length}
         onNotificationClick={() => setShowNotifications(!showNotifications)}
-        onCalendarClick={handleCalendarClick}
       />
 
       <NotificationPanel
@@ -119,7 +107,6 @@ export default function EmpowerUApp() {
         onClick={() => showNotifications && setShowNotifications(false)}
       >
         {renderContent()}
-        <CalendarTab show={showCalendar} onNavigateHome={() => setShowCalendar(false)} />
         <PastGoalsTab 
           show={showPastGoals} 
           departmentName={pastGoalsDepartment} 
