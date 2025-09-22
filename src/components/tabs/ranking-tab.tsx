@@ -33,16 +33,18 @@ const departmentPhilosophyRanking = [
     { id: 3, name: '営業部', score: 85 },
 ];
 
+const totalEmployees = 1550;
+
 const shortVideoRanking = [
-    { id: 1, title: '第4四半期 全社ミーティング', views: 1280 },
-    { id: 2, title: '新プロダクトのコンセプト紹介', views: 980 },
-    { id: 3, title: 'ベータ版新機能のデモ', views: 750 },
+    { id: 1, title: '第4四半期 全社ミーティング', viewers: 1280, totalAudience: totalEmployees },
+    { id: 2, title: '新プロダクトのコンセプト紹介', viewers: 980, totalAudience: totalEmployees },
+    { id: 3, title: 'ベータ版新機能のデモ', viewers: 750, totalAudience: totalEmployees },
 ];
 
 const executiveMessageRanking = [
-    { id: 1, title: '第4四半期の戦略 (CEO)', views: 1520 },
-    { id: 2, title: 'DX推進の進捗 (CTO)', views: 1100 },
-    { id: 3, title: '新市場への展開について', views: 850 },
+    { id: 1, title: '第4四半期の戦略 (CEO)', viewers: 1520, totalAudience: totalEmployees },
+    { id: 2, title: 'DX推進の進捗 (CTO)', viewers: 1100, totalAudience: totalEmployees },
+    { id: 3, title: '新市場への展開について', viewers: 850, totalAudience: totalEmployees },
 ];
 
 
@@ -159,9 +161,9 @@ export function RankingTab() {
                             <CardHeader>
                                 <CardTitle className="text-base flex items-center gap-2">
                                    <Film className="text-purple-500" />
-                                   ショート動画 視聴数
+                                   ショート動画 視聴率
                                 </CardTitle>
-                                 <CardDescription>社内向けショート動画の再生回数</CardDescription>
+                                 <CardDescription>社内向けショート動画の視聴率</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {renderRankingList(shortVideoRanking, (item, index) => (
@@ -169,7 +171,7 @@ export function RankingTab() {
                                         key={item.id}
                                         index={index}
                                         title={item.title}
-                                        value={`${item.views} 回`}
+                                        value={`${item.viewers} / ${item.totalAudience} 人`}
                                     />
                                 ))}
                             </CardContent>
@@ -178,9 +180,9 @@ export function RankingTab() {
                             <CardHeader>
                                 <CardTitle className="text-base flex items-center gap-2">
                                    <Megaphone className="text-orange-500" />
-                                   経営層メッセージ 閲覧数
+                                   経営層メッセージ 閲覧率
                                 </CardTitle>
-                                 <CardDescription>経営層からのメッセージの閲覧回数</CardDescription>
+                                 <CardDescription>経営層からのメッセージの閲覧率</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {renderRankingList(executiveMessageRanking, (item, index) => (
@@ -188,7 +190,7 @@ export function RankingTab() {
                                         key={item.id}
                                         index={index}
                                         title={item.title}
-                                        value={`${item.views} 回`}
+                                        value={`${item.viewers} / ${item.totalAudience} 人`}
                                     />
                                 ))}
                             </CardContent>
