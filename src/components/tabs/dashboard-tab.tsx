@@ -35,7 +35,7 @@ import { Bar, XAxis, YAxis, CartesianGrid, ComposedChart, Line, DotProps, Cell, 
 const salesChartData = [
   { month: "4月", "売上": 50, "利益率": 15 },
   { month: "5月", "売上": 60, "利益率": 18 },
-  { month: "6月", "  売上": 75, "利益率": 20 },
+  { month: "6月", "売上": 75, "利益率": 20 },
   { month: "7月", "売上": 65, "利益率": 17 },
   { month: "8月", "売上": 80, "利益率": 22 },
   { month: "9月", "売上": 90, "利益率": 25 },
