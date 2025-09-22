@@ -17,12 +17,10 @@ export function AppHeader({ notificationCount, onNotificationClick }: AppHeaderP
         <h1 className="text-lg font-bold text-foreground font-headline">Philos</h1>
       </div>
       <div className="flex items-center gap-1">
-        <Link href="/calendar" passHref legacyBehavior>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <a>
-              <CalendarIcon className="h-4 w-4" />
-              <span className="sr-only">カレンダーを開く</span>
-            </a>
+        <Link href="/calendar">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <CalendarIcon className="h-4 w-4" />
+            <span className="sr-only">カレンダーを開く</span>
           </Button>
         </Link>
         <Button
