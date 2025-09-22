@@ -60,7 +60,7 @@ export default function CalendarPage() {
     <main className="flex-1 flex items-center justify-center min-h-screen bg-white">
       <div className={cn(isDarkMode && 'dark')}>
           <div 
-            className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer bg-muted"
+            className="relative h-full flex flex-col items-center justify-center p-4 cursor-pointer"
             onClick={handlePageFlip}
           >
             <div 
@@ -110,7 +110,7 @@ export default function CalendarPage() {
                 </main>
 
                 <footer className="text-center bg-card pb-4">
-                  <div className="flex flex-col items-center gap-2 drop-shadow-sm">
+                  <div className="flex flex-col items-center gap-2">
                     <button onClick={handleLike} className="transition-transform transform active:scale-125">
                       <ThumbsUp className={cn("h-8 w-8 text-muted-foreground", isLiked && "fill-primary text-primary")} />
                     </button>
