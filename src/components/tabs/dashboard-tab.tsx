@@ -58,7 +58,7 @@ const salesChartConfig = {
   },
   "利益率": {
     label: "利益率 (%)",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-4))",
     icon: LineChart,
   },
 };
@@ -268,7 +268,7 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
                     <YAxis
                       yAxisId="right"
                       orientation="right"
-                      stroke="hsl(var(--chart-2))"
+                      stroke="hsl(var(--chart-4))"
                       tickLine={false}
                       axisLine={false}
                     />
@@ -289,7 +289,7 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
                     <Line
                       dataKey="利益率"
                       type="monotone"
-                      stroke="hsl(var(--chart-2))"
+                      stroke="hsl(var(--chart-4))"
                       strokeWidth={2}
                       yAxisId="right"
                       dot={<CustomizedDot />}
