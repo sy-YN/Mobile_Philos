@@ -144,6 +144,16 @@ export function HomeTab() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handlePostUpdateSuccess = () => {
+    // onSnapshot already handles real-time updates, so no explicit re-fetch needed here.
+    console.log("Post updated, onSnapshot will handle UI refresh.");
+  };
+
+  const handlePostDeleteSuccess = () => {
+    // onSnapshot already handles real-time updates, so no explicit re-fetch needed here.
+    console.log("Post deleted, onSnapshot will handle UI refresh.");
+  };
+
   return (
     <div className="p-4 space-y-6">
       <div
@@ -211,6 +221,8 @@ export function HomeTab() {
                         isExecutive={isExecutive}
                         onReplyClick={() => setReplyingToPostId(replyingToPostId === post.id ? null : post.id)}
                         isReplying={replyingToPostId === post.id}
+                        onUpdateSuccess={handlePostUpdateSuccess}
+                        onDeleteSuccess={handlePostDeleteSuccess}
                       />
                       {replyingToPostId === post.id && (
                         <div className="pl-12 pt-2">
@@ -288,5 +300,3 @@ export function HomeTab() {
     </div>
   );
 }
-
-    
