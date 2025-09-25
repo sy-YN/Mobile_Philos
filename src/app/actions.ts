@@ -14,7 +14,7 @@ export type Post = {
   likes: number;
   time: string | Date;
   analysis?: AnalyzeBoardPostSentimentOutput;
-  createdAt: Timestamp;
+  createdAt: Timestamp | Date | string; // Updated type definition
 };
 
 export type FormState = {

@@ -13,6 +13,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
 import {
@@ -159,7 +161,7 @@ export function HomeTab() {
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
-        <Carousel setApi={setCarouselApi}>
+        <Carousel setApi={setCarouselApi} className="group">
           <CarouselContent>
             {videos.map(video => (
               <CarouselItem key={video.id}>
@@ -173,6 +175,12 @@ export function HomeTab() {
               </CarouselItem>
             ))}
           </CarouselContent>
+           <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 bg-black/30 text-white border-none rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="m15 18-6-6 6-6"/></svg>
+          </CarouselPrevious>
+          <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 bg-black/30 text-white border-none rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="m9 18 6-6-6-6"/></svg>
+          </CarouselNext>
         </Carousel>
         <div className="flex justify-center gap-2 mt-3">
           {scrollSnaps.map((_, index) => (
@@ -181,7 +189,7 @@ export function HomeTab() {
               onClick={() => scrollTo(index)}
               className={cn(
                 "h-1 w-6 rounded-full transition-all",
-                selectedIndex === index ? "w-6 bg-white" : "bg-gray-500"
+                selectedIndex === index ? "bg-primary" : "bg-gray-500"
               )}
               aria-label={`Go to slide ${index + 1}`}
             />
