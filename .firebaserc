@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "dev-project"
-  }
+    "default": "philos-firebase"
+  },
+  "targets": {},
+  "etags": {}
 }
