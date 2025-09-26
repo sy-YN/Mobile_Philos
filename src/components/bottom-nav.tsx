@@ -13,7 +13,7 @@ const navItems = [
   { id: 'philosophy', label: '理念', icon: BookOpen },
   { id: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
   { id: 'ranking', label: 'ランキング', icon: Trophy },
-  { id: 'other', label: 'そのた', icon: MoreHorizontal },
+  { id: 'other', label: 'その他', icon: MoreHorizontal },
 ];
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {

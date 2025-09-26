@@ -1,4 +1,4 @@
-# **App Name**: EmpowerU
+# **App Name**: Philos
 
 ## Core Features:
 
