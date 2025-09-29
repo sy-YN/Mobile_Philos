@@ -6,6 +6,13 @@ import type { Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase-admin';
 import { analyzeBoardPostSentiment } from '@/ai/flows/analyze-board-post-sentiment';
 
+export type Reply = {
+  author: string;
+  avatar: string;
+  content: string;
+  createdAt: Date | string | Timestamp;
+};
+
 export type Post = {
   id: string;
   author: string;
@@ -15,6 +22,7 @@ export type Post = {
   time: string | Date;
   analysis?: AnalyzeBoardPostSentimentOutput;
   createdAt: Timestamp | Date | string; // Updated type definition
+  replies?: Reply[];
 };
 
 export type FormState = {

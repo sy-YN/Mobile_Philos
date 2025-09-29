@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import type { Post } from '@/app/actions';
+import type { Post, Reply } from '@/app/actions';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, AlertTriangle, MessageSquare, MoreVertical } from "lucide-react";
@@ -42,6 +42,22 @@ type BoardPostCardProps = {
   onDeleteSuccess?: () => void;
 };
 
+const getTimeAgo = (dateValue: string | Date | Timestamp) => {
+  if (!dateValue) return 'たった今';
+  let date;
+  if (dateValue instanceof Timestamp) {
+    date = dateValue.toDate();
+  } else if (dateValue instanceof Date) {
+    date = dateValue;
+  } else if (typeof dateValue === 'string') {
+    date = new Date(dateValue);
+  } else {
+    return '不明';
+  }
+  return formatDistanceToNow(date, { addSuffix: true, locale: ja });
+}
+
+
 export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onUpdateSuccess, onDeleteSuccess }: BoardPostCardProps) {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -50,21 +66,6 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const needsModeration = post.analysis?.requiresModeration;
-
-  const getTimeAgo = () => {
-    if (!post.createdAt) return 'たった今';
-    let date;
-    if (post.createdAt instanceof Timestamp) {
-      date = post.createdAt.toDate();
-    } else if (post.createdAt instanceof Date) {
-      date = post.createdAt;
-    } else if (typeof post.createdAt === 'string') {
-      date = new Date(post.createdAt);
-    } else {
-      return '不明';
-    }
-    return formatDistanceToNow(date, { addSuffix: true, locale: ja });
-  }
 
   const handleUpdatePost = async () => {
     if (!editedContent.trim()) {
@@ -183,7 +184,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
             <span className="font-semibold text-card-foreground">{post.author}</span>
-            <span className="text-xs text-muted-foreground">{getTimeAgo()}</span>
+            <span className="text-xs text-muted-foreground">{getTimeAgo(post.createdAt)}</span>
           </div>
           {isEditing ? (
             <div className="space-y-2">
@@ -235,6 +236,29 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
           )}
         </div>
       </div>
+       {post.replies && post.replies.length > 0 && (
+        <div className="mt-4 pl-12 space-y-3 border-t pt-4">
+          {post.replies.map((reply, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <Image
+                src={reply.avatar}
+                alt={reply.author}
+                width={32}
+                height={32}
+                className="rounded-full mt-1"
+                data-ai-hint="person portrait"
+              />
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-semibold text-sm text-card-foreground">{reply.author}</span>
+                  <span className="text-xs text-muted-foreground">{getTimeAgo(reply.createdAt)}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{reply.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </Card>
   );
 }

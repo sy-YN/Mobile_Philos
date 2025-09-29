@@ -126,6 +126,12 @@ export function HomeTab() {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.createdAt) {
+          const createdAt = data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt);
+          const replies = (data.replies || []).map((reply: any) => ({
+            ...reply,
+            createdAt: reply.createdAt instanceof Timestamp ? reply.createdAt.toDate() : new Date(reply.createdAt)
+          }));
+
           postsData.push({
             id: doc.id,
             author: data.author,
@@ -133,8 +139,9 @@ export function HomeTab() {
             content: data.content,
             likes: data.likes,
             analysis: data.analysis,
-            createdAt: data.createdAt,
-            time: data.createdAt.toDate().toISOString(),
+            createdAt: createdAt.toISOString(),
+            time: createdAt.toISOString(),
+            replies,
           });
         }
       });

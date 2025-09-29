@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
 import { db } from '@/lib/firebase'; // Client SDK
-import { doc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 type BoardPostReplyFormProps = {
   postId: string;
@@ -62,6 +62,10 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
       
       setContent('');
       formRef.current?.reset();
+      toast({
+        title: "成功",
+        description: "返信が投稿されました。",
+      });
       onReplySuccess?.();
 
     } catch (error) {
@@ -101,5 +105,3 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
     </div>
   );
 }
-
-    
