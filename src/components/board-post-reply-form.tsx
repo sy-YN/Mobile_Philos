@@ -41,21 +41,18 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
     try {
       const postRef = doc(db, "posts", postId);
       
-      // This user is an executive, get their details.
-      // TODO: Replace with actual logged-in executive user data
       const executiveUser = {
         author: '田中 CEO',
         avatar: 'https://picsum.photos/seed/ceo/100/100',
       };
 
       const newReply = {
+        id: `reply-${Date.now()}`, // Simple unique ID for the reply
         ...executiveUser,
         content,
-        createdAt: new Date(), // Using client-side date for replies for simplicity
+        createdAt: new Date(), 
       };
 
-      // Firestore doesn't have serverTimestamp for arrayUnion, so we use client time.
-      // For more accuracy, this could be a separate subcollection.
       await updateDoc(postRef, {
         replies: arrayUnion(newReply)
       });

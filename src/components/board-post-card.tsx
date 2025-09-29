@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import type { Post, Reply } from '@/app/actions';
+import type { Post } from '@/app/actions';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, AlertTriangle, MessageSquare, MoreVertical } from "lucide-react";
@@ -29,8 +29,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { BoardReplyCard } from "./board-reply-card";
 
 
 type BoardPostCardProps = {
@@ -63,7 +63,6 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const needsModeration = post.analysis?.requiresModeration;
 
@@ -125,7 +124,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
       });
     } finally {
       setIsSubmitting(false);
-      setIsDeleteDialogOpen(false);
+      // No need to close dialog here, it's handled by AlertDialog
     }
   };
 
@@ -157,7 +156,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
                 <AlertDialogHeader>
                   <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
                   <AlertDialogDescription>
-                    この操作は元に戻せません。投稿は完全に削除されます。
+                    この操作は元に戻せません。この投稿と全ての返信が完全に削除されます。
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -238,24 +237,12 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
       </div>
        {post.replies && post.replies.length > 0 && (
         <div className="mt-4 pl-12 space-y-3 border-t pt-4">
-          {post.replies.map((reply, index) => (
-            <div key={index} className="flex items-start gap-3">
-              <Image
-                src={reply.avatar}
-                alt={reply.author}
-                width={32}
-                height={32}
-                className="rounded-full mt-1"
-                data-ai-hint="person portrait"
-              />
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-semibold text-sm text-card-foreground">{reply.author}</span>
-                  <span className="text-xs text-muted-foreground">{getTimeAgo(reply.createdAt)}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">{reply.content}</p>
-              </div>
-            </div>
+          {post.replies.map((reply) => (
+            <BoardReplyCard 
+              key={reply.id} 
+              reply={reply} 
+              post={post}
+            />
           ))}
         </div>
       )}

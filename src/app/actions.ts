@@ -7,6 +7,7 @@ import { db } from '@/lib/firebase-admin';
 import { analyzeBoardPostSentiment } from '@/ai/flows/analyze-board-post-sentiment';
 
 export type Reply = {
+  id: string; // Add id to uniquely identify replies
   author: string;
   avatar: string;
   content: string;
