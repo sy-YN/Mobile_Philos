@@ -161,47 +161,6 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
 
   return (
     <Card className={cn("p-4 transition-all relative", needsModeration && "border-yellow-500/50 bg-yellow-500/5")}>
-      <div className="absolute top-4 right-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="h-4 w-4" />
-              <span className="sr-only">投稿メニュー</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
-              更新
-            </DropdownMenuItem>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  onSelect={(e) => e.preventDefault()}
-                  className="text-red-600 focus:text-red-600 cursor-pointer" 
-                  disabled={isSubmitting}
-                >
-                  削除
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="max-w-xs">
-                <AlertDialogHeader>
-                  <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    この操作は元に戻せません。この投稿と全ての返信が完全に削除されます。
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeletePost} className="bg-red-600 text-white hover:bg-red-700">
-                    削除
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
       <div className="flex items-start gap-3">
         <Image
           src={post.avatar}
@@ -212,10 +171,49 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
           data-ai-hint="person portrait"
         />
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2 mb-1">
             <span className="font-semibold text-card-foreground">{post.author}</span>
-            <span className="text-xs text-muted-foreground">{getTimeAgo(post.createdAt)}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6">
+                  <MoreVertical className="h-4 w-4" />
+                  <span className="sr-only">投稿メニュー</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
+                  更新
+                </DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      className="text-red-600 focus:text-red-600 cursor-pointer" 
+                      disabled={isSubmitting}
+                    >
+                      削除
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="max-w-xs">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        この操作は元に戻せません。この投稿と全ての返信が完全に削除されます。
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDeletePost} className="bg-red-600 text-white hover:bg-red-700">
+                        削除
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <span className="text-xs text-muted-foreground ml-auto">{getTimeAgo(post.createdAt)}</span>
           </div>
+
           {isEditing ? (
             <div className="space-y-2">
               <Textarea
