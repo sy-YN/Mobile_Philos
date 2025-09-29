@@ -239,11 +239,12 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
        {post.replies && post.replies.length > 0 && (
         <div className="mt-4 pl-12 space-y-3 border-t pt-4">
           {post.replies.map((reply) => (
-            <BoardReplyCard 
-              key={reply.id} 
-              reply={reply} 
-              post={post}
-            />
+            <div key={reply.id}>
+              <BoardReplyCard 
+                reply={reply} 
+                post={post}
+              />
+            </div>
           ))}
         </div>
       )}
