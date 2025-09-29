@@ -293,7 +293,7 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
               <CardHeader>
                 <CardTitle>売上推移</CardTitle>
               </CardHeader>
-              <CardContent className="h-[25rem] -mx-4">
+              <CardContent className="h-[25rem]">
                 <ChartContainer config={salesChartConfig}>
                   <ComposedChart data={salesChartData}>
                     <CartesianGrid vertical={false} />
@@ -368,7 +368,7 @@ export function DashboardTab({ onShowPastGoals }: { onShowPastGoals: (department
               <CardHeader>
                 <CardTitle>売上・純利益推移</CardTitle>
               </CardHeader>
-              <CardContent className="h-[25rem] -mx-4">
+              <CardContent className="h-[25rem]">
                 <ChartContainer config={salesProfitChartConfig}>
                   <ComposedChart data={salesProfitChartData}>
                     <CartesianGrid vertical={false} />
