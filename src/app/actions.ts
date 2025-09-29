@@ -20,6 +20,7 @@ export type Post = {
   avatar: string;
   content: string;
   likes: number;
+  likedBy: string[];
   time: string | Date;
   analysis?: AnalyzeBoardPostSentimentOutput;
   createdAt: Timestamp | Date | string; // Updated type definition

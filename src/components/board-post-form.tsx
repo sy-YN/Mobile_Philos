@@ -46,6 +46,7 @@ export function BoardPostForm() {
         avatar: 'https://picsum.photos/seed/yudai/100/100',
         content,
         likes: 0,
+        likedBy: [],
         createdAt: serverTimestamp(),
         // analysis will be added later by the server action
       };

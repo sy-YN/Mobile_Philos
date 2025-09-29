@@ -138,6 +138,7 @@ export function HomeTab() {
             avatar: data.avatar,
             content: data.content,
             likes: data.likes,
+            likedBy: data.likedBy || [],
             analysis: data.analysis,
             createdAt: createdAt.toISOString(),
             time: createdAt.toISOString(),

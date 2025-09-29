@@ -2,7 +2,7 @@
 'use client';
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Post } from '@/app/actions';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Heart, AlertTriangle, MessageSquare, MoreVertical } from "lucide-react"
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Timestamp, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { Timestamp, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -64,8 +64,38 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Using a mock user ID until auth is implemented
+  const currentUserId = 'mock-user-id';
+  const [isLiked, setIsLiked] = useState(post.likedBy?.includes(currentUserId) || false);
+
+  useEffect(() => {
+    setIsLiked(post.likedBy?.includes(currentUserId) || false);
+  }, [post.likedBy, currentUserId]);
+
 
   const needsModeration = post.analysis?.requiresModeration;
+
+  const handleLike = async () => {
+    const postRef = doc(db, "posts", post.id);
+    
+    if (isLiked) {
+      // Unlike
+      await updateDoc(postRef, {
+        likes: post.likes - 1,
+        likedBy: arrayRemove(currentUserId)
+      });
+      setIsLiked(false); // Update UI immediately
+    } else {
+      // Like
+      await updateDoc(postRef, {
+        likes: post.likes + 1,
+        likedBy: arrayUnion(currentUserId)
+      });
+      setIsLiked(true); // Update UI immediately
+    }
+  };
+
 
   const handleUpdatePost = async () => {
     if (!editedContent.trim()) {
@@ -221,8 +251,8 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
               )}
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-auto px-2 py-1 hover:text-primary">
-                  <Heart className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-auto px-2 py-1 hover:text-primary" onClick={handleLike}>
+                  <Heart className={cn("h-4 w-4", isLiked && "text-red-500 fill-current")} />
                   <span>{post.likes}</span>
                 </Button>
                 {isExecutive && (
