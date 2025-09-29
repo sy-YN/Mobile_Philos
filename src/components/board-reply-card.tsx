@@ -134,46 +134,44 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
           <span className="font-semibold text-sm text-card-foreground">{reply.author}</span>
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <MoreVertical className="h-4 w-4" />
-                  <span className="sr-only">返信メニュー</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
-                  更新
-                </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem
-                      onSelect={(e) => e.preventDefault()}
-                      className="text-red-600 focus:text-red-600 cursor-pointer"
-                      disabled={isSubmitting}
-                    >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <MoreVertical className="h-4 w-4" />
+                <span className="sr-only">返信メニュー</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
+                更新
+              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="text-red-600 focus:text-red-600 cursor-pointer"
+                    disabled={isSubmitting}
+                  >
+                    削除
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="max-w-xs">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>本当にこの返信を削除しますか？</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      この操作は元に戻せません。
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteReply} className="bg-red-600 text-white hover:bg-red-700">
                       削除
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="max-w-xs">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>本当にこの返信を削除しますか？</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        この操作は元に戻せません。
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDeleteReply} className="bg-red-600 text-white hover:bg-red-700">
-                        削除
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="text-xs text-muted-foreground ml-auto">{getTimeAgo(reply.createdAt)}</span>
         </div>
         {isEditing ? (

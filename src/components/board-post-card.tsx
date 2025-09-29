@@ -248,13 +248,13 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
                 </div>
               )}
 
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-auto px-2 py-1 hover:text-primary" onClick={handleLike}>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-auto px-2 py-1 hover:text-primary flex-shrink-0" onClick={handleLike}>
                   <Heart className={cn("h-4 w-4", isLiked && "text-red-500 fill-current")} />
                   <span>{post.likes}</span>
                 </Button>
                 {isExecutive && (
-                  <Button variant="ghost" size="sm" className={cn("flex items-center gap-1.5 h-auto px-2 py-1", isReplying ? "text-primary" : "hover:text-primary")} onClick={onReplyClick}>
+                  <Button variant="ghost" size="sm" className={cn("flex items-center gap-1.5 h-auto px-2 py-1 flex-shrink-0", isReplying ? "text-primary" : "hover:text-primary")} onClick={onReplyClick}>
                     <MessageSquare className="h-4 w-4" />
                     <span>返信する (経営陣のみ)</span>
                   </Button>
