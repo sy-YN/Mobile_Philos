@@ -331,7 +331,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                             </Badge>
                             <span>{message.time}</span>
                           </div>
-                        </DialogDescription>
+                        </DialogDescription>。
                       </div>
                     </div>
                   </DialogHeader>
