@@ -39,7 +39,7 @@ export default function SettingsPage() {
         <AppShell>
           <div className="flex flex-col h-full">
             <header className="px-4 py-3 flex items-center border-b shrink-0 sticky top-0 bg-background/95 backdrop-blur-sm z-10 pt-8">
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.back()}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground" onClick={() => router.back()}>
                 <ArrowLeft className="h-5 w-5" />
                 <span className="sr-only">戻る</span>
               </Button>

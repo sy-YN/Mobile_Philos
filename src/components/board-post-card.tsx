@@ -234,7 +234,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
               </div>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground mb-3">{post.content}</p>
+            <p className="text-sm text-muted-foreground dark:text-gray-300 mb-3">{post.content}</p>
           )}
 
           {!isEditing && (

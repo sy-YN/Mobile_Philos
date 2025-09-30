@@ -122,7 +122,7 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   };
 
   return (
-    <div className="flex items-start gap-3 group">
+    <div className="flex items-start gap-3">
       <Image
         src={reply.avatar}
         alt={reply.author}
@@ -194,7 +194,7 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">{reply.content}</p>
+          <p className="text-sm text-muted-foreground dark:text-gray-300">{reply.content}</p>
         )}
       </div>
     </div>

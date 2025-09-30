@@ -225,11 +225,11 @@ export function HomeTab() {
         <Collapsible open={isCommentsOpen} onOpenChange={setIsCommentsOpen}>
           <CollapsibleTrigger asChild>
             <div className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-md hover:bg-accent">
-                <h2 className="text-base font-medium flex items-center gap-2">
+                <h2 className="text-base font-medium flex items-center gap-2 text-foreground">
                   <MessageSquare className="h-5 w-5 text-primary" />
                   <span>コメント ({posts.length})</span>
                 </h2>
-                <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="flex items-center gap-2 text-muted-foreground dark:text-gray-300">
                     <span>{isCommentsOpen ? "閉じる" : "すべて表示"}</span>
                     <ChevronDown className={cn("h-5 w-5 transition-transform", isCommentsOpen && "rotate-180")} />
                 </div>
