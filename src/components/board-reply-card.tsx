@@ -143,7 +143,7 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
-                更新
+                編集
               </DropdownMenuItem>
               <AlertDialog>
                 <AlertDialogTrigger asChild>

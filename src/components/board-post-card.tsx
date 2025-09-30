@@ -182,7 +182,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setIsEditing(true)} disabled={isSubmitting}>
-                  更新
+                  編集
                 </DropdownMenuItem>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
