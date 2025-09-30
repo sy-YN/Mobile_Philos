@@ -60,25 +60,25 @@ export function PhilosophyTab() {
             <>
               {filteredItems.philosophy.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground">理念・ビジョン</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground dark:text-gray-400">理念・ビジョン</h3>
                   {filteredItems.philosophy.map(item => (
                     <Card key={item.id} className="p-4">
                       <h4 className="font-semibold text-card-foreground mb-1">{item.title}</h4>
-                      <p className="text-sm text-muted-foreground">{item.content}</p>
+                      <p className="text-sm text-muted-foreground dark:text-gray-300">{item.content}</p>
                     </Card>
                   ))}
                 </div>
               )}
               {filteredItems.values.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground">行動指針</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground dark:text-gray-400">行動指針</h3>
                   {filteredItems.values.map(item => (
                     <Card key={item.id} className="p-4">
                       <div className="flex items-center gap-3 mb-1">
                         <item.icon className="w-5 h-5 text-primary" />
                         <h4 className="font-semibold text-card-foreground">{item.title}</h4>
                       </div>
-                      <p className="text-sm text-muted-foreground ml-8">{item.content}</p>
+                      <p className="text-sm text-muted-foreground dark:text-gray-300 ml-8">{item.content}</p>
                     </Card>
                   ))}
                 </div>
@@ -86,38 +86,38 @@ export function PhilosophyTab() {
             </>
           ) : (
             <div className="text-center py-10">
-              <p className="text-muted-foreground">「{searchTerm}」に一致する項目は見つかりませんでした。</p>
+              <p className="text-muted-foreground dark:text-gray-400">「{searchTerm}」に一致する項目は見つかりませんでした。</p>
             </div>
           )}
         </div>
       ) : (
         <Accordion type="single" collapsible defaultValue="philosophy" className="w-full">
           <AccordionItem value="philosophy">
-            <AccordionTrigger className="text-lg font-semibold">
+            <AccordionTrigger className="text-lg font-semibold dark:text-white">
               私たちの理念
             </AccordionTrigger>
             <AccordionContent>
               <Accordion type="multiple" className="w-full space-y-2">
                 <AccordionItem value="mission">
-                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md text-foreground">
                     {philosophyItems[0].title}
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pt-2 text-muted-foreground">
+                  <AccordionContent className="px-4 pt-2 text-muted-foreground dark:text-gray-300">
                     {philosophyItems[0].content}
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="vision">
-                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md text-foreground">
                     {philosophyItems[1].title}
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pt-2 text-muted-foreground">
+                  <AccordionContent className="px-4 pt-2 text-muted-foreground dark:text-gray-300">
                     {philosophyItems[1].content}
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="values">
-                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md">
+                  <AccordionTrigger className="bg-muted/50 px-4 rounded-md text-foreground">
                     行動指針
                   </AccordionTrigger>
                   <AccordionContent className="pt-2">
@@ -128,7 +128,7 @@ export function PhilosophyTab() {
                             <item.icon className="w-5 h-5 text-primary" />
                             <h4 className="font-semibold text-card-foreground">{item.title}</h4>
                           </div>
-                          <p className="text-sm text-muted-foreground ml-8">
+                          <p className="text-sm text-muted-foreground dark:text-gray-300 ml-8">
                             {item.content}
                           </p>
                         </div>
