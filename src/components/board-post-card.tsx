@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import type { Post } from '@/app/actions';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, AlertTriangle, MessageSquare, MoreVertical } from "lucide-react";
+import { Heart, AlertTriangle, MessageSquare, MoreVertical, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -29,8 +29,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { BoardReplyCard } from "./board-reply-card";
 
 
@@ -64,6 +68,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [areRepliesOpen, setAreRepliesOpen] = useState(false);
   
   // Using a mock user ID until auth is implemented
   const currentUserId = 'mock-user-id';
@@ -228,7 +233,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
                 }} disabled={isSubmitting}>
                   キャンセル
                 </Button>
-                <Button onClick={handleUpdatePost} disabled={isSubmitting} className="bg-orange-500 hover:bg-orange-600 text-white">
+                <Button onClick={handleUpdatePost} disabled={isSubmitting}>
                   送信
                 </Button>
               </div>
@@ -264,17 +269,29 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
           )}
         </div>
       </div>
-       {post.replies && post.replies.length > 0 && (
-        <div className="mt-4 pl-12 space-y-3 border-t pt-4">
-          {post.replies.map((reply) => (
-            <div key={reply.id}>
-              <BoardReplyCard 
-                reply={reply} 
-                post={post}
-              />
+      
+      {post.replies && post.replies.length > 0 && (
+        <Collapsible open={areRepliesOpen} onOpenChange={setAreRepliesOpen} className="mt-4">
+          <CollapsibleTrigger asChild>
+             <div className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground hover:text-primary pl-12">
+              <div className="h-px w-6 bg-border"></div>
+              <span>{post.replies.length}件の返信</span>
+              <ChevronDown className={cn("h-4 w-4 transition-transform", areRepliesOpen && "rotate-180")} />
             </div>
-          ))}
-        </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="mt-3 pl-12 space-y-3 border-l ml-15 pt-3">
+              {post.replies.map((reply) => (
+                <div key={reply.id}>
+                  <BoardReplyCard 
+                    reply={reply} 
+                    post={post}
+                  />
+                </div>
+              ))}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </Card>
   );
