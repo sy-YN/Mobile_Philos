@@ -225,12 +225,14 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
         </div>
       </div>
 
-      <section className="space-y-4">
+      <section>
         <BoardPostForm />
+      </section>
 
+      <section>
         <Collapsible open={isCommentsOpen} onOpenChange={setIsCommentsOpen}>
           <CollapsibleTrigger asChild>
-            <div className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-md hover:bg-accent">
+            <div className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-md hover:bg-accent/50">
                 <h2 className="text-base font-medium flex items-center gap-2 text-foreground">
                   <MessageSquare className="h-5 w-5 text-primary" />
                   <span>コメント ({posts.length})</span>
@@ -246,7 +248,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
             <div
               className={`transition-all duration-700 delay-200 mt-2 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
             >
-              <ScrollArea className="h-[200px] pr-4">
+              <ScrollArea className="max-h-[25vh] pr-4">
                 <div className="space-y-3">
                   {loading ? (
                     Array.from({ length: 3 }).map((_, i) => (
