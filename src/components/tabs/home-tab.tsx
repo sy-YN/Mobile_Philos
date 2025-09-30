@@ -244,53 +244,54 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
             </div>
           </CollapsibleTrigger>
 
-          <CollapsibleContent>
-            <div
-              className={`transition-all duration-700 delay-200 mt-2 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-            >
-              <ScrollArea className="max-h-[25vh] pr-4">
-                <div className="space-y-3">
-                  {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="flex items-start gap-3 p-4 border rounded-lg">
-                        <Skeleton className="h-10 w-10 rounded-full" />
-                        <div className="flex-1 space-y-2">
-                          <Skeleton className="h-4 w-1/4" />
-                          <Skeleton className="h-4 w-full" />
-                          <Skeleton className="h-4 w-3/4" />
-                        </div>
+          <CollapsibleContent
+            className={cn(
+              "transition-all duration-700 delay-200 mt-2",
+              showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            )}
+          >
+            <ScrollArea className="max-h-[25vh] pr-4">
+              <div className="space-y-3">
+                {loading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 border rounded-lg">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-1/4" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                    </div>
+                  ))
+                ) : posts.length > 0 ? (
+                    posts.map(post => (
+                      <div key={post.id}>
+                        <BoardPostCard 
+                          post={post} 
+                          isExecutive={isExecutive}
+                          onReplyClick={() => setReplyingToPostId(replyingToPostId === post.id ? null : post.id)}
+                          isReplying={replyingToPostId === post.id}
+                          onUpdateSuccess={handlePostUpdateSuccess}
+                          onDeleteSuccess={handlePostDeleteSuccess}
+                        />
+                        {replyingToPostId === post.id && (
+                          <div className="pl-12 pt-2">
+                            <BoardPostReplyForm 
+                              postId={post.id}
+                              onReplySuccess={() => setReplyingToPostId(null)}
+                            />
+                          </div>
+                        )}
                       </div>
                     ))
-                  ) : posts.length > 0 ? (
-                      posts.map(post => (
-                        <div key={post.id}>
-                          <BoardPostCard 
-                            post={post} 
-                            isExecutive={isExecutive}
-                            onReplyClick={() => setReplyingToPostId(replyingToPostId === post.id ? null : post.id)}
-                            isReplying={replyingToPostId === post.id}
-                            onUpdateSuccess={handlePostUpdateSuccess}
-                            onDeleteSuccess={handlePostDeleteSuccess}
-                          />
-                          {replyingToPostId === post.id && (
-                            <div className="pl-12 pt-2">
-                              <BoardPostReplyForm 
-                                postId={post.id}
-                                onReplySuccess={() => setReplyingToPostId(null)}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      ))
-                  ) : (
-                    <div className="text-center text-muted-foreground py-8">
-                      <p>まだコメントがありません。</p>
-                      <p className="text-sm">最初のコメントを投稿しましょう！</p>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
+                ) : (
+                  <div className="text-center text-muted-foreground py-8">
+                    <p>まだコメントがありません。</p>
+                    <p className="text-sm">最初のコメントを投稿しましょう！</p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </CollapsibleContent>
         </Collapsible>
       </section>
