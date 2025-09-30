@@ -191,7 +191,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 flex flex-col h-full">
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
@@ -302,21 +302,19 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
       </section>
       
       <section
-        className={`transition-all duration-700 delay-300 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        className={`flex-1 min-h-0 flex flex-col transition-all duration-700 delay-300 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
-        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 shrink-0">
           <Building2 className="h-5 w-5 text-primary" />
           経営層からのメッセージ
         </h2>
-        <ScrollArea className="h-[200px] pr-4">
-          <div className="space-y-3">
+        <ScrollArea className="h-full">
+          <div className="space-y-3 pr-4">
             {executiveMessages.map((message, index) => (
                <Dialog key={message.id}>
                 <DialogTrigger asChild>
                   <ExecutiveMessageCard 
                     message={message}
-                    className={`transition-all duration-500 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-                    style={{ transitionDelay: `${400 + index * 150}ms` }}
                   />
                 </DialogTrigger>
                 <DialogContent className={cn("max-w-xs", isDarkMode && 'dark')}>

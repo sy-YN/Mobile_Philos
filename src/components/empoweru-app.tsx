@@ -83,7 +83,7 @@ export default function EmpowerUApp() {
     return (
       <>
         {Object.entries(tabs).map(([tabId, content]) => (
-          <div key={tabId} style={{ display: activeTab === tabId && !showPastGoals ? 'block' : 'none' }}>
+          <div key={tabId} style={{ display: activeTab === tabId && !showPastGoals ? 'block' : 'none' }} className="h-full">
             {content}
           </div>
         ))}
@@ -124,7 +124,7 @@ export default function EmpowerUApp() {
 
 
         <main
-          className="h-[calc(100%-130px)] overflow-y-auto relative"
+          className="h-[calc(100%-130px)] overflow-hidden relative"
           onClick={() => showNotifications && setShowNotifications(false)}
         >
           {renderContent()}
