@@ -1,4 +1,3 @@
-
 'use client';
 import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Crown, Users, BookOpen, Medal, Star, Film, Megaphone, Building } from 'lucide-react';
 import Image from 'next/image';
