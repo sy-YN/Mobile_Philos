@@ -81,7 +81,12 @@ const videos = [
   },
 ]
 
-export function HomeTab() {
+type HomeTabProps = {
+  isDarkMode: boolean;
+};
+
+
+export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -305,7 +310,7 @@ export function HomeTab() {
                     style={{ transitionDelay: `${400 + index * 150}ms` }}
                   />
                 </DialogTrigger>
-                <DialogContent className="max-w-xs">
+                <DialogContent className={cn("max-w-xs", isDarkMode && 'dark')}>
                   <DialogHeader>
                     <div className="flex items-start gap-4 mb-4">
                       <Image

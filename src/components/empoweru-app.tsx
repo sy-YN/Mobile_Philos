@@ -73,7 +73,7 @@ export default function EmpowerUApp() {
 
   const renderContent = () => {
     const tabs: { [key: string]: JSX.Element } = {
-      home: <HomeTab />,
+      home: <HomeTab isDarkMode={isDarkMode} />,
       philosophy: <PhilosophyTab />,
       dashboard: <DashboardTab onShowPastGoals={handleShowPastGoals} />,
       ranking: <RankingTab />,
@@ -107,7 +107,7 @@ export default function EmpowerUApp() {
         />
 
         <Dialog open={!!selectedNotification} onOpenChange={(isOpen) => !isOpen && setSelectedNotification(null)}>
-          <DialogContent className="max-w-xs">
+          <DialogContent className={cn("max-w-xs", isDarkMode && 'dark')}>
             {selectedNotification && (
               <>
                 <DialogHeader>
