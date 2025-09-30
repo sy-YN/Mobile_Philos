@@ -1,3 +1,4 @@
+
 'use client';
 import { Award, BarChart, Heart, MessageSquare, Target, Trophy, Crown, Users, BookOpen, Medal, Star, Film, Megaphone, Building } from 'lucide-react';
 import Image from 'next/image';
@@ -7,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
+import { Separator } from '../ui/separator';
 
 const departments = [
     { id: 'all', name: '全社' },
@@ -139,9 +141,34 @@ const PaginatedRankingList = ({ items, renderItem, itemsPerPage = 5 }: { items: 
     );
 };
 
+const TopNAndSelfRankingList = ({ items, renderItem, selfName }: { items: any[], renderItem: (item: any, index: number, isSelf: boolean) => React.ReactNode, selfName: string }) => {
+    const top3 = items.slice(0, 3);
+    const selfIndex = items.findIndex(item => item.name === selfName);
+    const selfData = selfIndex !== -1 ? items[selfIndex] : null;
+    const isSelfInTop3 = selfIndex !== -1 && selfIndex < 3;
+
+    return (
+        <div className="space-y-3">
+            {top3.map((item, index) => renderItem(item, index, item.name === selfName))}
+            {selfData && !isSelfInTop3 && (
+                <>
+                    <div className="flex items-center gap-4 py-2">
+                        <Separator className="flex-1" />
+                        <span className="text-xs text-muted-foreground">あなたの順位</span>
+                        <Separator className="flex-1" />
+                    </div>
+                    {renderItem(selfData, selfIndex, true)}
+                </>
+            )}
+        </div>
+    );
+};
+
 
 export function RankingTab() {
     const [selectedDepartment, setSelectedDepartment] = useState('all');
+    // In a real app, this would come from auth.
+    const currentUserName = '鈴木 花子';
 
     const getFilteredData = (data: any[]) => {
         if (selectedDepartment === 'all') return data;
@@ -191,15 +218,17 @@ export function RankingTab() {
                                 <CardDescription>目標達成、理念体現などを総合評価</CardDescription>
                             </CardHeader>
                             <CardContent>
-                               <PaginatedRankingList 
+                               <TopNAndSelfRankingList 
                                     items={getFilteredData(individualMvpRanking)}
-                                    renderItem={(item, index) => (
+                                    selfName={currentUserName}
+                                    renderItem={(item, index, isSelf) => (
                                         <RankingListItem 
                                             key={item.id} 
                                             index={index}
                                             avatar={item.avatar}
                                             title={item.name} 
                                             value={`${item.score} pt`}
+                                            isSelf={isSelf}
                                         />
                                     )}
                                 />
@@ -215,15 +244,17 @@ export function RankingTab() {
                                 <CardDescription>投稿やコメントへのいいね総数</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <PaginatedRankingList 
+                                <TopNAndSelfRankingList 
                                     items={getFilteredData(individualLikesRanking)}
-                                    renderItem={(item, index) => (
+                                    selfName={currentUserName}
+                                    renderItem={(item, index, isSelf) => (
                                         <RankingListItem 
                                             key={item.id} 
                                             index={index} 
                                             avatar={item.avatar}
                                             title={item.name}
                                             value={`${item.likes} いいね`}
+                                            isSelf={isSelf}
                                         />
                                     )}
                                 />
@@ -239,15 +270,17 @@ export function RankingTab() {
                                 <CardDescription>掲示板への投稿と返信の総数</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <PaginatedRankingList 
+                                <TopNAndSelfRankingList 
                                     items={getFilteredData(individualCommentsRanking)}
-                                    renderItem={(item, index) => (
+                                    selfName={currentUserName}
+                                    renderItem={(item, index, isSelf) => (
                                         <RankingListItem 
                                             key={item.id} 
                                             index={index} 
                                             avatar={item.avatar}
                                             title={item.name}
                                             value={`${item.comments} 回`}
+                                            isSelf={isSelf}
                                         />
                                     )}
                                 />
@@ -328,7 +361,7 @@ export function RankingTab() {
     );
 }
 
-const RankingListItem = ({ index, avatar, title, subtitle, value }: { index: number; avatar?: string; title: string; subtitle?: string; value: string; }) => {
+const RankingListItem = ({ index, avatar, title, subtitle, value, isSelf }: { index: number; avatar?: string; title: string; subtitle?: string; value: string; isSelf?: boolean; }) => {
     const rankIcons = [
         <Crown key="1" className="text-yellow-400 fill-yellow-400" />,
         <Medal key="2" className="text-gray-400 fill-gray-400" />,
@@ -336,7 +369,7 @@ const RankingListItem = ({ index, avatar, title, subtitle, value }: { index: num
     ];
     
     return (
-        <div className="flex items-center gap-4 p-2 rounded-lg transition-colors hover:bg-muted/50">
+        <div className={cn("flex items-center gap-4 p-2 rounded-lg transition-colors", isSelf ? "bg-primary/10 border border-primary/50" : "hover:bg-muted/50")}>
             <div className={`flex items-center justify-center font-bold text-lg w-8 h-8 shrink-0`}>
                 {rankIcons[index] || <span className="text-muted-foreground text-sm w-5 text-center">{index + 1}</span>}
             </div>
