@@ -193,168 +193,170 @@ export function RankingTab() {
                         部署
                     </TabsTrigger>
                 </TabsList>
-                <div className="flex-grow overflow-y-auto mt-4 -mr-4 pr-4">
-                    <TabsContent value="individual" className="space-y-6 m-0">
-                         <div className="flex items-center gap-4 mb-4">
-                            <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                                <SelectTrigger className="w-[180px]">
-                                    <Building className="h-4 w-4 mr-2 text-muted-foreground"/>
-                                    <SelectValue placeholder="部署を選択" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {departments.map(dep => (
-                                        <SelectItem key={dep.id} value={dep.id}>{dep.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                <div className="flex-grow overflow-y-auto mt-4">
+                    <div className="pr-4">
+                        <TabsContent value="individual" className="space-y-6 m-0">
+                            <div className="flex items-center gap-4 mb-4">
+                                <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <Building className="h-4 w-4 mr-2 text-muted-foreground"/>
+                                        <SelectValue placeholder="部署を選択" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {departments.map(dep => (
+                                            <SelectItem key={dep.id} value={dep.id}>{dep.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                    <Award className="text-yellow-500" />
-                                    個人MVP
-                                </CardTitle>
-                                <CardDescription>目標達成、理念体現などを総合評価</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                               <TopNAndSelfRankingList 
-                                    items={getFilteredData(individualMvpRanking)}
-                                    selfName={currentUserName}
-                                    renderItem={(item, index, isSelf) => (
-                                        <RankingListItem 
-                                            key={item.id} 
-                                            index={index}
-                                            avatar={item.avatar}
-                                            title={item.name} 
-                                            value={`${item.score} pt`}
-                                            isSelf={isSelf}
-                                        />
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                        <Award className="text-yellow-500" />
+                                        個人MVP
+                                    </CardTitle>
+                                    <CardDescription>目標達成、理念体現などを総合評価</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                <TopNAndSelfRankingList 
+                                        items={getFilteredData(individualMvpRanking)}
+                                        selfName={currentUserName}
+                                        renderItem={(item, index, isSelf) => (
+                                            <RankingListItem 
+                                                key={item.id} 
+                                                index={index}
+                                                avatar={item.avatar}
+                                                title={item.name} 
+                                                value={`${item.score} pt`}
+                                                isSelf={isSelf}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
 
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                    <Heart className="text-red-500" />
-                                    いいね獲得数
-                                </CardTitle>
-                                <CardDescription>投稿やコメントへのいいね総数</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <TopNAndSelfRankingList 
-                                    items={getFilteredData(individualLikesRanking)}
-                                    selfName={currentUserName}
-                                    renderItem={(item, index, isSelf) => (
-                                        <RankingListItem 
-                                            key={item.id} 
-                                            index={index} 
-                                            avatar={item.avatar}
-                                            title={item.name}
-                                            value={`${item.likes} いいね`}
-                                            isSelf={isSelf}
-                                        />
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                        
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                    <MessageSquare className="text-green-500" />
-                                    コメント投稿数
-                                </CardTitle>
-                                <CardDescription>掲示板への投稿と返信の総数</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <TopNAndSelfRankingList 
-                                    items={getFilteredData(individualCommentsRanking)}
-                                    selfName={currentUserName}
-                                    renderItem={(item, index, isSelf) => (
-                                        <RankingListItem 
-                                            key={item.id} 
-                                            index={index} 
-                                            avatar={item.avatar}
-                                            title={item.name}
-                                            value={`${item.comments} 回`}
-                                            isSelf={isSelf}
-                                        />
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value="department" className="space-y-6 m-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                   <Target className="text-blue-500" />
-                                   部署別 目標達成率
-                                </CardTitle>
-                                 <CardDescription>部署ごとの月間目標の達成率</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <PaginatedRankingList 
-                                    items={departmentAchievementRanking}
-                                    renderItem={(item, index) => (
-                                        <RankingListItem
-                                            key={item.id}
-                                            index={index}
-                                            title={item.name}
-                                            value={`${item.progress}%`}
-                                        />
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                   <Film className="text-purple-500" />
-                                   ショート動画 視聴率
-                                </CardTitle>
-                                 <CardDescription>社内向けショート動画の視聴率</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <PaginatedRankingList 
-                                     items={shortVideoRanking}
-                                     renderItem={(item, index) => (
-                                         <RankingListItem
-                                             key={item.id}
-                                             index={index}
-                                             title={item.title}
-                                             value={`${item.viewers} / ${item.totalAudience} 人`}
-                                         />
-                                     )}
-                                 />
-                            </CardContent>
-                        </Card>
-                         <Card>
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2">
-                                   <Megaphone className="text-orange-500" />
-                                   経営層メッセージ 閲覧率
-                                </CardTitle>
-                                 <CardDescription>経営層からのメッセージの閲覧率</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                 <PaginatedRankingList 
-                                     items={executiveMessageRanking}
-                                     renderItem={(item, index) => (
-                                         <RankingListItem
-                                             key={item.id}
-                                             index={index}
-                                             title={item.title}
-                                             value={`${item.viewers} / ${item.totalAudience} 人`}
-                                         />
-                                     )}
-                                 />
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                        <Heart className="text-red-500" />
+                                        いいね獲得数
+                                    </CardTitle>
+                                    <CardDescription>投稿やコメントへのいいね総数</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <TopNAndSelfRankingList 
+                                        items={getFilteredData(individualLikesRanking)}
+                                        selfName={currentUserName}
+                                        renderItem={(item, index, isSelf) => (
+                                            <RankingListItem 
+                                                key={item.id} 
+                                                index={index} 
+                                                avatar={item.avatar}
+                                                title={item.name}
+                                                value={`${item.likes} いいね`}
+                                                isSelf={isSelf}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                            
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                        <MessageSquare className="text-green-500" />
+                                        コメント投稿数
+                                    </CardTitle>
+                                    <CardDescription>掲示板への投稿と返信の総数</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <TopNAndSelfRankingList 
+                                        items={getFilteredData(individualCommentsRanking)}
+                                        selfName={currentUserName}
+                                        renderItem={(item, index, isSelf) => (
+                                            <RankingListItem 
+                                                key={item.id} 
+                                                index={index} 
+                                                avatar={item.avatar}
+                                                title={item.name}
+                                                value={`${item.comments} 回`}
+                                                isSelf={isSelf}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                        <TabsContent value="department" className="space-y-6 m-0">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                    <Target className="text-blue-500" />
+                                    部署別 目標達成率
+                                    </CardTitle>
+                                    <CardDescription>部署ごとの月間目標の達成率</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <PaginatedRankingList 
+                                        items={departmentAchievementRanking}
+                                        renderItem={(item, index) => (
+                                            <RankingListItem
+                                                key={item.id}
+                                                index={index}
+                                                title={item.name}
+                                                value={`${item.progress}%`}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                    <Film className="text-purple-500" />
+                                    ショート動画 視聴率
+                                    </CardTitle>
+                                    <CardDescription>社内向けショート動画の視聴率</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <PaginatedRankingList 
+                                        items={shortVideoRanking}
+                                        renderItem={(item, index) => (
+                                            <RankingListItem
+                                                key={item.id}
+                                                index={index}
+                                                title={item.title}
+                                                value={`${item.viewers} / ${item.totalAudience} 人`}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                    <Megaphone className="text-orange-500" />
+                                    経営層メッセージ 閲覧率
+                                    </CardTitle>
+                                    <CardDescription>経営層からのメッセージの閲覧率</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <PaginatedRankingList 
+                                        items={executiveMessageRanking}
+                                        renderItem={(item, index) => (
+                                            <RankingListItem
+                                                key={item.id}
+                                                index={index}
+                                                title={item.title}
+                                                value={`${item.viewers} / ${item.totalAudience} 人`}
+                                            />
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    </div>
                 </div>
             </Tabs>
         </div>
