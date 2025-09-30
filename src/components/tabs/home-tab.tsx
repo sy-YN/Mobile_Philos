@@ -340,7 +340,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                   </div>
                 </DialogContent>
               </Dialog>
-            ))}\
+            ))}
           </div>
         </ScrollArea>
       </section>
