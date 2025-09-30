@@ -134,6 +134,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
           const createdAt = data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt);
           const replies = (data.replies || []).map((reply: any) => ({
             ...reply,
+            id: reply.id,
             createdAt: reply.createdAt instanceof Timestamp ? reply.createdAt.toDate() : new Date(reply.createdAt)
           }));
 
@@ -180,7 +181,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 flex flex-col h-full">
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
@@ -282,7 +283,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                   ) : (
                     <div className="text-center text-muted-foreground py-8">
                       <p>まだコメントがありません。</p>
-                      <p className="text-sm\">最初のコメントを投稿しましょう！</p>
+                      <p className="text-sm">最初のコメントを投稿しましょう！</p>
                     </div>
                   )}
                 </div>
@@ -293,13 +294,13 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
       </section>
       
       <section
-        className={`transition-all duration-700 delay-300 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        className={`transition-all duration-700 delay-300 flex-1 min-h-0 flex flex-col ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary" />
           経営層からのメッセージ
         </h2>
-        <ScrollArea className="h-[200px] pr-4">
+        <ScrollArea className="h-full pr-4">
           <div className="space-y-3">
             {executiveMessages.map((message, index) => (
                <Dialog key={message.id}>
