@@ -111,10 +111,10 @@ export default function EmpowerUApp() {
             {selectedNotification && (
               <>
                 <DialogHeader>
-                  <DialogTitle>{selectedNotification.title}</DialogTitle>
+                  <DialogTitle className="dark:text-white">{selectedNotification.title}</DialogTitle>
                   <DialogDescription>{selectedNotification.time}</DialogDescription>
                 </DialogHeader>
-                <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto">
+                <div className="text-sm text-muted-foreground dark:text-gray-300 max-h-[60vh] overflow-y-auto">
                   <p>{selectedNotification.fullContent}</p>
                 </div>
               </>

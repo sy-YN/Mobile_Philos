@@ -46,7 +46,7 @@ const executiveMessages = [
     preview: "次の四半期の主要な施策について説明します...",
     time: "2時間前",
     priority: "high" as const,
-    fullContent: "社員の皆様、こんにちは。CEOの田中です。第3四半期も皆様の尽力のおかげで、素晴らしい成果を上げることができました。誠にありがとうございます。\\n\\nさて、来る第4四半期に向けて、私たちは3つの主要な戦略的柱に焦点を当てます。第一に「顧客中心主義の徹底」、第二に「デジタルトランスフォーメーションの加速」、そして第三に「持続可能な成長への投資」です。各部門でこれらの戦略がどのように実行されるか、具体的な計画については来週の全社ミーティングで詳しく説明します。未来へ向けて、一丸となって挑戦し続けましょう。"
+    fullContent: "社員の皆様、こんにちは。CEOの田中です。第3四半期も皆様の尽力のおかげで、素晴らしい成果を上げることができました。誠にありがとうございます。\n\nさて、来る第4四半期に向けて、私たちは3つの主要な戦略的柱に焦点を当てます。第一に「顧客中心主義の徹底」、第二に「デジタルトランスフォーメーションの加速」、そして第三に「持続可能な成長への投資」です。各部門でこれらの戦略がどのように実行されるか、具体的な計画については来週の全社ミーティングで詳しく説明します。未来へ向けて、一丸となって挑戦し続けましょう。"
   },
   {
     id: 2,
@@ -56,7 +56,7 @@ const executiveMessages = [
     preview: "デジタルトランスフォーメーションの現状と今後の計画...",
     time: "1日前",
     priority: "medium" as const,
-    fullContent: "CTOの佐藤です。現在進行中のDXプロジェクトについてご報告します。先月、新しい社内コミュニケーションツールを導入し、多くのチームで活用が進んでいます。また、データ分析基盤の構築も順調に進んでおり、年末までには第一弾のダッシュボードをリリースできる見込みです。\\n\\n今後は、AIを活用した業務効率化ツールの試験導入も計画しています。これらの取り組みを通じて、より創造的で生産性の高い働き方を実現していきたいと考えています。ご意見やフィードバックがあれば、ぜひお聞かせください。"
+    fullContent: "CTOの佐藤です。現在進行中のDXプロジェクトについてご報告します。先月、新しい社内コミュニケーションツールを導入し、多くのチームで活用が進んでいます。また、データ分析基盤の構築も順調に進んでおり、年末までには第一弾のダッシュボードをリリースできる見込みです。\n\n今後は、AIを活用した業務効率化ツールの試験導入も計画しています。これらの取り組みを通じて、より創造的で生産性の高い働き方を実現していきたいと考えています。ご意見やフィードバックがあれば、ぜひお聞かせください。"
   },
 ];
 
@@ -322,7 +322,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                         data-ai-hint="person portrait"
                       />
                       <div>
-                        <DialogTitle className="mb-1">{message.title}</DialogTitle>
+                        <DialogTitle className="mb-1 dark:text-white">{message.title}</DialogTitle>
                         <DialogDescription asChild>
                            <div className="text-sm text-muted-foreground flex items-center gap-4 flex-wrap">
                             <span>{message.author}</span>
@@ -331,11 +331,11 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                             </Badge>
                             <span>{message.time}</span>
                           </div>
-                        </DialogDescription>。
+                        </DialogDescription>
                       </div>
                     </div>
                   </DialogHeader>
-                  <div className="prose prose-sm dark:prose-invert max-h-[60vh] overflow-y-auto whitespace-pre-wrap">
+                  <div className="text-sm text-muted-foreground dark:text-gray-300 max-h-[60vh] overflow-y-auto whitespace-pre-wrap">
                     {message.fullContent}
                   </div>
                 </DialogContent>
