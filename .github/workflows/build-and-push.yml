@@ -1,9 +1,9 @@
 name: Build & Push to ACR
 
 on:
-  workflow_dispatch:         # 手動実行
+  workflow_dispatch:
   push:
-    branches: [ main ]       # main に push されたら自動実行（不要なら消してOK）
+    branches: [ main ]
 
 env:
   IMAGE_NAME: philos-test
@@ -15,12 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 必要なら Node のビルドを入れる（例：Next.js など）
-      # - uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '18'
-      # - run: npm ci && npm run build
-
       - name: Log in to ACR
         uses: docker/login-action@v3
         with:
@@ -28,7 +22,7 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push (two tags: commit-sha & latest)
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
