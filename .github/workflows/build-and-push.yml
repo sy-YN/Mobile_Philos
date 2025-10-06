@@ -1,9 +1,6 @@
 name: Build & Push to ACR
-
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
 
 env:
   IMAGE_NAME: philos-test
@@ -12,10 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Log in to ACR
+      - name: Docker login to ACR (admin user)
         uses: docker/login-action@v3
         with:
           registry: acrphilostest.azurecr.io
@@ -28,5 +24,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
+            acrphilostest.azurecr.io/${{ env.IMAGE_NAME }}:latest
+            acrphilostest.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
