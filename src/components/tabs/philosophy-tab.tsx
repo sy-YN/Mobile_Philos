@@ -37,7 +37,7 @@ export function PhilosophyTab() {
   const hasSearchResults = filteredItems.philosophy.length > 0 || filteredItems.values.length > 0;
 
   return (
-    <div className="p-4">
+    <div className="h-full overflow-y-auto p-4">
       <header className="flex items-center gap-2 mb-4 pt-2 shrink-0">
         <BookOpen className="h-6 w-6 text-primary" />
         <h2 className="text-xl font-bold text-foreground font-headline">企業理念</h2>
