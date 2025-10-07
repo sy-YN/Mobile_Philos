@@ -191,7 +191,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   };
 
   return (
-    <div className="p-4 space-y-6 flex flex-col h-full">
+    <div className="h-full overflow-y-auto p-4 space-y-6">
       <div
         className={`transition-all duration-700 ${showAnimatedContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
       >
@@ -255,7 +255,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
           </CollapsibleTrigger>
 
           <CollapsibleContent
-            className="mt-2 overflow-y-auto max-h-[25vh]"
+            className="overflow-y-auto max-h-[25vh] mt-2"
           >
             <div className="space-y-3 pr-4">
               {loading ? (

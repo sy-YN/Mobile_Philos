@@ -124,7 +124,7 @@ export default function EmpowerUApp() {
 
 
         <main
-          className="h-[calc(100%-130px)] overflow-y-auto relative"
+          className="h-[calc(100%-130px)] relative"
           onClick={() => showNotifications && setShowNotifications(false)}
         >
           {renderContent()}
