@@ -14,21 +14,24 @@ import { BottomNav } from '@/components/bottom-nav';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   useEffect(() => {
     const darkModeValue = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModeValue);
-    // In a real app, you would get this value from user preferences
+    
     const notificationsValue = localStorage.getItem('notificationsEnabled') !== 'false';
     setNotificationsEnabled(notificationsValue);
   }, []);
 
+  if (isDarkMode === undefined) {
+    return null; // or a loading skeleton
+  }
+
   const handleDarkModeChange = (enabled: boolean) => {
     setIsDarkMode(enabled);
     localStorage.setItem('darkMode', String(enabled));
-    // This will force a re-render on the parent components that use this value
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -39,8 +42,7 @@ export default function SettingsPage() {
   };
 
   const handleTabChange = (tab: string) => {
-    // For now, simply navigate home. A more complex implementation could use query params to select a tab.
-    router.push('/');
+    router.push('/home');
   };
 
   return (
