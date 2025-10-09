@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Palette } from 'lucide-react';
+import { ArrowLeft, Palette, Bell } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -15,10 +15,14 @@ import { BottomNav } from '@/components/bottom-nav';
 export default function SettingsPage() {
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   useEffect(() => {
     const darkModeValue = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModeValue);
+    // In a real app, you would get this value from user preferences
+    const notificationsValue = localStorage.getItem('notificationsEnabled') !== 'false';
+    setNotificationsEnabled(notificationsValue);
   }, []);
 
   const handleDarkModeChange = (enabled: boolean) => {
@@ -26,6 +30,12 @@ export default function SettingsPage() {
     localStorage.setItem('darkMode', String(enabled));
     // This will force a re-render on the parent components that use this value
     window.dispatchEvent(new Event('storage'));
+  };
+
+  const handleNotificationsChange = (enabled: boolean) => {
+    setNotificationsEnabled(enabled);
+    localStorage.setItem('notificationsEnabled', String(enabled));
+    // Here you would typically call a function to register/unregister the push subscription
   };
 
   const handleTabChange = (tab: string) => {
@@ -48,7 +58,7 @@ export default function SettingsPage() {
               </div>
               <div className="w-8"></div>
             </header>
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <Label htmlFor="dark-mode-switch" className="flex items-center gap-3">
@@ -59,6 +69,19 @@ export default function SettingsPage() {
                             id="dark-mode-switch"
                             checked={isDarkMode}
                             onCheckedChange={handleDarkModeChange}
+                        />
+                    </div>
+                </Card>
+                <Card className="p-4">
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="notification-switch" className="flex items-center gap-3">
+                            <Bell className="w-5 h-5 text-primary" />
+                            <span className="text-base font-medium">プッシュ通知</span>
+                        </Label>
+                        <Switch
+                            id="notification-switch"
+                            checked={notificationsEnabled}
+                            onCheckedChange={handleNotificationsChange}
                         />
                     </div>
                 </Card>
