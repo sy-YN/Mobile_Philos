@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -11,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase.tsx';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {

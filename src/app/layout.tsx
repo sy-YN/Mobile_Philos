@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { FirebaseProvider } from '@/lib/firebase';
+import { FirebaseProvider } from '@/lib/firebase.tsx';
 
 export const metadata: Metadata = {
   title: 'Philos',

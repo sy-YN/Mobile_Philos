@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -9,7 +8,7 @@ import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase.tsx';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {

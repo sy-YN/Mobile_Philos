@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRef, useState } from 'react';
@@ -7,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { db } from '@/lib/firebase'; // Client SDK
+import { db } from '@/lib/firebase.tsx'; // Client SDK
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';

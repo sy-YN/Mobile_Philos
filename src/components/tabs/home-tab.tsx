@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect, useCallback } from "react";
 import { VideoPlayer } from "@/components/video-player";
@@ -32,7 +31,7 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase.tsx';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
