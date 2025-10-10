@@ -9,6 +9,8 @@ import { Send } from 'lucide-react';
 import Image from 'next/image';
 import { db } from '@/lib/firebase'; // Client SDK
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardPostReplyFormProps = {
   postId: string;
@@ -38,25 +40,25 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
 
     setIsSubmitting(true);
 
-    try {
-      const postRef = doc(db, "posts", postId);
+    const postRef = doc(db, "posts", postId);
       
-      const executiveUser = {
-        author: '田中 CEO',
-        avatar: 'https://picsum.photos/seed/ceo/100/100',
-      };
+    const executiveUser = {
+      author: '田中 CEO',
+      avatar: 'https://picsum.photos/seed/ceo/100/100',
+    };
 
-      const newReply = {
-        id: `reply-${Date.now()}`, // Simple unique ID for the reply
-        ...executiveUser,
-        content,
-        createdAt: new Date(), 
-      };
+    const newReply = {
+      id: `reply-${Date.now()}`, // Simple unique ID for the reply
+      ...executiveUser,
+      content,
+      createdAt: new Date(), 
+    };
 
-      await updateDoc(postRef, {
-        replies: arrayUnion(newReply)
-      });
-      
+    const updateData = {
+      replies: arrayUnion(newReply)
+    };
+
+    updateDoc(postRef, updateData).then(() => {
       setContent('');
       formRef.current?.reset();
       toast({
@@ -64,17 +66,16 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
         description: "返信が投稿されました。",
       });
       onReplySuccess?.();
-
-    } catch (error) {
-      console.error("Error creating reply:", error);
-      toast({
-        title: "エラー",
-        description: "返信中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'update',
+        requestResourceData: updateData,
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
   };
 
   return (

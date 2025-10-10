@@ -37,7 +37,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { BoardReplyCard } from "./board-reply-card";
-
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardPostCardProps = {
   post: Post;
@@ -84,22 +85,22 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
 
   const handleLike = async () => {
     const postRef = doc(db, "posts", post.id);
-    
-    if (isLiked) {
-      // Unlike
-      await updateDoc(postRef, {
-        likes: post.likes - 1,
-        likedBy: arrayRemove(currentUserId)
-      });
-      setIsLiked(false); // Update UI immediately
-    } else {
-      // Like
-      await updateDoc(postRef, {
-        likes: post.likes + 1,
-        likedBy: arrayUnion(currentUserId)
-      });
-      setIsLiked(true); // Update UI immediately
-    }
+    const updateData = {
+      likes: post.likes + (isLiked ? -1 : 1),
+      likedBy: isLiked ? arrayRemove(currentUserId) : arrayUnion(currentUserId)
+    };
+
+    updateDoc(postRef, updateData).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'update',
+        requestResourceData: updateData,
+      } satisfies SecurityRuleContext);
+
+      errorEmitter.emit('permission-error', permissionError);
+    });
+
+    setIsLiked(!isLiked);
   };
 
 
@@ -114,12 +115,10 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
     }
 
     setIsSubmitting(true);
+    const postRef = doc(db, "posts", post.id);
+    const updateData = { content: editedContent };
 
-    try {
-      const postRef = doc(db, "posts", post.id);
-      await updateDoc(postRef, {
-        content: editedContent,
-      });
+    updateDoc(postRef, updateData).then(() => {
       toast({
         title: "成功",
         description: "投稿が正常に更新されました。",
@@ -128,23 +127,23 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
       if (onUpdateSuccess) {
         onUpdateSuccess();
       }
-    } catch (error) {
-      console.error("Error updating post:", error);
-      toast({
-        title: "エラー",
-        description: "投稿の更新中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'update',
+        requestResourceData: updateData,
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
   };
 
   const handleDeletePost = async () => {
     setIsSubmitting(true);
-    try {
-      const postRef = doc(db, "posts", post.id);
-      await deleteDoc(postRef);
+    const postRef = doc(db, "posts", post.id);
+
+    deleteDoc(postRef).then(() => {
       toast({
         title: "成功",
         description: "投稿が正常に削除されました。",
@@ -152,17 +151,15 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
       if (onDeleteSuccess) {
         onDeleteSuccess();
       }
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      toast({
-        title: "エラー",
-        description: "投稿の削除中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'delete',
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-      // No need to close dialog here, it's handled by AlertDialog
-    }
+    });
   };
 
   return (

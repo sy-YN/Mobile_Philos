@@ -36,6 +36,9 @@ import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+
 
 const executiveMessages = [
   {
@@ -164,9 +167,13 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
       });
       setPosts(postsData);
       setLoading(false);
-    }, (error) => {
-        console.error("Error fetching posts:", error);
-        setLoading(false);
+    }, async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: 'posts',
+        operation: 'list',
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+      setLoading(false);
     });
 
     return () => unsubscribe();

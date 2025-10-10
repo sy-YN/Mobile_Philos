@@ -1,6 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth, Auth } from "firebase/auth";
+import React from 'react';
+import { FirebaseErrorListener } from "@/components/firebase-error-listener";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -14,11 +17,27 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app;
+let app: FirebaseApp;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
+} else {
+  app = getApps()[0];
 }
 
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-export { db };
+export { app, db, auth };
+
+type FirebaseProviderProps = {
+    children: React.ReactNode;
+};
+
+export function FirebaseProvider({ children }: FirebaseProviderProps) {
+    return (
+        <>
+            {children}
+            <FirebaseErrorListener />
+        </>
+    );
+}

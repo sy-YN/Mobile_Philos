@@ -10,6 +10,8 @@ import Image from 'next/image';
 import { db } from '@/lib/firebase'; // Client SDK
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createPostWithAnalysis } from '@/app/actions';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 function SubmitButton({ disabled, pending }: { disabled: boolean; pending: boolean }) {
   return (
@@ -39,20 +41,17 @@ export function BoardPostForm() {
 
     setIsSubmitting(true);
 
-    try {
-      // 1. Create the initial post document in Firestore from the client
-      const newPostData = {
-        author: '鈴木 雄大',
-        avatar: 'https://picsum.photos/seed/yudai/100/100',
-        content,
-        likes: 0,
-        likedBy: [],
-        createdAt: serverTimestamp(),
-        // analysis will be added later by the server action
-      };
+    const newPostData = {
+      author: '鈴木 雄大',
+      avatar: 'https://picsum.photos/seed/yudai/100/100',
+      content,
+      likes: 0,
+      likedBy: [],
+      createdAt: serverTimestamp(),
+      // analysis will be added later by the server action
+    };
 
-      const docRef = await addDoc(collection(db, "posts"), newPostData);
-      
+    addDoc(collection(db, "posts"), newPostData).then(docRef => {
       toast({
         title: "成功",
         description: "投稿が正常に作成されました。AIが内容を分析中です...",
@@ -62,20 +61,20 @@ export function BoardPostForm() {
       setContent('');
       formRef.current?.reset();
       
-      // 2. Call the server action to perform AI analysis and update the post
-      // This happens in the background and doesn't block the UI
-      await createPostWithAnalysis(docRef.id, content);
+      // Call the server action to perform AI analysis and update the post
+      createPostWithAnalysis(docRef.id, content);
+      
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: 'posts', // The collection path
+        operation: 'create',
+        requestResourceData: newPostData,
+      } satisfies SecurityRuleContext);
 
-    } catch (error) {
-      console.error("Error creating post:", error);
-      toast({
-        title: "エラー",
-        description: "投稿中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
   };
 
   return (

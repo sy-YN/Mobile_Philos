@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { Timestamp, doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -29,6 +29,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardReplyCardProps = {
   reply: Reply;
@@ -67,58 +69,52 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
       return;
     }
     setIsSubmitting(true);
-    try {
-      const postRef = doc(db, "posts", post.id);
-      const updatedReply = { ...reply, content: editedContent };
+    
+    const postRef = doc(db, "posts", post.id);
+    const updatedReply = { ...reply, content: editedContent };
 
-      // To update an item in an array, we remove the old one and add the new one.
-      // This is a common pattern for array updates in Firestore.
-      const currentReplies = post.replies || [];
-      const updatedReplies = currentReplies.map(r => r.id === reply.id ? updatedReply : r);
+    const currentReplies = post.replies || [];
+    const updatedReplies = currentReplies.map(r => r.id === reply.id ? updatedReply : r);
+    const updateData = { replies: updatedReplies };
 
-      await updateDoc(postRef, {
-        replies: updatedReplies
-      });
-
+    updateDoc(postRef, updateData).then(() => {
       toast({
         title: "成功",
         description: "返信が正常に更新されました。",
       });
       setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating reply:", error);
-      toast({
-        title: "エラー",
-        description: "返信の更新中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'update',
+        requestResourceData: updateData,
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
   };
 
   const handleDeleteReply = async () => {
     setIsSubmitting(true);
-    try {
-      const postRef = doc(db, "posts", post.id);
-      // We pass the entire reply object to arrayRemove to ensure Firestore can find and delete it.
-      await updateDoc(postRef, {
-        replies: arrayRemove(reply)
-      });
+    const postRef = doc(db, "posts", post.id);
+    const updateData = { replies: arrayRemove(reply) };
+
+    updateDoc(postRef, updateData).then(() => {
       toast({
         title: "成功",
         description: "返信が正常に削除されました。",
       });
-    } catch (error) {
-      console.error("Error deleting reply:", error);
-      toast({
-        title: "エラー",
-        description: "返信の削除中にエラーが発生しました。",
-        variant: "destructive",
-      });
-    } finally {
+    }).catch(async (serverError) => {
+      const permissionError = new FirestorePermissionError({
+        path: postRef.path,
+        operation: 'update',
+        requestResourceData: updateData,
+      } satisfies SecurityRuleContext);
+      errorEmitter.emit('permission-error', permissionError);
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
   };
 
   return (
