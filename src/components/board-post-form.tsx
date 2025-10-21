@@ -6,11 +6,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-// import { useFirestore } from '@/firebase';
-// import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 import { createPostWithAnalysis } from '@/app/actions';
-// import { errorEmitter } from '@/firebase/error-emitter';
-// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+import { addDocumentNonBlocking } from '@/firebase';
 
 function SubmitButton({ disabled, pending }: { disabled: boolean; pending: boolean }) {
   return (
@@ -26,12 +25,11 @@ export function BoardPostForm() {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const { db } = useFirestore();
-  const db = null;
+  const firestore = useFirestore();
 
   const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!db) return;
+    if (!firestore) return;
     if (!content.trim()) {
       toast({
         title: "エラー",
@@ -42,7 +40,26 @@ export function BoardPostForm() {
     }
 
     setIsSubmitting(true);
-    console.log("Creating post...");
+    
+    const newPost = {
+        author: '鈴木 雄大', // Mock user
+        avatar: 'https://picsum.photos/seed/yudai/100/100', // Mock avatar
+        content: content.trim(),
+        likes: 0,
+        likedBy: [],
+        createdAt: serverTimestamp(),
+        replies: [],
+    };
+
+    const postsCollection = collection(firestore, 'posts');
+    const docRefPromise = addDocumentNonBlocking(postsCollection, newPost);
+    
+    docRefPromise.then(docRef => {
+      if (docRef) {
+        createPostWithAnalysis(docRef.id, newPost.content);
+      }
+    });
+
     setIsSubmitting(false);
     setContent('');
     formRef.current?.reset();

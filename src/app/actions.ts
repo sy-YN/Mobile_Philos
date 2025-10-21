@@ -7,11 +7,11 @@ import { db } from '@/lib/firebase-admin';
 import { analyzeBoardPostSentiment } from '@/ai/flows/analyze-board-post-sentiment';
 
 export type Reply = {
-  id: string; // Add id to uniquely identify replies
+  id: string; 
   author: string;
   avatar: string;
   content: string;
-  createdAt: Date | string | Timestamp;
+  createdAt: Timestamp;
 };
 
 export type Post = {
@@ -21,9 +21,8 @@ export type Post = {
   content: string;
   likes: number;
   likedBy: string[];
-  time: string | Date;
+  createdAt: Timestamp;
   analysis?: AnalyzeBoardPostSentimentOutput;
-  createdAt: Timestamp | Date | string; // Updated type definition
   replies?: Reply[];
 };
 

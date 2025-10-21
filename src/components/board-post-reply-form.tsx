@@ -6,10 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-// import { useFirestore } from '@/firebase';
-// import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-// import { errorEmitter } from '@/firebase/error-emitter';
-// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+import { useFirestore } from '@/firebase';
+import { doc, updateDoc, arrayUnion, Timestamp } from 'firebase/firestore';
+import { updateDocumentNonBlocking } from '@/firebase';
 
 type BoardPostReplyFormProps = {
   postId: string;
@@ -30,18 +29,30 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const { db } = useFirestore();
-  const db = null;
+  const firestore = useFirestore();
 
   const handleCreateReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!db) return;
+    if (!firestore) return;
     if (!content.trim()) {
       return;
     }
 
     setIsSubmitting(true);
-    console.log("Creating reply...");
+    
+    const newReply = {
+      id: new Date().toISOString(), // Temporary unique ID
+      author: '田中, CEO', // Mock executive user
+      avatar: 'https://picsum.photos/seed/ceo/100/100',
+      content: content.trim(),
+      createdAt: Timestamp.now(),
+    };
+
+    const postRef = doc(firestore, 'posts', postId);
+    updateDocumentNonBlocking(postRef, {
+        replies: arrayUnion(newReply)
+    });
+
     setIsSubmitting(false);
     setContent('');
     formRef.current?.reset();

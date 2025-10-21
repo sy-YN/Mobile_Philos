@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { VideoPlayer } from "@/components/video-player";
 import { ExecutiveMessageCard } from "@/components/executive-message-card";
 import { Building2, MessageSquare, ChevronDown } from "lucide-react";
@@ -31,13 +31,10 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-// import { useFirestore } from '@/firebase';
-// import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
-// import { errorEmitter } from '@/firebase/error-emitter';
-// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
-
 
 const executiveMessages = [
   {
@@ -100,8 +97,6 @@ type HomeTabProps = {
 
 export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [showAnimatedContent, setShowAnimatedContent] = useState(false);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -110,8 +105,13 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
-  // const { db } = useFirestore();
-  const db = null;
+  const firestore = useFirestore();
+
+  const postsQuery = useMemoFirebase(
+    () => firestore ? query(collection(firestore, 'posts'), orderBy('createdAt', 'desc')) : null,
+    [firestore]
+  );
+  const { data: posts, isLoading: loading } = useCollection<Post>(postsQuery);
 
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
@@ -136,51 +136,6 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const scrollTo = (index: number) => {
     carouselApi?.scrollTo(index)
   }
-
-
-  useEffect(() => {
-    if (!db) {
-      setLoading(false);
-      // Mock data for UI development without Firebase
-      const mockPosts: Post[] = [
-        {
-          id: '1',
-          author: '鈴木 雄大',
-          avatar: 'https://picsum.photos/seed/yudai/100/100',
-          content: '来期の目標達成に向けて、新しいマーケティング戦略のアイデアを募集します！どんな意見でも歓迎です。',
-          likes: 15,
-          likedBy: [],
-          time: new Date(Date.now() - 3600000).toISOString(),
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          replies: [
-            {
-              id: 'r1',
-              author: '田中 CEO',
-              avatar: 'https://picsum.photos/seed/ceo/100/100',
-              content: '素晴らしい提案ですね！特に若手の斬新なアイデアに期待しています。',
-              createdAt: new Date(Date.now() - 1800000),
-            }
-          ]
-        },
-        {
-          id: '2',
-          author: '佐藤 あきら',
-          avatar: 'https://picsum.photos/seed/p6/100/100',
-          content: '先日導入された新しいコミュニケーションツール、とても便利でチーム内の連携がスムーズになりました。開発チームに感謝です！',
-          likes: 42,
-          likedBy: [],
-          time: new Date(Date.now() - 86400000).toISOString(),
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-        }
-      ];
-      setPosts(mockPosts);
-      return;
-    };
-    
-    setLoading(false);
-    
-  }, [db]);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -252,7 +207,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
             <div className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-md hover:bg-accent/50">
                 <h2 className="text-base font-medium flex items-center gap-2 text-foreground">
                   <MessageSquare className="h-5 w-5 text-primary" />
-                  <span>コメント ({posts.length})</span>
+                  <span>コメント ({posts?.length ?? 0})</span>
                 </h2>
                 <div className="flex items-center gap-2 text-muted-foreground dark:text-gray-300">
                     <span>{isCommentsOpen ? "閉じる" : "すべて表示"}</span>
@@ -276,7 +231,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
                     </div>
                   </div>
                 ))
-              ) : posts.length > 0 ? (
+              ) : posts && posts.length > 0 ? (
                   posts.map(post => (
                     <div key={post.id}>
                       <BoardPostCard 

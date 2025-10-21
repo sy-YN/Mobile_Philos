@@ -8,8 +8,8 @@ import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import type { Timestamp } from "firebase/firestore";
-// import { doc, updateDoc, arrayRemove } from "firebase/firestore";
-// import { useFirestore } from '@/firebase';
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { useFirestore } from '@/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -29,8 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-// import { errorEmitter } from '@/firebase/error-emitter';
-// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+import { updateDocumentNonBlocking } from '@/firebase';
 
 type BoardReplyCardProps = {
   reply: Reply;
@@ -58,11 +57,10 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const { db } = useFirestore();
-  const db = null;
+  const firestore = useFirestore();
 
   const handleUpdateReply = async () => {
-    if (!db) return;
+    if (!firestore) return;
     if (!editedContent.trim()) {
       toast({
         title: "エラー",
@@ -72,15 +70,22 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
       return;
     }
     setIsSubmitting(true);
-    console.log("Updating reply...");
+    
+    const postRef = doc(firestore, "posts", post.id);
+    const updatedReplies = post.replies?.map(r => 
+        r.id === reply.id ? { ...r, content: editedContent } : r
+    );
+    updateDocumentNonBlocking(postRef, { replies: updatedReplies });
+
     setIsSubmitting(false);
     setIsEditing(false);
   };
 
   const handleDeleteReply = async () => {
-    if (!db) return;
+    if (!firestore) return;
     setIsSubmitting(true);
-    console.log("Deleting reply...");
+    const postRef = doc(firestore, "posts", post.id);
+    updateDocumentNonBlocking(postRef, { replies: arrayRemove(reply) });
     setIsSubmitting(false);
   };
 
