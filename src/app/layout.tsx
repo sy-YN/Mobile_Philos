@@ -1,14 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Home, BookOpen, LayoutDashboard, Trophy, Bell, Calendar } from "lucide-react";
-import Link from 'next/link';
-
-const inter = Inter({ subsets: ["latin"] });
+import type {Metadata} from 'next';
+import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
+import { FirebaseProvider } from '@/lib/firebase.tsx';
 
 export const metadata: Metadata = {
-  title: "Philos",
-  description: "Your internal communication app",
+  title: 'Philos',
+  description: '組織改善のためのアプリ',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -18,45 +16,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={inter.className}>
-        <div className="flex flex-col h-screen bg-secondary">
-          <header className="flex items-center justify-between p-4 bg-card border-b">
-            <h1 className="text-xl font-bold text-primary">Philos</h1>
-            <div className="flex items-center space-x-4">
-              <button>
-                <Calendar className="h-6 w-6" />
-              </button>
-              <button>
-                <Bell className="h-6 w-6" />
-              </button>
-            </div>
-          </header>
-          
-          <main className="flex-grow overflow-y-auto p-4">
-            {children}
-          </main>
-
-          <footer className="bg-card border-t">
-            <nav className="flex justify-around p-2">
-              <Link href="/" className="flex flex-col items-center text-primary">
-                <Home className="h-6 w-6" />
-                <span className="text-xs">ホーム</span>
-              </Link>
-              <Link href="#" className="flex flex-col items-center text-gray-500 hover:text-primary">
-                <BookOpen className="h-6 w-6" />
-                <span className="text-xs">理念</span>
-              </Link>
-              <Link href="#" className="flex flex-col items-center text-gray-500 hover:text-primary">
-                <LayoutDashboard className="h-6 w-6" />
-                <span className="text-xs">ダッシュボード</span>
-              </Link>
-              <Link href="#" className="flex flex-col items-center text-gray-500 hover:text-primary">
-                <Trophy className="h-6 w-6" />
-                <span className="text-xs">ランキング</span>
-              </Link>
-            </nav>
-          </footer>
-        </div>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <meta name="theme-color" content="#f97316" />
+      </head>
+      <body className="font-body antialiased">
+        <FirebaseProvider>
+          {children}
+          <Toaster />
+        </FirebaseProvider>
       </body>
     </html>
   );

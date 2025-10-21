@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "philos2-41336736-69b80"
-  }
+    "default": "philos-firebase"
+  },
+  "targets": {},
+  "etags": {}
 }

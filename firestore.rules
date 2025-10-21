@@ -1,15 +1,14 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     // "posts"コレクションへの読み書きを許可
     match /posts/{postId} {
       allow read, write: if true;
     }
-    
      match /users/{id} {
+
       allow read, write: if true;
     }
-    
-    
   }
 }
