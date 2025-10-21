@@ -1,39 +1,40 @@
+
 {
   "placeholderImages": [
     {
       "id": "video-poster",
       "description": "A corporate all-hands meeting in a modern office.",
-      "imageUrl": "https://images.unsplash.com/photo-1568992687947-868a62a9f521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb3Jwb3JhdGUlMjBtZWV0aW5nfGVufDB8fHx8MTc2MDk2MDQzMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/corpvideo/1280/720",
       "imageHint": "corporate meeting"
     },
     {
       "id": "ceo-avatar",
       "description": "Portrait of a male CEO.",
-      "imageUrl": "https://images.unsplash.com/photo-1607031542107-f6f46b5d54e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEwMTgyNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/ceo/100/100",
       "imageHint": "man portrait"
     },
     {
       "id": "cto-avatar",
       "description": "Portrait of a female CTO.",
-      "imageUrl": "https://images.unsplash.com/photo-1557053908-4793c484d06f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MDk0MDg0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/cto/100/100",
       "imageHint": "woman portrait"
     },
     {
       "id": "manager-avatar",
       "description": "Portrait of a male manager.",
-      "imageUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjA5MjcyMzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/manager/100/100",
       "imageHint": "person portrait"
     },
     {
       "id": "lead-avatar",
       "description": "Portrait of a female lead.",
-      "imageUrl": "https://images.unsplash.com/photo-1544717304-a2db4a7b16ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMGZhY2V8ZW58MHx8fHwxNzYwOTE0NzkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/lead/100/100",
       "imageHint": "woman face"
     },
     {
       "id": "user-avatar",
       "description": "Generic user avatar.",
-      "imageUrl": "https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx1c2VyJTIwYXZhdGFyfGVufDB8fHx8MTc2MTAwNTg0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/user/100/100",
       "imageHint": "user avatar"
     }
   ]
