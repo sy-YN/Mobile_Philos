@@ -104,7 +104,6 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
     // Construct an object that matches the one in Firestore to be removed.
     // Firestore's arrayRemove requires the exact object to match.
     // The createdAt might be a Date object on client, but needs to match what's in Firestore.
-    // If reply.createdAt is already a JS Date from onSnapshot, we might need to be careful here.
     // For this implementation, we assume `reply` is the exact object from the array.
     const updateData = { replies: arrayRemove(reply) };
 
