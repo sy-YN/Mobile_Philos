@@ -8,7 +8,7 @@ import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/components/firebase-provider';
+import { useFirestore } from '@/firebase/provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -103,7 +103,6 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
     
     // Construct an object that matches the one in Firestore to be removed.
     // Firestore's arrayRemove requires the exact object to match.
-    // The createdAt might be a Date object on client, but needs to match what's in Firestore.
     // For this implementation, we assume `reply` is the exact object from the array.
     const updateData = { replies: arrayRemove(reply) };
 
