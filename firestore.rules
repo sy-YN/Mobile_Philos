@@ -1,139 +1,15 @@
-/**
- * @file Firestore Security Rules
- * @description This ruleset enforces a strict user-ownership model for the GitSpace application.
- *
- * Data Structure:
- * - /users/{userId}: Stores user profiles. Each user can only access their own profile.
- * - /users/{userId}/workspaces/{workspaceId}: Stores workspaces owned by the user.
- * - /users/{userId}/workspaces/{workspaceId}/comments/{commentId}: Stores comments associated with a specific workspace.
- *
- * Key Security Decisions:
- * - User listing is disallowed.
- * - Only authenticated users can access data.
- * - All writes are protected by authorization checks.
- *
- * Denormalization for Authorization:
- * - Comments are stored as subcollections under workspaces to avoid collection group queries from being used to list across workspaces.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * @description Manages user profiles. Only the authenticated user can access their own profile.
-     * @path /users/{userId}
-     * @allow (create) User with ID "user_abc" can create their profile.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { id: "user_abc", ... } }
-     * @allow (get) User with ID "user_abc" can read their profile.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @allow (update) User with ID "user_abc" can update their profile.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { id: "user_abc", ... } }
-     * @allow (delete) User with ID "user_abc" can delete their profile.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @deny (create) User with ID "user_xyz" cannot create a profile for user "user_abc".
-     *   - Request: { auth: { uid: "user_xyz" }, resource.data: { id: "user_abc", ... } }
-     * @principle Enforces document ownership for writes.
-     */
-    match /users/{userId} {
-      // Helper function to check if the user is signed in
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      // Helper function to check if the user is the owner of the document
-      function isOwner(userId) {
-        return isSignedIn() && request.auth.uid == userId;
-      }
-
-      // Helper function to check if the user is the owner of the document and it exists
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if false; // User listing is disallowed
-
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
+    // "posts"コレクションへの読み書きを許可
+    match /posts/{postId} {
+      allow read, write: if true;
     }
-
-    /**
-     * @description Manages workspaces owned by a user. Only the owner can access their workspaces.
-     * @path /users/{userId}/workspaces/{workspaceId}
-     * @allow (create) User with ID "user_abc" can create a workspace.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { userId: "user_abc", ... } }
-     * @allow (get) User with ID "user_abc" can read their workspace.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @allow (update) User with ID "user_abc" can update their workspace.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { userId: "user_abc", ... } }
-     * @allow (delete) User with ID "user_abc" can delete their workspace.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @deny (create) User with ID "user_xyz" cannot create a workspace for user "user_abc".
-     *   - Request: { auth: { uid: "user_xyz" }, resource.data: { userId: "user_abc", ... } }
-     * @principle Enforces document ownership for writes.
-     */
-    match /users/{userId}/workspaces/{workspaceId} {
-        // Helper function to check if the user is signed in
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      // Helper function to check if the user is the owner of the document
-      function isOwner(userId) {
-        return isSignedIn() && request.auth.uid == userId;
-      }
-
-      // Helper function to check if the user is the owner of the document and it exists
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+    
+     match /users/{id} {
+      allow read, write: if true;
     }
-
-    /**
-     * @description Manages comments within a workspace. Only the workspace owner can manage comments.
-     * @path /users/{userId}/workspaces/{workspaceId}/comments/{commentId}
-     * @allow (create) User with ID "user_abc" can create a comment in their workspace.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { userId: "user_abc", workspaceId: "workspace_123", ... } }
-     * @allow (get) User with ID "user_abc" can read a comment in their workspace.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @allow (update) User with ID "user_abc" can update a comment in their workspace.
-     *   - Request: { auth: { uid: "user_abc" }, resource.data: { userId: "user_abc", workspaceId: "workspace_123", ... } }
-     * @allow (delete) User with ID "user_abc" can delete a comment in their workspace.
-     *   - Request: { auth: { uid: "user_abc" } }
-     * @deny (create) User with ID "user_xyz" cannot create a comment in user "user_abc"'s workspace.
-     *   - Request: { auth: { uid: "user_xyz" }, resource.data: { userId: "user_abc", workspaceId: "workspace_123", ... } }
-     * @principle Enforces document ownership for writes.
-     */
-    match /users/{userId}/workspaces/{workspaceId}/comments/{commentId} {
-        // Helper function to check if the user is signed in
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      // Helper function to check if the user is the owner of the document
-      function isOwner(userId) {
-        return isSignedIn() && request.auth.uid == userId;
-      }
-
-      // Helper function to check if the user is the owner of the document and it exists
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
-    }
+    
+    
   }
 }
