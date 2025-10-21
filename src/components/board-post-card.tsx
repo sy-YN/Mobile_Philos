@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import type { Timestamp } from "firebase/firestore";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase/provider';
+import { doc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { useFirestore } from '@/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -70,7 +70,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [areRepliesOpen, setAreRepliesOpen] = useState(false);
-  const firestore = useFirestore();
+  const { firestore } = useFirestore();
   
   // Using a mock user ID until auth is implemented
   const currentUserId = 'mock-user-id';

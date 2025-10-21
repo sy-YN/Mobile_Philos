@@ -6,8 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { useFirestore } from '@/firebase/provider';
-import { doc, updateDoc, arrayUnion, Timestamp } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
+import { doc, arrayUnion, Timestamp } from 'firebase/firestore';
 import { updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 type BoardPostReplyFormProps = {
@@ -29,7 +29,7 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const firestore = useFirestore();
+  const { firestore } = useFirestore();
 
   const handleCreateReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

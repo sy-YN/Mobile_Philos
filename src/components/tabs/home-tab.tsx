@@ -31,8 +31,8 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase/provider';
-import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -105,7 +105,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
-  const firestore = useFirestore();
+  const { firestore } = useFirestore();
 
   const postsQuery = useMemoFirebase(
     () => firestore ? query(collection(firestore, 'posts'), orderBy('createdAt', 'desc')) : null,
