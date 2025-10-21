@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { VideoPlayer } from "@/components/video-player";
 import { ExecutiveMessageCard } from "@/components/executive-message-card";
 import { Building2, MessageSquare, ChevronDown } from "lucide-react";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase/provider';
 import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";

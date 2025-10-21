@@ -9,7 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import type { Timestamp } from "firebase/firestore";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase';
+import { useFirestore } from '@/firebase/provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { updateDocumentNonBlocking } from '@/firebase';
+import { updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 type BoardReplyCardProps = {
   reply: Reply;

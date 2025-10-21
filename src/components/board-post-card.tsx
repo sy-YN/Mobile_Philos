@@ -11,7 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import type { Timestamp } from "firebase/firestore";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase';
+import { useFirestore } from '@/firebase/provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -37,7 +37,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { BoardReplyCard } from "./board-reply-card";
-import { deleteDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase';
+import { deleteDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 type BoardPostCardProps = {
   post: Post;
