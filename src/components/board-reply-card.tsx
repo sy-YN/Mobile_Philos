@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Timestamp, doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
-import { db } from '@/lib/firebase.tsx';
+import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { useFirestore } from '@/components/firebase-client-provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -57,8 +57,10 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const db = useFirestore();
 
   const handleUpdateReply = async () => {
+    if (!db) return;
     if (!editedContent.trim()) {
       toast({
         title: "エラー",
@@ -95,8 +97,15 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   };
 
   const handleDeleteReply = async () => {
+    if (!db) return;
     setIsSubmitting(true);
     const postRef = doc(db, "posts", post.id);
+    
+    // Construct an object that matches the one in Firestore to be removed.
+    // Firestore's arrayRemove requires the exact object to match.
+    // The createdAt might be a Date object on client, but needs to match what's in Firestore.
+    // If reply.createdAt is already a JS Date from onSnapshot, we might need to be careful here.
+    // For this implementation, we assume `reply` is the exact object from the array.
     const updateData = { replies: arrayRemove(reply) };
 
     updateDoc(postRef, updateData).then(() => {
@@ -105,9 +114,10 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
         description: "返信が正常に削除されました。",
       });
     }).catch(async (serverError) => {
+      console.log('Error deleting reply:', serverError);
       const permissionError = new FirestorePermissionError({
         path: postRef.path,
-        operation: 'update',
+        operation: 'update', // arrayRemove is an update op
         requestResourceData: updateData,
       } satisfies SecurityRuleContext);
       errorEmitter.emit('permission-error', permissionError);

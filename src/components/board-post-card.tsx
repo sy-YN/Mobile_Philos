@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { db } from '@/lib/firebase.tsx';
+import { useFirestore } from '@/components/firebase-client-provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -70,6 +70,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [areRepliesOpen, setAreRepliesOpen] = useState(false);
+  const db = useFirestore();
   
   // Using a mock user ID until auth is implemented
   const currentUserId = 'mock-user-id';
@@ -83,6 +84,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const needsModeration = post.analysis?.requiresModeration;
 
   const handleLike = async () => {
+    if (!db) return;
     const postRef = doc(db, "posts", post.id);
     const updateData = {
       likes: post.likes + (isLiked ? -1 : 1),
@@ -104,6 +106,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
 
 
   const handleUpdatePost = async () => {
+    if (!db) return;
     if (!editedContent.trim()) {
       toast({
         title: "エラー",
@@ -139,6 +142,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   };
 
   const handleDeletePost = async () => {
+    if (!db) return;
     setIsSubmitting(true);
     const postRef = doc(db, "posts", post.id);
 

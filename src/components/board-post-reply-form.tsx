@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { db } from '@/lib/firebase.tsx'; // Client SDK
+import { useFirestore } from '@/components/firebase-client-provider';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
@@ -30,9 +30,11 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const db = useFirestore();
 
   const handleCreateReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!db) return;
     if (!content.trim()) {
       return;
     }

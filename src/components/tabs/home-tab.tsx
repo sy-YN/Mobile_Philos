@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { db } from '@/lib/firebase.tsx';
+import { useFirestore } from '@/components/firebase-client-provider';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -110,6 +110,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
+  const db = useFirestore();
 
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
@@ -137,6 +138,10 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
 
 
   useEffect(() => {
+    if (!db) {
+      setLoading(false);
+      return;
+    };
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const postsData: Post[] = [];
@@ -176,7 +181,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [db]);
 
 
   useEffect(() => {
