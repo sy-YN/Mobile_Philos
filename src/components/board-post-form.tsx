@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { useFirestore } from '@/components/firebase-client-provider';
+import { useFirestore } from '@/components/firebase-provider';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createPostWithAnalysis } from '@/app/actions';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -26,7 +26,7 @@ export function BoardPostForm() {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const db = useFirestore();
+  const { db } = useFirestore();
 
   const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

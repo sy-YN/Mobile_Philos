@@ -1,9 +1,10 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
+import { FirebaseProvider } from '@/components/firebase-provider';
 import { FirebaseErrorListener } from '@/components/firebase-error-listener';
 
 const firebaseConfig = {
@@ -15,20 +16,14 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-interface FirebaseContextType {
+interface FirebaseInstances {
   app: FirebaseApp | null;
   db: Firestore | null;
   auth: Auth | null;
 }
 
-const FirebaseContext = createContext<FirebaseContextType>({
-  app: null,
-  db: null,
-  auth: null,
-});
-
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
-  const [firebaseInstances, setFirebaseInstances] = useState<FirebaseContextType>({
+  const [firebaseInstances, setFirebaseInstances] = useState<FirebaseInstances>({
     app: null,
     db: null,
     auth: null,
@@ -36,21 +31,32 @@ export function FirebaseClientProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && firebaseConfig.projectId) {
-      const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-      const db = getFirestore(app);
-      const auth = getAuth(app);
-      setFirebaseInstances({ app, db, auth });
+      if (!getApps().length) {
+        try {
+          const app = initializeApp(firebaseConfig);
+          const db = getFirestore(app);
+          const auth = getAuth(app);
+          setFirebaseInstances({ app, db, auth });
+        } catch (e) {
+          console.error("Firebase initialization error", e);
+        }
+      } else {
+        const app = getApps()[0];
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        setFirebaseInstances({ app, db, auth });
+      }
     }
   }, []);
 
   return (
-    <FirebaseContext.Provider value={firebaseInstances}>
+    <FirebaseProvider
+      app={firebaseInstances.app}
+      db={firebaseInstances.db}
+      auth={firebaseInstances.auth}
+    >
       {children}
       <FirebaseErrorListener />
-    </FirebaseContext.Provider>
+    </FirebaseProvider>
   );
 }
-
-export const useFirebase = () => useContext(FirebaseContext);
-export const useFirestore = () => useContext(FirebaseContext).db;
-export const useAuth = () => useContext(FirebaseContext).auth;

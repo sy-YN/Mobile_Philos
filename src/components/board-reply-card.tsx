@@ -8,7 +8,7 @@ import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/components/firebase-client-provider';
+import { useFirestore } from '@/components/firebase-provider';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -57,7 +57,7 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const db = useFirestore();
+  const { db } = useFirestore();
 
   const handleUpdateReply = async () => {
     if (!db) return;

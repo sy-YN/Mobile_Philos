@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { useFirestore } from '@/components/firebase-client-provider';
+import { useFirestore } from '@/components/firebase-provider';
 import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -110,7 +110,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
-  const db = useFirestore();
+  const { db } = useFirestore();
 
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
