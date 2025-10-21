@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { useFirestore } from '@/firebase/provider';
+import { useFirestore } from '@/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createPostWithAnalysis } from '@/app/actions';
 import { errorEmitter } from '@/firebase/error-emitter';

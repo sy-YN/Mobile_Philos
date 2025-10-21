@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { FirebaseApp } from 'firebase/app';
 import type { Firestore } from 'firebase/firestore';
@@ -33,7 +35,14 @@ export function FirebaseProvider({
   );
 }
 
-export const useFirebase = () => useContext(FirebaseContext);
+export const useFirebase = () => {
+    const context = useContext(FirebaseContext);
+    if (context === undefined) {
+        throw new Error('useFirebase must be used within a FirebaseProvider');
+    }
+    return context;
+};
+
 export const useFirestore = () => {
     const context = useContext(FirebaseContext);
     if (context === undefined) {
@@ -41,6 +50,7 @@ export const useFirestore = () => {
     }
     return { db: context.db };
 };
+
 export const useAuth = () => {
     const context = useContext(FirebaseContext);
     if (context === undefined) {

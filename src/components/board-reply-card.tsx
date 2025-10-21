@@ -8,7 +8,7 @@ import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase/provider';
+import { useFirestore } from '@/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {

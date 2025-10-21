@@ -1,12 +1,12 @@
 'use client';
 
 import React, { ReactNode, useState, useEffect } from 'react';
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore } from 'firebase/firestore';
-import { getAuth, Auth } from 'firebase/auth';
+import { initializeFirebase } from '@/firebase/client';
 import { FirebaseProvider } from '@/firebase/provider';
 import { FirebaseErrorListener } from '@/components/firebase-error-listener';
-import { firebaseConfig } from '@/firebase/config';
+import type { FirebaseApp } from 'firebase/app';
+import type { Auth } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
 
 interface FirebaseInstances {
   app: FirebaseApp | null;
@@ -22,10 +22,9 @@ export function FirebaseClientProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (firebaseConfig.projectId && typeof window !== 'undefined') {
-      const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-      const db = getFirestore(app);
-      const auth = getAuth(app);
+    // This check ensures that Firebase is only initialized on the client side.
+    if (typeof window !== 'undefined') {
+      const { app, db, auth } = initializeFirebase();
       setFirebaseInstances({ app, db, auth });
     }
   }, []);
