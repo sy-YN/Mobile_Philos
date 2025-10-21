@@ -9,8 +9,9 @@ import { Heart, AlertTriangle, MessageSquare, MoreVertical, ChevronDown } from "
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Timestamp, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase';
+import type { Timestamp } from "firebase/firestore";
+// import { doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+// import { useFirestore } from '@/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -36,8 +37,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { BoardReplyCard } from "./board-reply-card";
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+// import { errorEmitter } from '@/firebase/error-emitter';
+// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardPostCardProps = {
   post: Post;
@@ -51,8 +52,8 @@ type BoardPostCardProps = {
 const getTimeAgo = (dateValue: string | Date | Timestamp) => {
   if (!dateValue) return 'たった今';
   let date;
-  if (dateValue instanceof Timestamp) {
-    date = dateValue.toDate();
+  if (typeof dateValue === 'object' && 'toDate' in dateValue) {
+    date = (dateValue as Timestamp).toDate();
   } else if (dateValue instanceof Date) {
     date = dateValue;
   } else if (typeof dateValue === 'string') {
@@ -70,7 +71,8 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [areRepliesOpen, setAreRepliesOpen] = useState(false);
-  const { db } = useFirestore();
+  // const { db } = useFirestore();
+  const db = null;
   
   // Using a mock user ID until auth is implemented
   const currentUserId = 'mock-user-id';
@@ -84,22 +86,23 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const needsModeration = post.analysis?.requiresModeration;
 
   const handleLike = async () => {
-    if (!db) return;
-    const postRef = doc(db, "posts", post.id);
-    const updateData = {
-      likes: post.likes + (isLiked ? -1 : 1),
-      likedBy: isLiked ? arrayRemove(currentUserId) : arrayUnion(currentUserId)
-    };
+    console.log("Like button clicked");
+    // if (!db) return;
+    // const postRef = doc(db, "posts", post.id);
+    // const updateData = {
+    //   likes: post.likes + (isLiked ? -1 : 1),
+    //   likedBy: isLiked ? arrayRemove(currentUserId) : arrayUnion(currentUserId)
+    // };
 
-    updateDoc(postRef, updateData).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'update',
-        requestResourceData: updateData,
-      } satisfies SecurityRuleContext);
+    // updateDoc(postRef, updateData).catch(async (serverError) => {
+    //   const permissionError = new FirestorePermissionError({
+    //     path: postRef.path,
+    //     operation: 'update',
+    //     requestResourceData: updateData,
+    //   } satisfies SecurityRuleContext);
 
-      errorEmitter.emit('permission-error', permissionError);
-    });
+    //   errorEmitter.emit('permission-error', permissionError);
+    // });
 
     setIsLiked(!isLiked);
   };
@@ -115,54 +118,16 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
       });
       return;
     }
-
     setIsSubmitting(true);
-    const postRef = doc(db, "posts", post.id);
-    const updateData = { content: editedContent };
-
-    updateDoc(postRef, updateData).then(() => {
-      toast({
-        title: "成功",
-        description: "投稿が正常に更新されました。",
-      });
-      setIsEditing(false);
-      if (onUpdateSuccess) {
-        onUpdateSuccess();
-      }
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'update',
-        requestResourceData: updateData,
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Updating post...");
+    setIsSubmitting(false);
   };
 
   const handleDeletePost = async () => {
     if (!db) return;
     setIsSubmitting(true);
-    const postRef = doc(db, "posts", post.id);
-
-    deleteDoc(postRef).then(() => {
-      toast({
-        title: "成功",
-        description: "投稿が正常に削除されました。",
-      });
-      if (onDeleteSuccess) {
-        onDeleteSuccess();
-      }
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'delete',
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Deleting post...");
+    setIsSubmitting(false);
   };
 
   return (

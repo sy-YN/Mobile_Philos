@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Timestamp, doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { useFirestore } from '@/firebase';
+import type { Timestamp } from "firebase/firestore";
+// import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+// import { useFirestore } from '@/firebase';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -28,8 +29,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+// import { errorEmitter } from '@/firebase/error-emitter';
+// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardReplyCardProps = {
   reply: Reply;
@@ -40,8 +41,8 @@ type BoardReplyCardProps = {
 const getTimeAgo = (dateValue: string | Date | Timestamp) => {
   if (!dateValue) return 'たった今';
   let date;
-  if (dateValue instanceof Timestamp) {
-    date = dateValue.toDate();
+  if (typeof dateValue === 'object' && 'toDate' in dateValue) {
+    date = (dateValue as Timestamp).toDate();
   } else if (dateValue instanceof Date) {
     date = dateValue;
   } else if (typeof dateValue === 'string') {
@@ -57,7 +58,8 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { db } = useFirestore();
+  // const { db } = useFirestore();
+  const db = null;
 
   const handleUpdateReply = async () => {
     if (!db) return;
@@ -70,58 +72,16 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
       return;
     }
     setIsSubmitting(true);
-    
-    const postRef = doc(db, "posts", post.id);
-    const updatedReply = { ...reply, content: editedContent };
-
-    const currentReplies = post.replies || [];
-    const updatedReplies = currentReplies.map(r => r.id === reply.id ? updatedReply : r);
-    const updateData = { replies: updatedReplies };
-
-    updateDoc(postRef, updateData).then(() => {
-      toast({
-        title: "成功",
-        description: "返信が正常に更新されました。",
-      });
-      setIsEditing(false);
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'update',
-        requestResourceData: updateData,
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Updating reply...");
+    setIsSubmitting(false);
+    setIsEditing(false);
   };
 
   const handleDeleteReply = async () => {
     if (!db) return;
     setIsSubmitting(true);
-    const postRef = doc(db, "posts", post.id);
-    
-    // Construct an object that matches the one in Firestore to be removed.
-    // Firestore's arrayRemove requires the exact object to match.
-    // For this implementation, we assume `reply` is the exact object from the array.
-    const updateData = { replies: arrayRemove(reply) };
-
-    updateDoc(postRef, updateData).then(() => {
-      toast({
-        title: "成功",
-        description: "返信が正常に削除されました。",
-      });
-    }).catch(async (serverError) => {
-      console.log('Error deleting reply:', serverError);
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'update', // arrayRemove is an update op
-        requestResourceData: updateData,
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Deleting reply...");
+    setIsSubmitting(false);
   };
 
   return (

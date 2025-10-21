@@ -6,10 +6,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { useFirestore } from '@/firebase';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+// import { useFirestore } from '@/firebase';
+// import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+// import { errorEmitter } from '@/firebase/error-emitter';
+// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type BoardPostReplyFormProps = {
   postId: string;
@@ -30,7 +30,8 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { db } = useFirestore();
+  // const { db } = useFirestore();
+  const db = null;
 
   const handleCreateReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,43 +41,11 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
     }
 
     setIsSubmitting(true);
-
-    const postRef = doc(db, "posts", postId);
-      
-    const executiveUser = {
-      author: '田中 CEO',
-      avatar: 'https://picsum.photos/seed/ceo/100/100',
-    };
-
-    const newReply = {
-      id: `reply-${Date.now()}`, // Simple unique ID for the reply
-      ...executiveUser,
-      content,
-      createdAt: new Date(), 
-    };
-
-    const updateData = {
-      replies: arrayUnion(newReply)
-    };
-
-    updateDoc(postRef, updateData).then(() => {
-      setContent('');
-      formRef.current?.reset();
-      toast({
-        title: "成功",
-        description: "返信が投稿されました。",
-      });
-      onReplySuccess?.();
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: postRef.path,
-        operation: 'update',
-        requestResourceData: updateData,
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Creating reply...");
+    setIsSubmitting(false);
+    setContent('');
+    formRef.current?.reset();
+    onReplySuccess?.();
   };
 
   return (

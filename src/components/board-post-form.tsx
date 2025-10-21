@@ -6,11 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
-import { useFirestore } from '@/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+// import { useFirestore } from '@/firebase';
+// import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createPostWithAnalysis } from '@/app/actions';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+// import { errorEmitter } from '@/firebase/error-emitter';
+// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 function SubmitButton({ disabled, pending }: { disabled: boolean; pending: boolean }) {
   return (
@@ -26,7 +26,8 @@ export function BoardPostForm() {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { db } = useFirestore();
+  // const { db } = useFirestore();
+  const db = null;
 
   const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,41 +42,10 @@ export function BoardPostForm() {
     }
 
     setIsSubmitting(true);
-
-    const newPostData = {
-      author: '鈴木 雄大',
-      avatar: 'https://picsum.photos/seed/yudai/100/100',
-      content,
-      likes: 0,
-      likedBy: [],
-      createdAt: serverTimestamp(),
-      // analysis will be added later by the server action
-    };
-
-    addDoc(collection(db, "posts"), newPostData).then(docRef => {
-      toast({
-        title: "成功",
-        description: "投稿が正常に作成されました。AIが内容を分析中です...",
-      });
-
-      // Reset form on the client immediately
-      setContent('');
-      formRef.current?.reset();
-      
-      // Call the server action to perform AI analysis and update the post
-      createPostWithAnalysis(docRef.id, content);
-      
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: 'posts', // The collection path
-        operation: 'create',
-        requestResourceData: newPostData,
-      } satisfies SecurityRuleContext);
-
-      errorEmitter.emit('permission-error', permissionError);
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    console.log("Creating post...");
+    setIsSubmitting(false);
+    setContent('');
+    formRef.current?.reset();
   };
 
   return (

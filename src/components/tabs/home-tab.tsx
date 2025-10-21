@@ -31,12 +31,12 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { useFirestore } from '@/firebase';
-import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
+// import { useFirestore } from '@/firebase';
+// import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+// import { errorEmitter } from '@/firebase/error-emitter';
+// import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 
 const executiveMessages = [
@@ -110,7 +110,8 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
-  const { db } = useFirestore();
+  // const { db } = useFirestore();
+  const db = null;
 
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
@@ -140,47 +141,44 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   useEffect(() => {
     if (!db) {
       setLoading(false);
+      // Mock data for UI development without Firebase
+      const mockPosts: Post[] = [
+        {
+          id: '1',
+          author: '鈴木 雄大',
+          avatar: 'https://picsum.photos/seed/yudai/100/100',
+          content: '来期の目標達成に向けて、新しいマーケティング戦略のアイデアを募集します！どんな意見でも歓迎です。',
+          likes: 15,
+          likedBy: [],
+          time: new Date(Date.now() - 3600000).toISOString(),
+          createdAt: new Date(Date.now() - 3600000).toISOString(),
+          replies: [
+            {
+              id: 'r1',
+              author: '田中 CEO',
+              avatar: 'https://picsum.photos/seed/ceo/100/100',
+              content: '素晴らしい提案ですね！特に若手の斬新なアイデアに期待しています。',
+              createdAt: new Date(Date.now() - 1800000),
+            }
+          ]
+        },
+        {
+          id: '2',
+          author: '佐藤 あきら',
+          avatar: 'https://picsum.photos/seed/p6/100/100',
+          content: '先日導入された新しいコミュニケーションツール、とても便利でチーム内の連携がスムーズになりました。開発チームに感謝です！',
+          likes: 42,
+          likedBy: [],
+          time: new Date(Date.now() - 86400000).toISOString(),
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+        }
+      ];
+      setPosts(mockPosts);
       return;
     };
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const postsData: Post[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.createdAt) {
-          const createdAt = data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt);
-          const replies = (data.replies || []).map((reply: any) => ({
-            ...reply,
-            id: reply.id,
-            createdAt: reply.createdAt instanceof Timestamp ? reply.createdAt.toDate() : new Date(reply.createdAt)
-          }));
-
-          postsData.push({
-            id: doc.id,
-            author: data.author,
-            avatar: data.avatar,
-            content: data.content,
-            likes: data.likes,
-            likedBy: data.likedBy || [],
-            analysis: data.analysis,
-            createdAt: createdAt.toISOString(),
-            time: createdAt.toISOString(),
-            replies,
-          });
-        }
-      });
-      setPosts(postsData);
-      setLoading(false);
-    }, async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: 'posts',
-        operation: 'list',
-      } satisfies SecurityRuleContext);
-      errorEmitter.emit('permission-error', permissionError);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    
+    setLoading(false);
+    
   }, [db]);
 
 
@@ -192,13 +190,11 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   }, []);
 
   const handlePostUpdateSuccess = () => {
-    // onSnapshot already handles real-time updates, so no explicit re-fetch needed here.
-    console.log("Post updated, onSnapshot will handle UI refresh.");
+    console.log("Post updated, UI will refresh.");
   };
 
   const handlePostDeleteSuccess = () => {
-    // onSnapshot already handles real-time updates, so no explicit re-fetch needed here.
-    console.log("Post deleted, onSnapshot will handle UI refresh.");
+    console.log("Post deleted, UI will refresh.");
   };
 
   return (
