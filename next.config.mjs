@@ -1,34 +1,32 @@
+// @ts-check
+import withPWAInit from '@ducanh2912/next-pwa';
 
-import type {NextConfig} from 'next';
-import withPWAInit from "@ducanh2912/next-pwa";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   typescript: {
+    // ビルド時に型エラーで停止しない
     ignoreBuildErrors: true,
   },
   eslint: {
+    // ESLintエラーでビルドが止まらないように
     ignoreDuringBuilds: true,
   },
-  output: 'standalone',
+  output: 'standalone', // Firebase HostingやAzureに最適
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'picsum.photos',
-        port: '',
         pathname: '/**',
       },
     ],
@@ -42,8 +40,8 @@ const nextConfig: NextConfig = {
 };
 
 const withPWA = withPWAInit({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
   register: true,
   skipWaiting: true,
 });
