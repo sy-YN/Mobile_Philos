@@ -57,7 +57,7 @@ export function BoardReplyCard({ reply, post }: BoardReplyCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { firestore } = useFirestore();
+  const firestore = useFirestore();
 
   const handleUpdateReply = async () => {
     if (!firestore) return;

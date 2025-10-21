@@ -29,7 +29,7 @@ export function BoardPostReplyForm({ postId, onReplySuccess }: BoardPostReplyFor
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { firestore } = useFirestore();
+  const firestore = useFirestore();
 
   const handleCreateReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

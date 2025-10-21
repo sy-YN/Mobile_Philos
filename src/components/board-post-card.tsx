@@ -70,7 +70,7 @@ export function BoardPostCard({ post, isExecutive, onReplyClick, isReplying, onU
   const [editedContent, setEditedContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [areRepliesOpen, setAreRepliesOpen] = useState(false);
-  const { firestore } = useFirestore();
+  const firestore  = useFirestore();
   
   // Using a mock user ID until auth is implemented
   const currentUserId = 'mock-user-id';

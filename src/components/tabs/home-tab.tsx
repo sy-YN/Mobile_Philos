@@ -105,7 +105,7 @@ export function HomeTab({ isDarkMode }: HomeTabProps) {
   const [replyingToPostId, setReplyingToPostId] = useState<string | null>(null);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const isExecutive = true; // TODO: Replace with real authentication logic
-  const { firestore } = useFirestore();
+  const firestore = useFirestore();
 
   const postsQuery = useMemoFirebase(
     () => firestore ? query(collection(firestore, 'posts'), orderBy('createdAt', 'desc')) : null,

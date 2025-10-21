@@ -25,7 +25,7 @@ export function BoardPostForm() {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { firestore } = useFirestore();
+  const firestore = useFirestore();
 
   const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
