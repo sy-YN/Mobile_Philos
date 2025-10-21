@@ -22,7 +22,7 @@ export function FirebaseClientProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (firebaseConfig.projectId) {
+    if (firebaseConfig.projectId && typeof window !== 'undefined') {
       const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
       const db = getFirestore(app);
       const auth = getAuth(app);
